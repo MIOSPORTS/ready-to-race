@@ -41,13 +41,11 @@
 </head>
 <body class="bg-[#f1f5f9] font-sans antialiased text-slate-800">
 
-    <!-- 頂部導航列 -->
     <nav class="bg-brandDark text-white py-3 px-6 md:px-12 flex justify-between items-center border-b border-zinc-800">
         <div class="flex items-center">
             <img src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
         </div>
         
-        <!-- 右側社群與官網導流 -->
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
             <a href="https://www.miosports.com.tw/" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
@@ -76,9 +74,8 @@
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
                     比賽前，<br><span class="text-brandRed">你準備好了嗎？</span>
                 </h1>
-                <p class="text-lg md:text-xl text-zinc-300 max-w-xl font-light">
-                    依照你的賽事，自動建立專屬裝備清單。
-出發前快速確認，不再漏帶重要裝備。
+                <p class="text-lg md:text-xl text-zinc-300 max-w-xl font-light leading-relaxed">
+                    依照你的賽事，自動建立專屬裝備清單。<br>出發前快速確認，不再漏帶重要裝備。
                 </p>
             </div>
 
@@ -128,7 +125,6 @@
             
             <div class="lg:col-span-8 space-y-10 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
                 
-                <!-- ❶ 選擇類型 -->
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
@@ -136,12 +132,10 @@
                     </div>
                     
                     <div class="grid grid-cols-3 gap-4">
-                        <!-- 越野跑 -->
                         <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border-2 border-brandRed shadow-md transition-all duration-300 group select-none">
                             <img id="img-choice-trail" src="" alt="Trail" class="sport-btn-img absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/30 transition-all duration-300"></div>
                             
-                            <!-- 🚀 像素級對齊：結合 top-[46%] 完美抵銷圖示本身的字體邊距，鎖定正中心 -->
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
@@ -152,12 +146,10 @@
                             </div>
                         </button>
 
-                        <!-- 鐵人三項 -->
                         <button onclick="setSportType('triathlon')" id="btn-triathlon" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 group select-none">
                             <img id="img-choice-triathlon" src="" alt="Triathlon" class="sport-btn-img absolute inset-0 w-full h-full object-cover grayscale transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
                             
-                            <!-- 🚀 像素級對齊：結合 top-[46%] 完美抵銷圖示本身的字體邊距，鎖定正中心 -->
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
@@ -168,12 +160,10 @@
                             </div>
                         </button>
 
-                        <!-- 路跑/馬拉松 -->
                         <button onclick="setSportType('road')" id="btn-road" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 group select-none">
                             <img id="img-choice-road" src="" alt="Road" class="sport-btn-img absolute inset-0 w-full h-full object-cover grayscale transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
                             
-                            <!-- 🚀 像素級對齊：結合 top-[46%] 完美抵銷圖示本身的字體邊距，鎖定正中心 -->
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
@@ -186,7 +176,6 @@
                     </div>
                 </section>
 
-                <!-- ❷ 選擇賽事 -->
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
@@ -223,7 +212,6 @@
                     </div>
                 </section>
 
-                <!-- ❸ 裝備清單 -->
                 <section class="space-y-6">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
@@ -273,7 +261,6 @@
                 </section>
             </div>
 
-            <!-- 右側海報預覽 -->
             <div class="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
                     <h3 class="text-base font-bold mb-3">你的裝備清單圖片 <span class="text-xs text-slate-400 font-normal">（預覽）</span></h3>
@@ -861,7 +848,8 @@
 
             const imageURL = canvas.toDataURL("image/png");
             const link = document.createElement('a');
-            link.download = `COMPRESSPORT_裝備檢查清單.png`;
+            const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
+            link.download = fileName;
             link.href = imageURL;
             link.click();
         }
