@@ -283,11 +283,12 @@
                         </div>
 
                         <div class="relative z-10 flex justify-between items-center pt-2 border-t border-white/10">
-                            <div>
-                                <span class="text-[9px] uppercase tracking-wider text-zinc-500 block">Status</span>
-                                <span class="text-xs font-black italic tracking-widest text-white">#WheverYouRaceWeSupportYou</span>
+                            <div class="space-y-0.5">
+                                <span class="text-[8px] uppercase tracking-widest text-zinc-500 block leading-none">Status</span>
+                                <span class="text-[9px] font-bold italic tracking-wider text-zinc-400 block leading-tight">#WheverYouRaceWeSupportYou</span>
+                                <span id="poster-status-ready" class="text-[11px] font-black italic tracking-widest text-white block leading-tight">READY TO TRAIL</span>
                             </div>
-                            <div class="text-right">
+                            <div class="text-right flex-shrink-0">
                                 <img id="poster-logo-square" src="images/logo2.jpg" alt="Logo" class="h-7 inline-block md:hidden object-contain" onerror="this.removeAttribute('src');">
                                 <img id="poster-logo-landscape" src="images/logo.jpg" alt="Logo" class="h-5 hidden md:inline-block object-contain" onerror="this.removeAttribute('src');">
                             </div>
@@ -319,9 +320,9 @@
 
     <script>
        const SPORT_BACKGROUNDS = {
-           trail: 'images/bg_trail.jpg',      // 請將你做好的越野跑背景圖命名為 bg_trail.jpg 並放入 images 資料夾
-           triathlon: 'images/bg_triathlon.jpg',  // 請將你做好的鐵人三項背景圖命名為 bg_triathlon.jpg 並放入 images 資料夾
-           road: 'images/bg_road.jpg'         // 請將你做好的路跑背景圖命名為 bg_road.jpg 並放入 images 資料夾
+           trail: 'images/bg_trail.jpg',      
+           triathlon: 'images/bg_triathlon.jpg',  
+           road: 'images/bg_road.jpg'         
         };
 
         const OFFICIAL_STORE_URLS = {
@@ -476,6 +477,7 @@
             updateSportVisuals(); 
         });
 
+        // (中略，其餘功能皆維持不變)
         function initDate() {
             const MathDate = new Date();
             document.getElementById('poster-date').innerText = `${MathDate.getFullYear()}.${String(MathDate.getMonth() + 1).padStart(2, '0')}.${String(MathDate.getDate()).padStart(2, '0')}`;
@@ -748,6 +750,13 @@
                 }
                 posterContainer.appendChild(itemDiv);
             });
+
+            const readyTextElement = document.getElementById('poster-status-ready');
+            if (readyTextElement) {
+                if (currentSport === 'trail') readyTextElement.innerText = 'READY TO TRAIL';
+                if (currentSport === 'triathlon') readyTextElement.innerText = 'READY TO TRIATHLON';
+                if (currentSport === 'road') readyTextElement.innerText = 'READY TO RUN';
+            }
         }
 
         function generateImage() {
@@ -765,18 +774,17 @@
             ctx.fillStyle = '#09090b';
             ctx.fillRect(0, 0, 1080, 1920);
 
-            // 🚀 2. 繪製背景圖片（使用完美的 Object-Fit: Cover 算法，解決拉伸變形問題）
+            // 2. 繪製背景圖片（Object-Fit: Cover 裁切）
             const posterBgImg = document.getElementById('poster-bg');
             if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
                 ctx.save();
-                ctx.globalAlpha = 0.55; // 同步預覽圖 55% 不透明度
+                ctx.globalAlpha = 0.55; 
                 
                 const canvasWidth = 1080;
                 const canvasHeight = 1920;
                 const imgWidth = posterBgImg.naturalWidth;
                 const imgHeight = posterBgImg.naturalHeight;
 
-                // 計算等比例滿版覆蓋 (Cover) 的裁切範圍
                 const r = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
                 const nw = imgWidth * r;
                 const nh = imgHeight * r;
@@ -787,20 +795,15 @@
                 ctx.restore();
             }
 
-            // 🚀 3. 繪製漸層遮罩（與海報預覽的半透明比例完全一致）
+            // 3. 繪製漸層遮罩
             const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
-            gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    // 相當於 zinc-950/40
-            gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  // 相當於 zinc-950/50
-            gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   // 相當於 zinc-950/85
+            gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
+            gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
+            gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, 1080, 1920);
 
-            // 4. 裝飾紅斜線
-            ctx.strokeStyle = 'rgba(226, 0, 26, 0.2)';
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(0, 1600); ctx.lineTo(400, 1300); ctx.lineTo(700, 1450); ctx.lineTo(1080, 1100);
-            ctx.stroke();
+            // 🚀 4. 裝飾斜紅線已成功拔除，畫面現在會乾淨透亮！
 
             // 5. 繪製頂部 Tag
             ctx.fillStyle = '#e2001a';
@@ -870,34 +873,38 @@
                 }
             });
 
-            // 11. 繪製底部文字
+            // 11. 繪製底部雙行文字資訊（STATUS 區塊）
             ctx.fillStyle = '#52525b';
             ctx.font = '400 24px "Inter"';
-            ctx.fillText('STATUS', 80, 1770);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '900 italic 38px "Inter"';
-            
-            if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1825);
-            if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1825);
-            if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1825);
+            ctx.fillText('STATUS', 80, 1740);
 
-            // 🚀 12. 完美繪製橫式 LOGO 圖片到 Canvas 中，取代以前的純文字
+            // 第一行：經典品牌標語 #WheverYouRaceWeSupportYou
+            ctx.fillStyle = '#a1a1aa'; 
+            ctx.font = '900 italic 30px "Inter"';
+            ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
+
+            // 第二行：動態 READY TO 運動狀態
+            ctx.fillStyle = '#ffffff'; 
+            ctx.font = '900 italic 38px "Inter"';
+            if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1855);
+            if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1855);
+            if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1855);
+
+            // 12. 完美繪製橫式 LOGO 圖片（與第二行文字底部齊平）
             const navLogo = document.getElementById('nav-logo');
             if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
-                const targetLogoHeight = 40; // 設定 LOGO 繪製高度為 40px
+                const targetLogoHeight = 40; 
                 const aspectRatio = navLogo.naturalWidth / navLogo.naturalHeight;
                 const targetLogoWidth = targetLogoHeight * aspectRatio;
                 
-                // 鎖定繪製在畫布右側對齊 80px 邊距、底部對齊 1825px 文字底線的位置
-                const logoX = 1000 - targetLogoWidth; // 右側邊界
-                const logoY = 1825 - targetLogoHeight + 8; // 稍微向下對齊基準線
+                const logoX = 1000 - targetLogoWidth; 
+                const logoY = 1855 - targetLogoHeight + 8; 
 
                 ctx.drawImage(navLogo, logoX, logoY, targetLogoWidth, targetLogoHeight);
             } else {
-                // 如果 LOGO 載入失敗，備份繪製純文字品牌字樣
                 ctx.fillStyle = '#ffffff';
                 ctx.font = '900 32px "Inter"';
-                ctx.fillText('COMPRESSPORT', 700, 1825);
+                ctx.fillText('COMPRESSPORT', 700, 1855);
             }
 
             // 13. 輸出下載圖片
