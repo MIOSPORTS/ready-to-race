@@ -225,9 +225,9 @@
                             <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
                         </div>
                         <div class="flex items-center px-2 py-2 sm:py-0 select-none">
-                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-brandRed transition">
+                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-slate-700 transition">
                                 <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
-                                <span>🔍 尚未準備清單</span>
+                                <span><i class="fa-solid fa-magnifying-glass mr-1 text-[10px]"></i>尚未準備清單</span>
                             </label>
                         </div>
                     </div>
@@ -235,9 +235,7 @@
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
                     </div>
 
-                    <!-- 💡 輸入與控制區塊 -->
                     <div class="space-y-3 pt-2">
-                        <!-- 第一排：新增輸入框 -->
                         <div class="flex items-center gap-2">
                             <div class="relative flex-grow">
                                 <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -248,10 +246,9 @@
                             </button>
                         </div>
                         
-                        <!-- 🎯 第二排：編輯控制按鈕（新增到「新增」的下方，版面整齊好看） -->
                         <div class="flex items-center gap-2">
-                            <button id="edit-mode-btn" onclick="toggleEditMode()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                <i class="fa-solid fa-pen-to-square"></i>
+                            <button id="edit-mode-btn" onclick="toggleEditMode()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-pen-to-square" id="edit-btn-icon"></i>
                                 <span id="edit-btn-text">編輯清單項目</span>
                             </button>
                             <button onclick="resetDeletedItems()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
@@ -311,7 +308,6 @@
                             <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
                         </div>
 
-                        <!-- 💡 修正後：固定外框高度為 250px，確保不管項目多寡，黑底都一定是完整的漂亮長方形 -->
                         <div class="relative z-10 my-3 bg-black/50 border border-white/5 rounded-xl p-3.5 flex flex-col h-[55%] shrink-0">
                             <div id="poster-items" class="space-y-1.5 text-xs overflow-y-auto no-scrollbar h-full">
                             </div>
@@ -382,9 +378,9 @@
         let currentRace = null;
         let checkedItems = new Set();
         let customItemsDatabase = {}; 
-        let deletedItemsDatabase = {}; // 🧠 記錄各賽事被用戶刪除的公版項目
+        let deletedItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
-        let isEditMode = false;        // ✏️ 是否處於「編輯清單」模式
+        let isEditMode = false;        
 
         function initChoiceImages() {
             Object.keys(SPORT_BACKGROUNDS).forEach(key => {
@@ -563,7 +559,6 @@
                 customItemsDatabase[currentRace.id] = [];
             }
 
-            // 載入被刪除的公版項目
             const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
             const savedDeletedData = localStorage.getItem(deletedStorageKey);
             if (savedDeletedData) {
@@ -586,7 +581,6 @@
             localStorage.setItem(customStorageKey, JSON.stringify(customItemsDatabase[currentRace.id] || []));
         }
 
-        // 儲存被刪除公版項目的 ID
         function saveDeletedItemsToStorage() {
             if(!currentRace) return;
             const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
@@ -618,19 +612,16 @@
             }
         }
 
-        // 🎯 刪除項目邏輯（支援自訂裝備刪除與公版隱藏）
         function deleteItem(id, isCustom, e) {
             if (e) e.stopPropagation(); 
             if(!currentRace) return;
             
             if (isCustom) {
-                // 刪除自訂項目
                 if (customItemsDatabase[currentRace.id]) {
                     customItemsDatabase[currentRace.id] = customItemsDatabase[currentRace.id].filter(item => item.id !== id);
                     saveCustomItemsToStorage();
                 }
             } else {
-                // 隱藏公版項目
                 if (!deletedItemsDatabase[currentRace.id]) {
                     deletedItemsDatabase[currentRace.id] = [];
                 }
@@ -645,32 +636,32 @@
             loadChecklist();
         }
 
-        // 🔄 恢復預設：一鍵清空刪除紀錄與自訂裝備
         function resetDeletedItems() {
             if (!currentRace) return;
             if (confirm("確定要恢復本賽事的預設公版裝備清單嗎？這將會恢復所有被您刪除的原始項目。")) {
                 deletedItemsDatabase[currentRace.id] = [];
                 saveDeletedItemsToStorage();
                 
-                // 關閉編輯模式
                 if (isEditMode) toggleEditMode();
-                
                 loadChecklist();
             }
         }
 
-        // ✏️ 開啟/關閉編輯模式
+        // 🎯 修正後：切換編輯模式，兩個按鈕維持白底高質感，不採用紅色大區塊
         function toggleEditMode() {
             isEditMode = !isEditMode;
             const btn = document.getElementById('edit-mode-btn');
             const text = document.getElementById('edit-btn-text');
+            const icon = document.getElementById('edit-btn-icon');
             
             if (isEditMode) {
-                btn.className = "flex-1 py-2 bg-brandRed hover:bg-red-700 text-white font-bold text-xs rounded-xl border border-brandRed transition flex items-center justify-center space-x-1.5 shadow-sm";
+                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-brandRed font-bold text-xs rounded-xl border border-brandRed/40 transition flex items-center justify-center space-x-1.5 shadow-sm";
                 text.innerText = "完成編輯";
+                if (icon) icon.className = "fa-solid fa-floppy-disk";
             } else {
-                btn.className = "flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
+                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
                 text.innerText = "編輯清單項目";
+                if (icon) icon.className = "fa-solid fa-pen-to-square";
             }
             renderChecklistItems();
         }
@@ -721,7 +712,6 @@
             }
             currentRace = RACES_DATABASE[type][0]; 
             
-            // 切換運動時關閉編輯模式
             if (isEditMode) toggleEditMode();
 
             loadSavedChecklist();
@@ -781,7 +771,7 @@
 
         function selectRace(race) {
             currentRace = race;
-            if (isEditMode) toggleEditMode(); // 切換賽事時關閉編輯模式
+            if (isEditMode) toggleEditMode(); 
             selectRaceVisuals(race);
             
             loadSavedChecklist();
@@ -857,7 +847,6 @@
                 });
             }
 
-            // 🧠 智慧過濾：過濾掉被用戶刪除（隱藏）的公版裝備
             const deletedList = deletedItemsDatabase[currentRace.id] || [];
             baseItems = baseItems.filter(item => !deletedList.includes(item.id));
 
@@ -886,7 +875,6 @@
                 const isChecked = checkedItems.has(item.id);
                 const itemDiv = document.createElement('div');
                 
-                // 編輯模式下微調游標與選取樣式
                 if (isEditMode) {
                     itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
                 } else {
@@ -894,7 +882,6 @@
                     itemDiv.onclick = () => toggleItem(item.id);
                 }
 
-                // 垃圾桶刪除按鈕：自訂項目永遠有；公版項目在「編輯模式」下顯現
                 let deleteBtnHtml = '';
                 if (item.isCustom) {
                     deleteBtnHtml = `
@@ -912,11 +899,10 @@
 
                 itemDiv.innerHTML = `
                     <div class="flex items-center space-x-3 overflow-hidden flex-grow">
-                        <!-- 編輯模式下隱藏勾選方框 -->
                         ${!isEditMode ? `
                         <div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">
                             ${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
-                        </div>` : '<span class="text-slate-400 text-xs">📍</span>'}
+                        </div>` : '<i class="fa-solid fa-circle text-[5px] text-slate-300 ml-1 flex-shrink-0"></i>'}
                         
                         <span class="text-xs font-semibold text-slate-700 truncate ${(!isEditMode && isChecked) ? 'line-through text-slate-400 font-normal' : ''}">
                             ${item.name} 
@@ -930,7 +916,7 @@
         }
 
         function toggleItem(id) {
-            if (isEditMode) return; // 編輯模式下禁止勾選
+            if (isEditMode) return; 
             
             if (checkedItems.has(id)) checkedItems.delete(id);
             else checkedItems.add(id);
@@ -967,7 +953,6 @@
                 entireList = [...entireList, ...baseItems];
             });
 
-            // 🧠 智慧過濾：過濾掉被用戶刪除（隱藏）的公版裝備
             const deletedList = deletedItemsDatabase[currentRace.id] || [];
             entireList = entireList.filter(item => !deletedList.includes(item.id));
 
