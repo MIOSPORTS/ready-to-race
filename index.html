@@ -227,7 +227,7 @@
                         <div class="flex items-center px-2 py-2 sm:py-0 select-none">
                             <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-brandRed transition">
                                 <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
-                                <span>🔍 只看未準備裝備</span>
+                                <span>🔍 查看尚未準備清單</span>
                             </label>
                         </div>
                     </div>
@@ -333,9 +333,9 @@
         };
 
         const OFFICIAL_STORE_URLS = {
-            trail: 'https://www.compressport.tw/collections/trail-running',
-            triathlon: 'https://www.compressport.tw/collections/triathlon',
-            road: 'https://www.compressport.tw/collections/road-running'
+            trail: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406626?sortMode=Curator',
+            triathlon: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406623?sortMode=Curator',
+            road: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406624?sortMode=Curator'
         };
 
         const RACES_DATABASE = {
@@ -698,7 +698,7 @@
             }
 
             if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁籤的項目皆已準備就緒！' : '無裝備項目'}</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '無裝備項目'}</div>`;
                 return;
             }
 
