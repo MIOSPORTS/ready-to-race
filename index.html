@@ -308,10 +308,11 @@
                             <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
                         </div>
 
-                        <div class="relative z-10 my-3 bg-black/50 border border-white/5 rounded-xl p-3.5 flex flex-col h-[55%] shrink-0">
-                            <div id="poster-items" class="space-y-1.5 text-xs overflow-y-auto no-scrollbar h-full">
-                            </div>
-                        </div>
+                        <!-- 💡 修正後：讓半透明黑底直接成為滿版主體，自動撐滿從日期到標語之間的所有空間！ -->
+                      <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
+                          <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1">
+                          </div>
+                      </div>
 
                         <div class="relative z-10 flex justify-between items-center pt-2 border-t border-white/10">
                             <div class="space-y-0.5">
