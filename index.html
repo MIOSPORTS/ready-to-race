@@ -235,14 +235,30 @@
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
                     </div>
 
-                    <div class="flex items-center gap-2 pt-2">
-                        <div class="relative flex-grow">
-                            <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                            <input type="text" id="custom-item-input" onkeypress="handleCustomItemKey(event)" placeholder="新增個人裝備(例如：個人藥品、運動攝影機)" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-xs transition">
+                    <!-- 💡 輸入與控制區塊 -->
+                    <div class="space-y-3 pt-2">
+                        <!-- 第一排：新增輸入框 -->
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-grow">
+                                <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" id="custom-item-input" onkeypress="handleCustomItemKey(event)" placeholder="新增個人裝備(例如：個人藥品、運動攝影機)" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-xs transition">
+                            </div>
+                            <button onclick="addCustomItem()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm">
+                                新增
+                            </button>
                         </div>
-                        <button onclick="addCustomItem()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm">
-                            新增
-                        </button>
+                        
+                        <!-- 🎯 第二排：編輯控制按鈕（新增到「新增」的下方，版面整齊好看） -->
+                        <div class="flex items-center gap-2">
+                            <button id="edit-mode-btn" onclick="toggleEditMode()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span id="edit-btn-text">✏️ 編輯清單項目</span>
+                            </button>
+                            <button onclick="resetDeletedItems()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>🔄 恢復預設裝備</span>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
@@ -260,7 +276,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的清單</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的裝備</span>
                             <ul id="unprepared-list" class="text-xs text-slate-600 space-y-1 list-disc list-inside max-h-[100px] overflow-y-auto">
                             </ul>
                         </div>
@@ -295,6 +311,7 @@
                             <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
                         </div>
 
+                        <!-- 預覽框優化 -->
                         <div class="relative z-10 flex-grow my-3 bg-black/50 border border-white/5 rounded-xl p-3.5 overflow-hidden flex flex-col">
                             <div id="poster-items" class="space-y-1 text-xs overflow-y-auto no-scrollbar flex-grow max-h-[220px]">
                             </div>
@@ -343,9 +360,9 @@
         };
 
         const OFFICIAL_STORE_URLS = {
-            trail: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406626?sortMode=Curator',
-            triathlon: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406623?sortMode=Curator',
-            road: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406624?sortMode=Curator'
+            trail: 'https://www.compressport.tw/collections/trail-running',
+            triathlon: 'https://www.compressport.tw/collections/triathlon',
+            road: 'https://www.compressport.tw/collections/road-running'
         };
 
         // ==========================================
@@ -365,7 +382,9 @@
         let currentRace = null;
         let checkedItems = new Set();
         let customItemsDatabase = {}; 
+        let deletedItemsDatabase = {}; // 🧠 記錄各賽事被用戶刪除的公版項目
         let isOnlyUnprepared = false; 
+        let isEditMode = false;        // ✏️ 是否處於「編輯清單」模式
 
         function initChoiceImages() {
             Object.keys(SPORT_BACKGROUNDS).forEach(key => {
@@ -543,6 +562,15 @@
             } else {
                 customItemsDatabase[currentRace.id] = [];
             }
+
+            // 載入被刪除的公版項目
+            const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
+            const savedDeletedData = localStorage.getItem(deletedStorageKey);
+            if (savedDeletedData) {
+                deletedItemsDatabase[currentRace.id] = JSON.parse(savedDeletedData);
+            } else {
+                deletedItemsDatabase[currentRace.id] = [];
+            }
         }
 
         function saveChecklistToStorage() {
@@ -556,6 +584,13 @@
             if(!currentRace) return;
             const customStorageKey = `compressport_custom_list_${currentRace.id}`;
             localStorage.setItem(customStorageKey, JSON.stringify(customItemsDatabase[currentRace.id] || []));
+        }
+
+        // 儲存被刪除公版項目的 ID
+        function saveDeletedItemsToStorage() {
+            if(!currentRace) return;
+            const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
+            localStorage.setItem(deletedStorageKey, JSON.stringify(deletedItemsDatabase[currentRace.id] || []));
         }
 
         function addCustomItem() {
@@ -583,17 +618,61 @@
             }
         }
 
-        function deleteCustomItem(id, e) {
+        // 🎯 刪除項目邏輯（支援自訂裝備刪除與公版隱藏）
+        function deleteItem(id, isCustom, e) {
             if (e) e.stopPropagation(); 
             if(!currentRace) return;
             
-            if (customItemsDatabase[currentRace.id]) {
-                customItemsDatabase[currentRace.id] = customItemsDatabase[currentRace.id].filter(item => item.id !== id);
-                saveCustomItemsToStorage();
+            if (isCustom) {
+                // 刪除自訂項目
+                if (customItemsDatabase[currentRace.id]) {
+                    customItemsDatabase[currentRace.id] = customItemsDatabase[currentRace.id].filter(item => item.id !== id);
+                    saveCustomItemsToStorage();
+                }
+            } else {
+                // 隱藏公版項目
+                if (!deletedItemsDatabase[currentRace.id]) {
+                    deletedItemsDatabase[currentRace.id] = [];
+                }
+                if (!deletedItemsDatabase[currentRace.id].includes(id)) {
+                    deletedItemsDatabase[currentRace.id].push(id);
+                    saveDeletedItemsToStorage();
+                }
             }
+            
             checkedItems.delete(id); 
             saveChecklistToStorage();
             loadChecklist();
+        }
+
+        // 🔄 恢復預設：一鍵清空刪除紀錄與自訂裝備
+        function resetDeletedItems() {
+            if (!currentRace) return;
+            if (confirm("確定要恢復本賽事的預設公版裝備清單嗎？這將會恢復所有被您刪除的原始項目。")) {
+                deletedItemsDatabase[currentRace.id] = [];
+                saveDeletedItemsToStorage();
+                
+                // 關閉編輯模式
+                if (isEditMode) toggleEditMode();
+                
+                loadChecklist();
+            }
+        }
+
+        // ✏️ 開啟/關閉編輯模式
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('edit-mode-btn');
+            const text = document.getElementById('edit-btn-text');
+            
+            if (isEditMode) {
+                btn.className = "flex-1 py-2 bg-brandRed hover:bg-red-700 text-white font-bold text-xs rounded-xl border border-brandRed transition flex items-center justify-center space-x-1.5 shadow-sm";
+                text.innerText = "💾 完成編輯";
+            } else {
+                btn.className = "flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
+                text.innerText = "✏️ 編輯清單項目";
+            }
+            renderChecklistItems();
         }
 
         function setSportTypeVisuals(type) {
@@ -642,6 +721,9 @@
             }
             currentRace = RACES_DATABASE[type][0]; 
             
+            // 切換運動時關閉編輯模式
+            if (isEditMode) toggleEditMode();
+
             loadSavedChecklist();
             resetFilterCheckbox(); 
 
@@ -699,6 +781,7 @@
 
         function selectRace(race) {
             currentRace = race;
+            if (isEditMode) toggleEditMode(); // 切換賽事時關閉編輯模式
             selectRaceVisuals(race);
             
             loadSavedChecklist();
@@ -708,6 +791,7 @@
 
         function resetToGeneral() {
             currentRace = RACES_DATABASE[currentSport][0];
+            if (isEditMode) toggleEditMode();
             selectRaceVisuals(currentRace);
             document.getElementById('selected-race-update').innerText = `常態更新`;
             document.getElementById('race-rule-link').href = '#';
@@ -773,6 +857,10 @@
                 });
             }
 
+            // 🧠 智慧過濾：過濾掉被用戶刪除（隱藏）的公版裝備
+            const deletedList = deletedItemsDatabase[currentRace.id] || [];
+            baseItems = baseItems.filter(item => !deletedList.includes(item.id));
+
             if (currentTab === 'mandatory' && customItemsDatabase[currentRace.id]) {
                 baseItems = [...baseItems, ...customItemsDatabase[currentRace.id]];
             }
@@ -797,13 +885,26 @@
             items.forEach(item => {
                 const isChecked = checkedItems.has(item.id);
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
-                itemDiv.onclick = () => toggleItem(item.id);
+                
+                // 編輯模式下微調游標與選取樣式
+                if (isEditMode) {
+                    itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
+                } else {
+                    itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
+                    itemDiv.onclick = () => toggleItem(item.id);
+                }
 
+                // 垃圾桶刪除按鈕：自訂項目永遠有；公版項目在「編輯模式」下顯現
                 let deleteBtnHtml = '';
                 if (item.isCustom) {
                     deleteBtnHtml = `
-                        <button onclick="deleteCustomItem('${item.id}', event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2">
+                        <button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2">
+                            <i class="fa-regular fa-trash-can text-xs"></i>
+                        </button>
+                    `;
+                } else if (isEditMode) {
+                    deleteBtnHtml = `
+                        <button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2" title="隱藏此項目">
                             <i class="fa-regular fa-trash-can text-xs"></i>
                         </button>
                     `;
@@ -811,11 +912,15 @@
 
                 itemDiv.innerHTML = `
                     <div class="flex items-center space-x-3 overflow-hidden flex-grow">
+                        <!-- 編輯模式下隱藏勾選方框 -->
+                        ${!isEditMode ? `
                         <div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">
                             ${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
-                        </div>
-                        <span class="text-xs font-semibold text-slate-700 truncate ${isChecked ? 'line-through text-slate-400 font-normal' : ''}">
-                            ${item.name} ${item.isCustom ? '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200/60 ml-1 font-normal">自訂</span>' : ''}
+                        </div>` : '<span class="text-slate-400 text-xs">📍</span>'}
+                        
+                        <span class="text-xs font-semibold text-slate-700 truncate ${(!isEditMode && isChecked) ? 'line-through text-slate-400 font-normal' : ''}">
+                            ${item.name} 
+                            ${item.isCustom ? '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200/60 ml-1 font-normal">自訂</span>' : ''}
                         </span>
                     </div>
                     ${deleteBtnHtml}
@@ -825,6 +930,8 @@
         }
 
         function toggleItem(id) {
+            if (isEditMode) return; // 編輯模式下禁止勾選
+            
             if (checkedItems.has(id)) checkedItems.delete(id);
             else checkedItems.add(id);
             
@@ -859,6 +966,10 @@
                 }
                 entireList = [...entireList, ...baseItems];
             });
+
+            // 🧠 智慧過濾：過濾掉被用戶刪除（隱藏）的公版裝備
+            const deletedList = deletedItemsDatabase[currentRace.id] || [];
+            entireList = entireList.filter(item => !deletedList.includes(item.id));
 
             const customList = customItemsDatabase[currentRace.id] || [];
             return [...entireList, ...customList];
@@ -939,9 +1050,6 @@
             }
         }
 
-        // =========================================================
-        // 🎨 雙欄自適應排版 Canvas 下載引擎（最高支援 32 項裝備集中一張）
-        // =========================================================
         function downloadPoster() {
             const btn = document.getElementById('download-btn');
             const icon = document.getElementById('download-icon');
@@ -956,11 +1064,9 @@
                     const canvas = document.getElementById('export-canvas');
                     const ctx = canvas.getContext('2d');
 
-                    // 1. 底色
                     ctx.fillStyle = '#09090b';
                     ctx.fillRect(0, 0, 1080, 1920);
 
-                    // 2. 運動背景圖
                     const posterBgImg = document.getElementById('poster-bg');
                     if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
                         ctx.save();
@@ -981,7 +1087,6 @@
                         ctx.restore();
                     }
 
-                    // 3. 漸層遮罩
                     const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
                     gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
                     gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
@@ -989,7 +1094,6 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, 1080, 1920);
 
-                    // 4. 頂部標題與賽事資訊
                     ctx.fillStyle = '#e2001a';
                     ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
                     let tagText = document.getElementById('poster-race-tag').innerText;
@@ -1003,24 +1107,21 @@
                     ctx.font = '500 28px "Inter"';
                     ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
 
-                    // 紅色橫線分隔
                     ctx.fillStyle = '#e2001a';
                     ctx.fillRect(80, 340, 920, 4);
 
-                    // 5. 裝備框背景與外框
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
                     ctx.fillRect(80, 380, 920, 1300);
                     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(80, 380, 920, 1300);
 
-                    // 🚀 智慧自適應演算法：根據裝備總數動態縮小字級與調整排版 
                     const allItems = getEntireRaceItemsCollection();
                     const totalItems = allItems.length;
 
-                    let fontSize = 32;       // 預設字體大小
-                    let lineHeight = 82;     // 預設行高
-                    let maxRows = 14;        // 單欄最大容納行數
+                    let fontSize = 32;       
+                    let lineHeight = 82;     
+                    let maxRows = 14;        
                     
                     if (totalItems > 28) {
                         fontSize = 24;
@@ -1037,22 +1138,17 @@
                     }
 
                     let startY = 460;
-                    const col1X = 130;       // 第一欄 X 座標
-                    const col2X = 580;       // 第二欄 X 座標
+                    const col1X = 130;       
+                    const col2X = 580;       
 
-                    // 繪製列表
                     allItems.forEach((item, index) => {
-                        // 當前要繪製哪一欄？
                         const isLeftCol = index < maxRows;
                         const xPos = isLeftCol ? col1X : col2X;
                         
-                        // 計算行數索引
                         const rowIndex = isLeftCol ? index : index - maxRows;
                         const yPos = startY + rowIndex * lineHeight;
 
-                        // 防止極端狀況下高度爆框
                         if (yPos > 1620) {
-                            // 接近底線時顯示剩餘項目
                             if (index === allItems.length - 1 || yPos > 1640) {
                                 ctx.fillStyle = '#e2001a';
                                 ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
@@ -1078,7 +1174,6 @@
                         }
                     });
 
-                    // 6. 底部 Slogan 與活動標籤
                     ctx.fillStyle = '#a1a1aa'; 
                     ctx.font = '900 italic 30px "Inter"';
                     ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
@@ -1105,7 +1200,6 @@
                         ctx.fillText('COMPRESSPORT', 700, 1855);
                     }
 
-                    // 7. 轉換下載
                     const imageURL = canvas.toDataURL("image/png");
                     const link = document.createElement('a');
                     const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
