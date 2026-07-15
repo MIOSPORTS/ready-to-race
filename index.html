@@ -218,10 +218,18 @@
                         <h3 class="text-xl font-bold">裝備清單 <span class="text-sm text-slate-400 font-normal">（勾選你已準備的裝備）</span></h3>
                     </div>
 
-                    <div class="flex border-b border-slate-200">
-                        <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
-                        <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">建議裝備</button>
-                        <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 gap-2">
+                        <div class="flex flex-1">
+                            <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
+                            <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">建議裝備</button>
+                            <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
+                        </div>
+                        <div class="flex items-center px-2 py-2 sm:py-0 select-none">
+                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-brandRed transition">
+                                <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
+                                <span>🔍 只看未準備裝備</span>
+                            </label>
+                        </div>
                     </div>
 
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
@@ -295,9 +303,9 @@
                     </div>
 
                     <div class="mt-5 space-y-2">
-                        <button onclick="downloadPoster()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md">
-                            <i class="fa-solid fa-download"></i>
-                            <span>下載圖片 (9:16)</span>
+                        <button id="download-btn" onclick="downloadPoster()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-download" id="download-icon"></i>
+                            <span id="download-text">下載圖片 (9:16)</span>
                         </button>
                         <button onclick="shareList()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs">
                             <i class="fa-solid fa-share-nodes"></i>
@@ -467,12 +475,12 @@
         let currentTab = 'mandatory';
         let currentRace = RACES_DATABASE['trail'][0];
         let checkedItems = new Set();
+        let isOnlyUnprepared = false; // 🚀 追蹤過濾器開關狀態
 
         window.addEventListener('DOMContentLoaded', () => {
             initDate();
             initChoiceImages(); 
             
-            // 讀取 URL 參數（分享機制）
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
@@ -491,9 +499,7 @@
                 selectRaceVisuals(currentRace);
             }
 
-            // 🚀 核心修改：初始化時，讀取 localStorage 記憶
             loadSavedChecklist();
-
             loadChecklist();
             updateSportVisuals(); 
         });
@@ -509,7 +515,6 @@
             document.getElementById('img-choice-road').src = SPORT_BACKGROUNDS['road'];
         }
 
-        // 🚀 核心增加：加載該賽事的 localStorage 勾選紀錄
         function loadSavedChecklist() {
             checkedItems.clear();
             const storageKey = `compressport_checked_${currentRace.id}`;
@@ -520,7 +525,6 @@
             }
         }
 
-        // 🚀 核心增加：儲存該賽事的勾選狀態
         function saveChecklistToStorage() {
             const storageKey = `compressport_checked_${currentRace.id}`;
             const arr = Array.from(checkedItems);
@@ -567,8 +571,8 @@
             currentSport = type;
             currentRace = RACES_DATABASE[type][0]; 
             
-            // 🚀 切換大類別時，同步讀取該大類別預設清單的記憶
             loadSavedChecklist();
+            resetFilterCheckbox(); // 🚀 重置過濾器狀態
 
             document.getElementById('race-search').value = '';
             setSportTypeVisuals(type);
@@ -623,9 +627,8 @@
             currentRace = race;
             selectRaceVisuals(race);
             
-            // 🚀 換賽事時，同步載入新賽事的記憶
             loadSavedChecklist();
-
+            resetFilterCheckbox(); // 🚀 重置過濾器狀態
             loadChecklist();
         }
 
@@ -637,9 +640,8 @@
             document.getElementById('race-search').value = '';
             renderRaceList(RACES_DATABASE[currentSport]);
             
-            // 🚀 清除選擇回歸基礎清單時，同步載入基礎清單記憶
             loadSavedChecklist();
-
+            resetFilterCheckbox(); // 🚀 重置過濾器狀態
             loadChecklist();
         }
 
@@ -654,6 +656,18 @@
                 }
             });
             renderChecklistItems();
+        }
+
+        // 🚀 核心增加 3：過濾器切換處理
+        function toggleUnpreparedFilter() {
+            isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
+            renderChecklistItems();
+        }
+
+        function resetFilterCheckbox() {
+            isOnlyUnprepared = false;
+            const chk = document.getElementById('toggle-unprepared');
+            if (chk) chk.checked = false;
         }
 
         function loadChecklist() {
@@ -676,10 +690,15 @@
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid');
             grid.innerHTML = '';
-            const items = getActiveGearItems();
+            let items = getActiveGearItems();
+
+            // 🚀 核心增加 3：若開啟過濾器，自動過濾掉已打勾的項目
+            if (isOnlyUnprepared) {
+                items = items.filter(item => !checkedItems.has(item.id));
+            }
 
             if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">無裝備項目</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁籤的項目皆已準備就緒！' : '無裝備項目'}</div>`;
                 return;
             }
 
@@ -707,10 +726,16 @@
             if (checkedItems.has(id)) checkedItems.delete(id);
             else checkedItems.add(id);
             
-            // 🚀 核心修改：打勾或取消時，同步儲存進記憶
             saveChecklistToStorage();
-
-            loadChecklist();
+            
+            // 🚀 如果在「只看未準備」模式下打勾，該項目在下一次 render 時會被動態隱藏
+            if (isOnlyUnprepared) {
+                renderChecklistItems();
+                updateProgress();
+                syncPosterPreview();
+            } else {
+                loadChecklist();
+            }
         }
 
         function updateProgress() {
@@ -816,133 +841,154 @@
         }
 
         function downloadPoster() {
-            const canvas = document.getElementById('export-canvas');
-            const ctx = canvas.getContext('2d');
+            // 🚀 UX優化 2：進入處理狀態，按鈕切換為 Loading 讀條反饋
+            const btn = document.getElementById('download-btn');
+            const icon = document.getElementById('download-icon');
+            const text = document.getElementById('download-text');
+            
+            btn.disabled = true;
+            icon.className = "fa-solid fa-spinner animate-spin mr-2";
+            text.innerText = "正在產生專屬清單海報...";
 
-            ctx.fillStyle = '#09090b';
-            ctx.fillRect(0, 0, 1080, 1920);
+            // 使用 setTimeout 讓瀏覽器有時間渲染 UI 改變，再開始執行高吃效能的 Canvas 繪圖
+            setTimeout(() => {
+                try {
+                    const canvas = document.getElementById('export-canvas');
+                    const ctx = canvas.getContext('2d');
 
-            const posterBgImg = document.getElementById('poster-bg');
-            if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
-                ctx.save();
-                ctx.globalAlpha = 0.55; 
-                
-                const canvasWidth = 1080;
-                const canvasHeight = 1920;
-                const imgWidth = posterBgImg.naturalWidth;
-                const imgHeight = posterBgImg.naturalHeight;
+                    ctx.fillStyle = '#09090b';
+                    ctx.fillRect(0, 0, 1080, 1920);
 
-                const r = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
-                const nw = imgWidth * r;
-                const nh = imgHeight * r;
-                const cx = (canvasWidth - nw) / 2;
-                const cy = (canvasHeight - nh) / 2;
+                    const posterBgImg = document.getElementById('poster-bg');
+                    if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.55; 
+                        
+                        const canvasWidth = 1080;
+                        const canvasHeight = 1920;
+                        const imgWidth = posterBgImg.naturalWidth;
+                        const imgHeight = posterBgImg.naturalHeight;
 
-                ctx.drawImage(posterBgImg, cx, cy, nw, nh);
-                ctx.restore();
-            }
+                        const r = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
+                        const nw = imgWidth * r;
+                        const nh = imgHeight * r;
+                        const cx = (canvasWidth - nw) / 2;
+                        const cy = (canvasHeight - nh) / 2;
 
-            const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
-            gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
-            gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
-            gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, 1080, 1920);
+                        ctx.drawImage(posterBgImg, cx, cy, nw, nh);
+                        ctx.restore();
+                    }
 
-            ctx.fillStyle = '#e2001a';
-            ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
-            let tagText = document.getElementById('poster-race-tag').innerText;
-            ctx.fillText(tagText.toUpperCase(), 80, 160);
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
+                    gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
+                    gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
+                    gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 1080, 1920);
 
-            ctx.fillStyle = '#ffffff';
-            ctx.font = '900 76px "Noto Sans TC"';
-            ctx.fillText('我的裝備清單', 80, 255);
-
-            ctx.fillStyle = '#71717a';
-            ctx.font = '500 28px "Inter"';
-            ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
-
-            ctx.fillStyle = '#e2001a';
-            ctx.fillRect(80, 340, 920, 4);
-
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
-            ctx.fillRect(80, 380, 920, 1300);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(80, 380, 920, 1300);
-
-            let mList = [], rList = [], wList = [];
-            if (GEAR_DATA[currentRace.id]) {
-                mList = GEAR_DATA[currentRace.id].mandatory || [];
-                rList = GEAR_DATA[currentRace.id].recommended || [];
-                wList = GEAR_DATA[currentRace.id].weather || [];
-            } else {
-                const fallbackId = `general_${currentSport}`;
-                mList = GEAR_DATA[fallbackId].mandatory || [];
-                rList = GEAR_DATA[fallbackId].recommended || [];
-                wList = GEAR_DATA[fallbackId].weather || [];
-            }
-            const allItems = [...mList, ...rList, ...wList];
-
-            let startY = 460;
-            const startX1 = 130;
-            const startX2 = 570;
-
-            allItems.forEach((item, index) => {
-                const isChecked = checkedItems.has(item.id);
-                const isLeftCol = index % 2 === 0;
-                const xPos = isLeftCol ? startX1 : startX2;
-                const yPos = startY + Math.floor(index / 2) * 82;
-
-                if (yPos > 1620) return;
-
-                if (isChecked) {
                     ctx.fillStyle = '#e2001a';
-                    ctx.font = 'bold 32px "Noto Sans TC"';
-                    ctx.fillText('✓', xPos, yPos);
+                    ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
+                    let tagText = document.getElementById('poster-race-tag').innerText;
+                    ctx.fillText(tagText.toUpperCase(), 80, 160);
+
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillText(item.name, xPos + 45, yPos);
-                } else {
-                    ctx.fillStyle = '#4b5563';
-                    ctx.font = 'bold 32px "Noto Sans TC"';
-                    ctx.fillText('☐', xPos, yPos);
+                    ctx.font = '900 76px "Noto Sans TC"';
+                    ctx.fillText('我的裝備清單', 80, 255);
+
                     ctx.fillStyle = '#71717a';
-                    ctx.fillText(item.name, xPos + 45, yPos);
+                    ctx.font = '500 28px "Inter"';
+                    ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
+
+                    ctx.fillStyle = '#e2001a';
+                    ctx.fillRect(80, 340, 920, 4);
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+                    ctx.fillRect(80, 380, 920, 1300);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(80, 380, 920, 1300);
+
+                    let mList = [], rList = [], wList = [];
+                    if (GEAR_DATA[currentRace.id]) {
+                        mList = GEAR_DATA[currentRace.id].mandatory || [];
+                        rList = GEAR_DATA[currentRace.id].recommended || [];
+                        wList = GEAR_DATA[currentRace.id].weather || [];
+                    } else {
+                        const fallbackId = `general_${currentSport}`;
+                        mList = GEAR_DATA[fallbackId].mandatory || [];
+                        rList = GEAR_DATA[fallbackId].recommended || [];
+                        wList = GEAR_DATA[fallbackId].weather || [];
+                    }
+                    const allItems = [...mList, ...rList, ...wList];
+
+                    let startY = 460;
+                    const startX1 = 130;
+                    const startX2 = 570;
+
+                    allItems.forEach((item, index) => {
+                        const isChecked = checkedItems.has(item.id);
+                        const isLeftCol = index % 2 === 0;
+                        const xPos = isLeftCol ? startX1 : startX2;
+                        const yPos = startY + Math.floor(index / 2) * 82;
+
+                        if (yPos > 1620) return;
+
+                        if (isChecked) {
+                            ctx.fillStyle = '#e2001a';
+                            ctx.font = 'bold 32px "Noto Sans TC"';
+                            ctx.fillText('✓', xPos, yPos);
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillText(item.name, xPos + 45, yPos);
+                        } else {
+                            ctx.fillStyle = '#4b5563';
+                            ctx.font = 'bold 32px "Noto Sans TC"';
+                            ctx.fillText('☐', xPos, yPos);
+                            ctx.fillStyle = '#71717a';
+                            ctx.fillText(item.name, xPos + 45, yPos);
+                        }
+                    });
+
+                    ctx.fillStyle = '#a1a1aa'; 
+                    ctx.font = '900 italic 30px "Inter"';
+                    ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
+
+                    ctx.fillStyle = '#ffffff'; 
+                    ctx.font = '900 italic 38px "Inter"';
+                    if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1855);
+                    if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1855);
+                    if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1855);
+
+                    const navLogo = document.getElementById('nav-logo');
+                    if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
+                        const targetLogoHeight = 40; 
+                        const aspectRatio = navLogo.naturalWidth / navLogo.naturalHeight;
+                        const targetLogoWidth = targetLogoHeight * aspectRatio;
+                        
+                        const logoX = 1000 - targetLogoWidth; 
+                        const logoY = 1855 - targetLogoHeight + 8; 
+
+                        ctx.drawImage(navLogo, logoX, logoY, targetLogoWidth, targetLogoHeight);
+                    } else {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '900 32px "Inter"';
+                        ctx.fillText('COMPRESSPORT', 700, 1855);
+                    }
+
+                    const imageURL = canvas.toDataURL("image/png");
+                    const link = document.createElement('a');
+                    const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
+                    link.download = fileName;
+                    link.href = imageURL;
+                    link.click();
+                } catch (error) {
+                    console.error("下載海報失敗", error);
+                } finally {
+                    // 🚀 UX優化 2：下載處理完成，按鈕自動回復原狀
+                    btn.disabled = false;
+                    icon.className = "fa-solid fa-download";
+                    text.innerText = "下載圖片 (9:16)";
                 }
-            });
-
-            ctx.fillStyle = '#a1a1aa'; 
-            ctx.font = '900 italic 30px "Inter"';
-            ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
-
-            ctx.fillStyle = '#ffffff'; 
-            ctx.font = '900 italic 38px "Inter"';
-            if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1855);
-            if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1855);
-            if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1855);
-
-            const navLogo = document.getElementById('nav-logo');
-            if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
-                const targetLogoHeight = 40; 
-                const aspectRatio = navLogo.naturalWidth / navLogo.naturalHeight;
-                const targetLogoWidth = targetLogoHeight * aspectRatio;
-                
-                const logoX = 1000 - targetLogoWidth; 
-                const logoY = 1855 - targetLogoHeight + 8; 
-
-                ctx.drawImage(navLogo, logoX, logoY, targetLogoWidth, targetLogoHeight);
-            } else {
-                ctx.fillStyle = '#ffffff';
-                ctx.font = '900 32px "Inter"';
-                ctx.fillText('COMPRESSPORT', 700, 1855);
-            }
-
-            const imageURL = canvas.toDataURL("image/png");
-            const link = document.createElement('a');
-            const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
-            link.download = fileName;
-            link.href = imageURL;
-            link.click();
+            }, 300); // 延遲 300ms 讓畫面流暢切換
         }
     </script>
 </body>
