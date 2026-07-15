@@ -266,10 +266,12 @@
                     <h3 class="text-base font-bold mb-3">你的裝備清單圖片 <span class="text-xs text-slate-400 font-normal">（預覽）</span></h3>
                     
                     <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-md text-white flex flex-col justify-between p-5" id="poster-preview">
-                        <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
-                            <img id="poster-bg" src="" alt="Poster Background" class="w-full h-full object-cover object-center opacity-30">
-                            <div class="absolute inset-0 bg-gradient-to-b from-zinc-900/60 via-zinc-950/80 to-black"></div>
-                        </div>
+                       <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
+                          <!-- 🚀 1. 將圖片不透明度從 opacity-30 提升到 opacity-55，讓跑者主體更鮮明 -->
+                          <img id="poster-bg" src="" alt="Poster Background" class="w-full h-full object-cover object-center opacity-55">
+                          <!-- 🚀 2. 將由上至下的漸層遮罩減弱（from 變淺，via 從 80% 降到 50%），保留跑者細節且不影響文字易讀性 -->
+                          <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/50 to-zinc-950/85"></div>
+                       </div>
 
                         <div class="relative z-10 space-y-1">
                             <p id="poster-race-tag" class="text-[10px] font-black text-brandRed uppercase tracking-widest">基本裝備清單</p>
