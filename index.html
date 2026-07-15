@@ -227,7 +227,7 @@
                         <div class="flex items-center px-2 py-2 sm:py-0 select-none">
                             <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-brandRed transition">
                                 <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
-                                <span>🔍 尚未準備清單</span>
+                                <span>🔍 只看未準備裝備</span>
                             </label>
                         </div>
                     </div>
@@ -235,7 +235,6 @@
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
                     </div>
 
-                    <!-- 🚀 UX優化 4：新增客製化裝備輸入欄位區塊（完美對齊整體極簡風格） -->
                     <div class="flex items-center gap-2 pt-2">
                         <div class="relative flex-grow">
                             <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
@@ -261,7 +260,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的清單</span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的裝備</span>
                             <ul id="unprepared-list" class="text-xs text-slate-600 space-y-1 list-disc list-inside max-h-[100px] overflow-y-auto">
                             </ul>
                         </div>
@@ -344,12 +343,22 @@
         };
 
         const OFFICIAL_STORE_URLS = {
-            trail: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406626?sortMode=Curator',
-            triathlon: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406623',
-            road: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406624?sortMode=Curator'
+            trail: 'https://www.compressport.tw/collections/trail-running',
+            triathlon: 'https://www.compressport.tw/collections/triathlon',
+            road: 'https://www.compressport.tw/collections/road-running'
         };
 
-        const RACES_DATABASE = {
+        // ==========================================
+        // 🚀 Google Sheets CSV 串接核心設定（已成功串接）
+        // ==========================================
+        const SPREADSHEET_CSV_URLS = {
+            road: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=0&single=true&output=csv',
+            trail: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=1816972335&single=true&output=csv',
+            triathlon: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=1123540638&single=true&output=csv'
+        };
+
+        // 本地靜態備用資料庫（當雲端 Sheet 無網路、或讀取異常時自動啟動，確保網頁永不白畫面）
+        const LOCAL_FALLBACK_RACES = {
             trail: [
                 { id: 'general_trail', title: '基本越野裝備清單', update: '常態更新', url: '#' },
                 { id: 'utmb-tw', title: 'UTMB Taiwan 100K', update: '2026/05/20', url: 'https://utmb.world/' },
@@ -373,7 +382,7 @@
             ]
         };
 
-        const GEAR_DATA = {
+        const LOCAL_FALLBACK_GEAR = {
             general_trail: {
                 mandatory: [
                     { id: 't_m1', name: '號碼布 (含感應晶片)' },
@@ -390,46 +399,6 @@
                 weather: [
                     { id: 't_w1', name: '防寒防水手套' },
                     { id: 't_w4', name: '乾爽備用跑襪' }
-                ]
-            },
-            'utmb-mb': { 
-                mandatory: [
-                    { id: 'utmb_m1', name: '大會晶片號碼布' },
-                    { id: 'utmb_m2', name: '越野背包 + 1.5L 飲身水壺' },
-                    { id: 'utmb_m3', name: '強光頭燈 2 盞 (皆含備用電池)' },
-                    { id: 'utmb_m4', name: '全接縫防水透氣連帽外套' },
-                    { id: 'utmb_m5', name: '保暖底層長袖衣物 (至少180g)' },
-                    { id: 'utmb_m6', name: '全防風防水長褲' },
-                    { id: 'utmb_m7', name: '高強度求生急救毯' },
-                    { id: 'utmb_m8', name: '防溫保暖手套' },
-                    { id: 'utmb_m9', name: '安全求生哨 + 隨身環保杯' }
-                ],
-                recommended: [
-                    { id: 'utmb_r1', name: 'Vibram 黃金大底越野鞋' },
-                    { id: 'utmb_r2', name: '強韌摺疊登山杖' },
-                    { id: 'utmb_r3', name: '高支撐壓縮小腿套' },
-                    { id: 'utmb_r4', name: '凡士林防磨膏' }
-                ],
-                weather: [
-                    { id: 'utmb_w1', name: '極端低溫防寒護目鏡' },
-                    { id: 'utmb_w2', name: '防潑水保暖圓帽' }
-                ]
-            },
-            'tnf-100': { 
-                mandatory: [
-                    { id: 'tnf_m1', name: '號碼布與大會雙晶片' },
-                    { id: 'tnf_m2', name: '水袋背包 (自備1.0L飲水)' },
-                    { id: 'tnf_m3', name: '夜行頭燈 (含備用電池)' },
-                    { id: 'tnf_m4', name: '安全求生毯 (1.4x2m)' },
-                    { id: 'tnf_m5', name: '高分貝安全哨子' }
-                ],
-                recommended: [
-                    { id: 'tnf-r1', name: '輕量透氣防曬帽' },
-                    { id: 'tnf-r2', name: '高能量果膠罐' },
-                    { id: 'tnf-r3', name: '越野防沙鞋套' }
-                ],
-                weather: [
-                    { id: 'tnf_w1', name: '一次性輕便雨衣' }
                 ]
             },
             general_triathlon: {
@@ -463,36 +432,26 @@
                 weather: [
                     { id: 'r_w1', name: '起跑防風保暖輕量外套' }
                 ]
-            },
-            'sunmoonlake-29k': { 
-                mandatory: [
-                    { id: 'sml_m1', name: '環湖感應晶片號碼布' },
-                    { id: 'sml_m2', name: '自備大會規定環保軟水杯' }, 
-                    { id: 'sml_m3', name: '全氣墊緩震慢跑鞋' }
-                ],
-                recommended: [
-                    { id: 'sml_r1', name: 'GPS智慧運動手錶' },
-                    { id: 'sml_r2', name: '咖啡因能量包 (29K抗抽筋)' },
-                    { id: 'sml_r3', name: '排汗壓縮中空帽' }
-                ],
-                weather: [
-                    { id: 'sml_w1', name: '防清晨湖畔低溫保暖風衣' },
-                    { id: 'sml_w2', name: '超商防驟雨輕便雨衣' }
-                ]
             }
         };
+
+        let RACES_DATABASE = JSON.parse(JSON.stringify(LOCAL_FALLBACK_RACES));
+        let GEAR_DATA = JSON.parse(JSON.stringify(LOCAL_FALLBACK_GEAR));
 
         let currentSport = 'trail';
         let currentTab = 'mandatory';
         let currentRace = RACES_DATABASE['trail'][0];
         let checkedItems = new Set();
-        let customItemsDatabase = {}; // 🚀 儲存每個賽事客製化裝備的資料庫結構
+        let customItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             initDate();
             initChoiceImages(); 
             
+            // 🚀 平行加載並解析來自三個分頁工作表的 Google Sheet 雲端資料
+            await fetchAllGoogleSheetsData();
+
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
@@ -502,6 +461,8 @@
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
                 if (foundRace) currentRace = foundRace;
                 else currentRace = RACES_DATABASE[currentSport][0];
+            } else {
+                currentRace = RACES_DATABASE[currentSport][0];
             }
 
             setSportTypeVisuals(currentSport);
@@ -516,21 +477,119 @@
             updateSportVisuals(); 
         });
 
-        function initDate() {
-            const MathDate = new Date();
-            document.getElementById('poster-date').innerText = `${MathDate.getFullYear()}.${String(MathDate.getMonth() + 1).padStart(2, '0')}.${String(MathDate.getDate()).padStart(2, '0')}`;
+        // 🚀 Google Sheets CSV 雲端平行解析引擎
+        async function fetchAllGoogleSheetsData() {
+            try {
+                const promises = Object.keys(SPREADSHEET_CSV_URLS).map(async (sportKey) => {
+                    const url = SPREADSHEET_CSV_URLS[sportKey];
+                    if (!url || url.includes('YOUR_')) return null;
+
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`無法獲取 ${sportKey} 的資料`);
+                    const csvText = await response.text();
+                    return { sport: sportKey, csv: csvText };
+                });
+
+                const results = await Promise.all(promises);
+                
+                const tempRaces = { road: [], trail: [], triathlon: [] };
+                const tempGear = {};
+
+                results.forEach(res => {
+                    if (!res) return;
+                    const lines = parseCSV(res.csv);
+                    if (lines.length < 2) return; 
+
+                    const headers = lines[0].map(h => h.trim());
+                    const raceIdIdx = headers.indexOf('RaceID');
+                    const raceTitleIdx = headers.indexOf('RaceTitle');
+                    const updateIdx = headers.indexOf('LastUpdate');
+                    const categoryIdx = headers.indexOf('Category');
+                    const itemIdIdx = headers.indexOf('ItemID');
+                    const itemNameIdx = headers.indexOf('ItemName');
+                    const raceUrlIdx = headers.indexOf('RaceURL');
+
+                    if (raceIdIdx === -1 || itemNameIdx === -1) return;
+
+                    const raceMap = new Map();
+
+                    for (let i = 1; i < lines.length; i++) {
+                        const row = lines[i];
+                        if (row.length < headers.length) continue;
+
+                        const raceId = row[raceIdIdx]?.trim();
+                        const raceTitle = row[raceTitleIdx]?.trim() || raceId;
+                        const lastUpdate = row[updateIdx]?.trim() || '常態更新';
+                        const category = row[categoryIdx]?.trim()?.toLowerCase() || 'mandatory';
+                        const itemId = row[itemIdIdx]?.trim() || `item_${i}`;
+                        const itemName = row[itemNameIdx]?.trim();
+                        const raceUrl = row[raceUrlIdx]?.trim() || '#';
+
+                        if (!raceId || !itemName) continue;
+
+                        if (!raceMap.has(raceId)) {
+                            raceMap.set(raceId, { id: raceId, title: raceTitle, update: lastUpdate, url: raceUrl });
+                        }
+
+                        if (!tempGear[raceId]) {
+                            tempGear[raceId] = { mandatory: [], recommended: [], weather: [] };
+                        }
+                        if (tempGear[raceId][category]) {
+                            tempGear[raceId][category].push({ id: itemId, name: itemName });
+                        }
+                    }
+
+                    const raceList = Array.from(raceMap.values());
+                    const generalId = `general_${res.sport}`;
+                    const sortedRaces = raceList.sort((a, b) => {
+                        if (a.id === generalId) return -1;
+                        if (b.id === generalId) return 1;
+                        return 0;
+                    });
+
+                    tempRaces[res.sport] = sortedRaces;
+                });
+
+                Object.keys(tempRaces).forEach(sportKey => {
+                    if (tempRaces[sportKey].length > 0) {
+                        RACES_DATABASE[sportKey] = tempRaces[sportKey];
+                    }
+                });
+                if (Object.keys(tempGear).length > 0) {
+                    GEAR_DATA = tempGear;
+                }
+                console.log("🚀 Google Sheets 雲端裝備資料庫同步成功！");
+
+            } catch (err) {
+                console.warn("⚠️ Google Sheets 雲端讀取不成功，改採用本地 Fallback 靜態資料：", err);
+            }
         }
 
-        function initChoiceImages() {
-            document.getElementById('img-choice-trail').src = SPORT_BACKGROUNDS['trail'];
-            document.getElementById('img-choice-triathlon').src = SPORT_BACKGROUNDS['triathlon'];
-            document.getElementById('img-choice-road').src = SPORT_BACKGROUNDS['road'];
+        function parseCSV(text) {
+            let p = '', r = [];
+            let q = false;
+            let row = [''];
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                if (c === '"') {
+                    if (q && text[i+1] === '"') { row[row.length-1] += '"'; i++; }
+                    else { q = !q; }
+                } else if (c === ',' && !q) {
+                    row.push('');
+                } else if (c === '\r' || c === '\n') {
+                    if (c === '\r' && text[i+1] === '\n') { i++; }
+                    if (!q) { r.push(row); row = ['']; }
+                    else { row[row.length-1] += '\n'; }
+                } else {
+                    row[row.length-1] += c;
+                }
+            }
+            if (row.length > 1 || row[0] !== '') r.push(row);
+            return r;
         }
 
         function loadSavedChecklist() {
             checkedItems.clear();
-            
-            // 🚀 核心修改：加載大會固定裝備記憶
             const storageKey = `compressport_checked_${currentRace.id}`;
             const savedData = localStorage.getItem(storageKey);
             if (savedData) {
@@ -538,7 +597,6 @@
                 arr.forEach(id => checkedItems.add(id));
             }
 
-            // 🚀 核心修改：加載客製化裝備清單的記憶庫
             const customStorageKey = `compressport_custom_list_${currentRace.id}`;
             const savedCustomData = localStorage.getItem(customStorageKey);
             if (savedCustomData) {
@@ -554,19 +612,16 @@
             localStorage.setItem(storageKey, JSON.stringify(arr));
         }
 
-        // 🚀 核心增加：儲存自訂裝備清單到 LocalStorage
         function saveCustomItemsToStorage() {
             const customStorageKey = `compressport_custom_list_${currentRace.id}`;
             localStorage.setItem(customStorageKey, JSON.stringify(customItemsDatabase[currentRace.id] || []));
         }
 
-        // 🚀 核心增加：處理自訂裝備的新增邏輯
         function addCustomItem() {
             const input = document.getElementById('custom-item-input');
             const name = input.value.trim();
             if (!name) return;
 
-            // 建立乾淨獨立的客製化 ID (以時間戳記防重複)
             const customId = `c_${Date.now()}`;
             const newItem = { id: customId, name: name, isCustom: true };
 
@@ -576,8 +631,8 @@
             customItemsDatabase[currentRace.id].push(newItem);
 
             saveCustomItemsToStorage();
-            input.value = ''; // 清空輸入框
-            loadChecklist(); // 全局刷新
+            input.value = ''; 
+            loadChecklist(); 
         }
 
         function handleCustomItemKey(e) {
@@ -586,15 +641,14 @@
             }
         }
 
-        // 🚀 核心增加：刪除自訂裝備的按鈕邏輯
         function deleteCustomItem(id, e) {
-            if (e) e.stopPropagation(); // 阻止氣泡事件觸發勾選
+            if (e) e.stopPropagation(); 
             
             if (customItemsDatabase[currentRace.id]) {
                 customItemsDatabase[currentRace.id] = customItemsDatabase[currentRace.id].filter(item => item.id !== id);
                 saveCustomItemsToStorage();
             }
-            checkedItems.delete(id); // 記憶中一併抹除
+            checkedItems.delete(id); 
             saveChecklistToStorage();
             loadChecklist();
         }
@@ -743,20 +797,30 @@
             syncPosterPreview();
         }
 
-        // 🚀 整合擴充：取得包含大會裝備與「當前賽事客製化追加裝備」的總集合
+        // =========================================================
+        // 🚀 核心智慧疊加合流引擎（Smart Union Engine）
+        // 當前賽事項目 = 該項目的【基本常規裝備】 + 試算表中該賽事的【追加裝備】
+        // =========================================================
         function getAllCurrentGearItems() {
-            // 基礎大會裝備
+            const generalId = `general_${currentSport}`;
+            
+            // 1. 抓取基本常規通用裝備做骨幹
             let baseItems = [];
-            if (GEAR_DATA[currentRace.id] && GEAR_DATA[currentRace.id][currentTab]) {
-                baseItems = [...GEAR_DATA[currentRace.id][currentTab]];
-            } else {
-                const fallbackId = `general_${currentSport}`;
-                if (GEAR_DATA[fallbackId] && GEAR_DATA[fallbackId][currentTab]) {
-                    baseItems = [...GEAR_DATA[fallbackId][currentTab]];
-                }
+            if (GEAR_DATA[generalId] && GEAR_DATA[generalId][currentTab]) {
+                baseItems = JSON.parse(JSON.stringify(GEAR_DATA[generalId][currentTab]));
             }
 
-            // 🚀 如果當前在「必要裝備」頁籤下，我們把選手個人的客製化裝備也全部塞在最下方一同打包
+            // 2. 如果選擇了特定賽事，自動將該賽事的「追加裝備」與基本裝備無縫相加合流
+            if (currentRace.id !== generalId && GEAR_DATA[currentRace.id] && GEAR_DATA[currentRace.id][currentTab]) {
+                const specificItems = GEAR_DATA[currentRace.id][currentTab];
+                specificItems.forEach(specItem => {
+                    if (!baseItems.some(b => b.id === specItem.id || b.name === specItem.name)) {
+                        baseItems.push(JSON.parse(JSON.stringify(specItem)));
+                    }
+                });
+            }
+
+            // 3. 如果當前在「必要裝備」頁籤下，將選手手動新增的個人客製化項目也一同塞在最下方
             if (currentTab === 'mandatory' && customItemsDatabase[currentRace.id]) {
                 baseItems = [...baseItems, ...customItemsDatabase[currentRace.id]];
             }
@@ -773,7 +837,7 @@
             }
 
             if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '無裝備項目'}</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁籤的項目皆已準備就緒！' : '無裝備項目'}</div>`;
                 return;
             }
 
@@ -783,7 +847,6 @@
                 itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
                 itemDiv.onclick = () => toggleItem(item.id);
 
-                // 🚀 如果是個人新增的裝備，右邊補上一個優雅的垃圾桶按鈕以供刪除
                 let deleteBtnHtml = '';
                 if (item.isCustom) {
                     deleteBtnHtml = `
@@ -823,22 +886,34 @@
             }
         }
 
-        function updateProgress() {
-            let mList = [], rList = [], wList = [];
-            if (GEAR_DATA[currentRace.id]) {
-                mList = GEAR_DATA[currentRace.id].mandatory || [];
-                rList = GEAR_DATA[currentRace.id].recommended || [];
-                wList = GEAR_DATA[currentRace.id].weather || [];
-            } else {
-                const fallbackId = `general_${currentSport}`;
-                mList = GEAR_DATA[fallbackId].mandatory || [];
-                rList = GEAR_DATA[fallbackId].recommended || [];
-                wList = GEAR_DATA[fallbackId].weather || [];
-            }
+        function getEntireRaceItemsCollection() {
+            const generalId = `general_${currentSport}`;
+            const tabs = ['mandatory', 'recommended', 'weather'];
+            let entireList = [];
 
-            // 🚀 進度條與計算邏輯同步納入自訂追加項目
+            tabs.forEach(tab => {
+                let baseItems = [];
+                if (GEAR_DATA[generalId] && GEAR_DATA[generalId][tab]) {
+                    baseItems = JSON.parse(JSON.stringify(GEAR_DATA[generalId][tab]));
+                }
+
+                if (currentRace.id !== generalId && GEAR_DATA[currentRace.id] && GEAR_DATA[currentRace.id][tab]) {
+                    const specItems = GEAR_DATA[currentRace.id][tab];
+                    specItems.forEach(spec => {
+                        if (!baseItems.some(b => b.id === spec.id || b.name === spec.name)) {
+                            baseItems.push(JSON.parse(JSON.stringify(spec)));
+                        }
+                    });
+                }
+                entireList = [...entireList, ...baseItems];
+            });
+
             const customList = customItemsDatabase[currentRace.id] || [];
-            const allItems = [...mList, ...rList, ...wList, ...customList];
+            return [...entireList, ...customList];
+        }
+
+        function updateProgress() {
+            const allItems = getEntireRaceItemsCollection();
             
             const totalCount = allItems.length;
             const checkedCount = allItems.filter(item => checkedItems.has(item.id)).length;
@@ -868,21 +943,7 @@
             const posterContainer = document.getElementById('poster-items');
             posterContainer.innerHTML = '';
             
-            let mList = [], rList = [], wList = [];
-            if (GEAR_DATA[currentRace.id]) {
-                mList = GEAR_DATA[currentRace.id].mandatory || [];
-                rList = GEAR_DATA[currentRace.id].recommended || [];
-                wList = GEAR_DATA[currentRace.id].weather || [];
-            } else {
-                const fallbackId = `general_${currentSport}`;
-                mList = GEAR_DATA[fallbackId].mandatory || [];
-                rList = GEAR_DATA[fallbackId].recommended || [];
-                wList = GEAR_DATA[fallbackId].weather || [];
-            }
-            
-            // 🚀 9:16海報預覽同步繪製自訂裝備
-            const customList = customItemsDatabase[currentRace.id] || [];
-            const allItems = [...mList, ...rList, ...wList, ...customList];
+            const allItems = getEntireRaceItemsCollection();
 
             allItems.forEach(item => {
                 const isChecked = checkedItems.has(item.id);
@@ -905,13 +966,6 @@
             }
         }
 
-        function generateImage() {
-            const previewCard = document.getElementById('poster-preview');
-            previewCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            previewCard.classList.add('ring-4', 'ring-brandRed');
-            setTimeout(() => { previewCard.classList.remove('ring-4', 'ring-brandRed'); }, 1200);
-        }
-
         function shareList() {
             const baseUrl = window.location.origin + window.location.pathname;
             const shareUrl = `${baseUrl}?sport=${currentSport}&race=${currentRace.id}`;
@@ -924,7 +978,7 @@
                 }).catch(err => console.log('分享取消或未成功', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的朋友吧！🤝`);
+                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的戰友、或跑友群組吧！🤝`);
                 }).catch(err => {
                     console.error('無法複製連結', err);
                 });
@@ -938,7 +992,7 @@
             
             btn.disabled = true;
             icon.className = "fa-solid fa-spinner animate-spin mr-2";
-            text.innerText = "正在產生專屬清單圖片...";
+            text.innerText = "正在產生專屬清單海報...";
 
             setTimeout(() => {
                 try {
@@ -997,21 +1051,7 @@
                     ctx.lineWidth = 2;
                     ctx.strokeRect(80, 380, 920, 1300);
 
-                    let mList = [], rList = [], wList = [];
-                    if (GEAR_DATA[currentRace.id]) {
-                        mList = GEAR_DATA[currentRace.id].mandatory || [];
-                        rList = GEAR_DATA[currentRace.id].recommended || [];
-                        wList = GEAR_DATA[currentRace.id].weather || [];
-                    } else {
-                        const fallbackId = `general_${currentSport}`;
-                        mList = GEAR_DATA[fallbackId].mandatory || [];
-                        rList = GEAR_DATA[fallbackId].recommended || [];
-                        wList = GEAR_DATA[fallbackId].weather || [];
-                    }
-                    
-                    // 🚀 Canvas 下載繪圖核心整合：同步抓取個人的自訂項目進行雙欄排版繪製
-                    const customList = customItemsDatabase[currentRace.id] || [];
-                    const allItems = [...mList, ...rList, ...wList, ...customList];
+                    const allItems = getEntireRaceItemsCollection();
 
                     let startY = 460;
                     const startX1 = 130;
@@ -1040,7 +1080,6 @@
                         }
                     });
 
-                    // 底部雙行文字標語
                     ctx.fillStyle = '#a1a1aa'; 
                     ctx.font = '900 italic 30px "Inter"';
                     ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
@@ -1074,7 +1113,7 @@
                     link.href = imageURL;
                     link.click();
                 } catch (error) {
-                    console.error("下載圖片失敗", error);
+                    console.error("下載海報失敗", error);
                 } finally {
                     btn.disabled = false;
                     icon.className = "fa-solid fa-download";
