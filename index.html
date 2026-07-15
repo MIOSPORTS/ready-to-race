@@ -299,7 +299,6 @@
                             <i class="fa-solid fa-download"></i>
                             <span>下載圖片 (9:16)</span>
                         </button>
-                        <!-- 🚀 這個按鈕現在完美連動下面的 shareList 功能了 -->
                         <button onclick="shareList()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs">
                             <i class="fa-solid fa-share-nodes"></i>
                             <span>分享清單連結</span>
@@ -473,7 +472,7 @@
             initDate();
             initChoiceImages(); 
             
-            // 🚀 核心修改：網頁載入時，先去讀取 URL 是否帶有朋友分享的網址參數
+            // 讀取 URL 參數（分享機制）
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
@@ -481,21 +480,19 @@
             if (sportParam && RACES_DATABASE[sportParam]) {
                 currentSport = sportParam;
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
-                if (foundRace) {
-                    currentRace = foundRace;
-                } else {
-                    currentRace = RACES_DATABASE[currentSport][0];
-                }
+                if (foundRace) currentRace = foundRace;
+                else currentRace = RACES_DATABASE[currentSport][0];
             }
 
-            // 初始化切換渲染
             setSportTypeVisuals(currentSport);
             renderRaceList(RACES_DATABASE[currentSport]);
             
-            // 如果分享的是特定賽事，直接鎖定該賽事
             if (raceParam && currentRace.id !== RACES_DATABASE[currentSport][0].id) {
                 selectRaceVisuals(currentRace);
             }
+
+            // 🚀 核心修改：初始化時，讀取 localStorage 記憶
+            loadSavedChecklist();
 
             loadChecklist();
             updateSportVisuals(); 
@@ -512,7 +509,24 @@
             document.getElementById('img-choice-road').src = SPORT_BACKGROUNDS['road'];
         }
 
-        // 把運動類型的視覺包裝出來，方便初始化調用
+        // 🚀 核心增加：加載該賽事的 localStorage 勾選紀錄
+        function loadSavedChecklist() {
+            checkedItems.clear();
+            const storageKey = `compressport_checked_${currentRace.id}`;
+            const savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+                const arr = JSON.parse(savedData);
+                arr.forEach(id => checkedItems.add(id));
+            }
+        }
+
+        // 🚀 核心增加：儲存該賽事的勾選狀態
+        function saveChecklistToStorage() {
+            const storageKey = `compressport_checked_${currentRace.id}`;
+            const arr = Array.from(checkedItems);
+            localStorage.setItem(storageKey, JSON.stringify(arr));
+        }
+
         function setSportTypeVisuals(type) {
             document.querySelectorAll('.sport-btn').forEach(btn => {
                 btn.classList.remove('border-brandRed', 'shadow-md');
@@ -551,9 +565,11 @@
 
         function setSportType(type) {
             currentSport = type;
-            checkedItems.clear();
             currentRace = RACES_DATABASE[type][0]; 
             
+            // 🚀 切換大類別時，同步讀取該大類別預設清單的記憶
+            loadSavedChecklist();
+
             document.getElementById('race-search').value = '';
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
@@ -606,7 +622,10 @@
         function selectRace(race) {
             currentRace = race;
             selectRaceVisuals(race);
-            checkedItems.clear(); 
+            
+            // 🚀 換賽事時，同步載入新賽事的記憶
+            loadSavedChecklist();
+
             loadChecklist();
         }
 
@@ -618,7 +637,9 @@
             document.getElementById('race-search').value = '';
             renderRaceList(RACES_DATABASE[currentSport]);
             
-            checkedItems.clear();
+            // 🚀 清除選擇回歸基礎清單時，同步載入基礎清單記憶
+            loadSavedChecklist();
+
             loadChecklist();
         }
 
@@ -685,6 +706,10 @@
         function toggleItem(id) {
             if (checkedItems.has(id)) checkedItems.delete(id);
             else checkedItems.add(id);
+            
+            // 🚀 核心修改：打勾或取消時，同步儲存進記憶
+            saveChecklistToStorage();
+
             loadChecklist();
         }
 
@@ -771,21 +796,17 @@
             setTimeout(() => { previewCard.classList.remove('ring-4', 'ring-brandRed'); }, 1200);
         }
 
-        // 🚀 核心修改：全新實作的分享連結函式
         function shareList() {
-            // 1. 取得當前的基礎網址，並封裝當前的運動類型與賽事 ID 作為參數
             const baseUrl = window.location.origin + window.location.pathname;
             const shareUrl = `${baseUrl}?sport=${currentSport}&race=${currentRace.id}`;
 
-            // 2. 如果是行動裝置且瀏覽器支援原生的 Web Share API，直接調用手機原生分享面板
             if (navigator.share) {
                 navigator.share({
                     title: `COMPRESSPORT | ${currentRace.title}`,
-                    text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速清點，一起無傷完賽！`,
+                    text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速確認，一起無傷完賽！`,
                     url: shareUrl,
                 }).catch(err => console.log('分享取消或未成功', err));
             } else {
-                // 3. 電腦版或不支援原生分享的瀏覽器 -> 直接將複製字串寫入剪貼簿，並跳出精美提示
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的戰友、或跑友群組吧！🤝`);
                 }).catch(err => {
@@ -890,7 +911,6 @@
                 }
             });
 
-            // 底部雙行品牌文字繪製
             ctx.fillStyle = '#a1a1aa'; 
             ctx.font = '900 italic 30px "Inter"';
             ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
