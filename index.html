@@ -299,6 +299,7 @@
                             <i class="fa-solid fa-download"></i>
                             <span>下載圖片 (9:16)</span>
                         </button>
+                        <!-- 🚀 這個按鈕現在完美連動下面的 shareList 功能了 -->
                         <button onclick="shareList()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs">
                             <i class="fa-solid fa-share-nodes"></i>
                             <span>分享清單連結</span>
@@ -471,12 +472,35 @@
         window.addEventListener('DOMContentLoaded', () => {
             initDate();
             initChoiceImages(); 
+            
+            // 🚀 核心修改：網頁載入時，先去讀取 URL 是否帶有朋友分享的網址參數
+            const urlParams = new URLSearchParams(window.location.search);
+            const sportParam = urlParams.get('sport');
+            const raceParam = urlParams.get('race');
+
+            if (sportParam && RACES_DATABASE[sportParam]) {
+                currentSport = sportParam;
+                const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
+                if (foundRace) {
+                    currentRace = foundRace;
+                } else {
+                    currentRace = RACES_DATABASE[currentSport][0];
+                }
+            }
+
+            // 初始化切換渲染
+            setSportTypeVisuals(currentSport);
             renderRaceList(RACES_DATABASE[currentSport]);
+            
+            // 如果分享的是特定賽事，直接鎖定該賽事
+            if (raceParam && currentRace.id !== RACES_DATABASE[currentSport][0].id) {
+                selectRaceVisuals(currentRace);
+            }
+
             loadChecklist();
             updateSportVisuals(); 
         });
 
-        // (中略，其餘功能皆維持不變)
         function initDate() {
             const MathDate = new Date();
             document.getElementById('poster-date').innerText = `${MathDate.getFullYear()}.${String(MathDate.getMonth() + 1).padStart(2, '0')}.${String(MathDate.getDate()).padStart(2, '0')}`;
@@ -488,71 +512,51 @@
             document.getElementById('img-choice-road').src = SPORT_BACKGROUNDS['road'];
         }
 
-        function setSportType(type) {
-            currentSport = type;
-            checkedItems.clear();
-
+        // 把運動類型的視覺包裝出來，方便初始化調用
+        function setSportTypeVisuals(type) {
             document.querySelectorAll('.sport-btn').forEach(btn => {
                 btn.classList.remove('border-brandRed', 'shadow-md');
                 btn.classList.add('border-slate-200', 'shadow-sm');
                 btn.querySelector('.active-badge').classList.add('hidden');
-
                 const img = btn.querySelector('.sport-btn-img');
                 if (img) img.classList.add('grayscale');
-
                 const mask = btn.querySelector('.sport-btn-mask');
-                if (mask) {
-                    mask.classList.remove('bg-zinc-950/30');
-                    mask.classList.add('bg-zinc-950/60');
-                }
-
+                if (mask) { mask.classList.remove('bg-zinc-950/30'); mask.classList.add('bg-zinc-950/60'); }
                 const icon = btn.querySelector('.sport-icon');
-                if (icon) {
-                    icon.classList.remove('text-white');
-                    icon.classList.add('text-zinc-300');
-                }
+                if (icon) { icon.classList.remove('text-white'); icon.classList.add('text-zinc-300'); }
                 const text = btn.querySelector('.sport-text');
-                if (text) {
-                    text.classList.remove('text-white');
-                    text.classList.add('text-zinc-300');
-                }
+                if (text) { text.classList.remove('text-white'); text.classList.add('text-zinc-300'); }
             });
 
             const activeBtn = document.getElementById(`btn-${type}`);
-            activeBtn.classList.add('border-brandRed', 'shadow-md');
-            activeBtn.classList.remove('border-slate-200', 'shadow-sm');
-            activeBtn.querySelector('.active-badge').classList.remove('hidden');
-
-            const activeImg = activeBtn.querySelector('.sport-btn-img');
-            if (activeImg) activeImg.classList.remove('grayscale');
-
-            const activeMask = activeBtn.querySelector('.sport-btn-mask');
-            if (activeMask) {
-                activeMask.classList.remove('bg-zinc-950/60');
-                activeMask.classList.add('bg-zinc-950/30');
+            if (activeBtn) {
+                activeBtn.classList.add('border-brandRed', 'shadow-md');
+                activeBtn.classList.remove('border-slate-200', 'shadow-sm');
+                activeBtn.querySelector('.active-badge').classList.remove('hidden');
+                const activeImg = activeBtn.querySelector('.sport-btn-img');
+                if (activeImg) activeImg.classList.remove('grayscale');
+                const activeMask = activeBtn.querySelector('.sport-btn-mask');
+                if (activeMask) { activeMask.classList.remove('bg-zinc-950/60'); activeMask.classList.add('bg-zinc-950/30'); }
+                const activeIcon = activeBtn.querySelector('.sport-icon');
+                if (activeIcon) { activeIcon.classList.remove('text-zinc-300'); activeIcon.classList.add('text-white'); }
+                const activeText = activeBtn.querySelector('.sport-text');
+                if (activeText) { activeText.classList.remove('text-zinc-300'); activeText.classList.add('text-white'); }
             }
 
-            const activeIcon = activeBtn.querySelector('.sport-icon');
-            if (activeIcon) {
-                activeIcon.classList.remove('text-zinc-300');
-                activeIcon.classList.add('text-white');
-            }
-            const activeText = activeBtn.querySelector('.sport-text');
-            if (activeText) {
-                activeText.classList.remove('text-zinc-300');
-                activeText.classList.add('text-white');
-            }
-
-            const currentRaceList = RACES_DATABASE[type];
-            currentRace = currentRaceList[0]; 
-            
             document.getElementById('selected-race-title').innerText = currentRace.title;
-            document.getElementById('selected-race-update').innerText = `常態更新`;
-            document.getElementById('race-rule-link').href = '#';
-            document.getElementById('race-search').value = '';
+            document.getElementById('selected-race-update').innerText = currentRace.id.includes('general') ? `常態更新` : `最後更新：${currentRace.update}`;
+            document.getElementById('race-rule-link').href = currentRace.url;
             document.getElementById('poster-race-tag').innerText = currentRace.title;
+        }
 
-            renderRaceList(currentRaceList);
+        function setSportType(type) {
+            currentSport = type;
+            checkedItems.clear();
+            currentRace = RACES_DATABASE[type][0]; 
+            
+            document.getElementById('race-search').value = '';
+            setSportTypeVisuals(type);
+            renderRaceList(RACES_DATABASE[type]);
             loadChecklist();
             updateSportVisuals(); 
         }
@@ -592,25 +596,27 @@
             renderRaceList(filtered);
         }
 
-        function selectRace(race) {
-            currentRace = race;
+        function selectRaceVisuals(race) {
             document.getElementById('selected-race-title').innerText = race.title;
             document.getElementById('selected-race-update').innerText = `最後更新：${race.update}`;
             document.getElementById('race-rule-link').href = race.url;
             document.getElementById('poster-race-tag').innerText = race.title.toUpperCase();
-            
+        }
+
+        function selectRace(race) {
+            currentRace = race;
+            selectRaceVisuals(race);
             checkedItems.clear(); 
             loadChecklist();
         }
 
         function resetToGeneral() {
             currentRace = RACES_DATABASE[currentSport][0];
-            document.getElementById('selected-race-title').innerText = currentRace.title;
+            selectRaceVisuals(currentRace);
             document.getElementById('selected-race-update').innerText = `常態更新`;
             document.getElementById('race-rule-link').href = '#';
             document.getElementById('race-search').value = '';
             renderRaceList(RACES_DATABASE[currentSport]);
-            document.getElementById('poster-race-tag').innerText = currentRace.title;
             
             checkedItems.clear();
             loadChecklist();
@@ -765,15 +771,36 @@
             setTimeout(() => { previewCard.classList.remove('ring-4', 'ring-brandRed'); }, 1200);
         }
 
+        // 🚀 核心修改：全新實作的分享連結函式
+        function shareList() {
+            // 1. 取得當前的基礎網址，並封裝當前的運動類型與賽事 ID 作為參數
+            const baseUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${baseUrl}?sport=${currentSport}&race=${currentRace.id}`;
+
+            // 2. 如果是行動裝置且瀏覽器支援原生的 Web Share API，直接調用手機原生分享面板
+            if (navigator.share) {
+                navigator.share({
+                    title: `COMPRESSPORT | ${currentRace.title}`,
+                    text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速清點，一起無傷完賽！`,
+                    url: shareUrl,
+                }).catch(err => console.log('分享取消或未成功', err));
+            } else {
+                // 3. 電腦版或不支援原生分享的瀏覽器 -> 直接將複製字串寫入剪貼簿，並跳出精美提示
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的戰友、或跑友群組吧！🤝`);
+                }).catch(err => {
+                    console.error('無法複製連結', err);
+                });
+            }
+        }
+
         function downloadPoster() {
             const canvas = document.getElementById('export-canvas');
             const ctx = canvas.getContext('2d');
 
-            // 1. 清空畫布，填滿極深色底色
             ctx.fillStyle = '#09090b';
             ctx.fillRect(0, 0, 1080, 1920);
 
-            // 2. 繪製背景圖片（Object-Fit: Cover 裁切）
             const posterBgImg = document.getElementById('poster-bg');
             if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
                 ctx.save();
@@ -794,7 +821,6 @@
                 ctx.restore();
             }
 
-            // 3. 繪製漸層遮罩
             const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
             gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
             gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
@@ -802,36 +828,28 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, 1080, 1920);
 
-            // 🚀 4. 裝飾斜紅線已成功拔除，畫面現在會乾淨透亮！
-
-            // 5. 繪製頂部 Tag
             ctx.fillStyle = '#e2001a';
             ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
             let tagText = document.getElementById('poster-race-tag').innerText;
             ctx.fillText(tagText.toUpperCase(), 80, 160);
 
-            // 6. 繪製標題
             ctx.fillStyle = '#ffffff';
             ctx.font = '900 76px "Noto Sans TC"';
             ctx.fillText('我的裝備清單', 80, 255);
 
-            // 7. 繪製日期
             ctx.fillStyle = '#71717a';
             ctx.font = '500 28px "Inter"';
             ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
 
-            // 8. 繪製紅色分割線
             ctx.fillStyle = '#e2001a';
             ctx.fillRect(80, 340, 920, 4);
 
-            // 9. 繪製內嵌裝備清單半透明背景外框
             ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.fillRect(80, 380, 920, 1300);
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
             ctx.lineWidth = 2;
             ctx.strokeRect(80, 380, 920, 1300);
 
-            // 10. 準備繪製裝備清單文字與勾選框
             let mList = [], rList = [], wList = [];
             if (GEAR_DATA[currentRace.id]) {
                 mList = GEAR_DATA[currentRace.id].mandatory || [];
@@ -872,20 +890,17 @@
                 }
             });
 
-            // 11. 繪製底部雙行文字資訊（STATUS 區塊）
-            // 第一行：經典品牌標語 #WheverYouRaceWeSupportYou
+            // 底部雙行品牌文字繪製
             ctx.fillStyle = '#a1a1aa'; 
             ctx.font = '900 italic 30px "Inter"';
             ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
 
-            // 第二行：動態 READY TO 運動狀態
             ctx.fillStyle = '#ffffff'; 
             ctx.font = '900 italic 38px "Inter"';
             if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1855);
             if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1855);
             if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1855);
 
-            // 12. 完美繪製橫式 LOGO 圖片（與第二行文字底部齊平）
             const navLogo = document.getElementById('nav-logo');
             if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
                 const targetLogoHeight = 40; 
@@ -902,7 +917,6 @@
                 ctx.fillText('COMPRESSPORT', 700, 1855);
             }
 
-            // 13. 輸出下載圖片
             const imageURL = canvas.toDataURL("image/png");
             const link = document.createElement('a');
             const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
