@@ -296,7 +296,7 @@
                         </div>
 
                         <div class="relative z-10 flex-grow my-3 bg-black/50 border border-white/5 rounded-xl p-3.5 overflow-hidden flex flex-col">
-                            <div id="poster-items" class="space-y-1.5 text-xs overflow-y-auto no-scrollbar flex-grow">
+                            <div id="poster-items" class="space-y-1 text-xs overflow-y-auto no-scrollbar flex-grow max-h-[220px]">
                             </div>
                         </div>
 
@@ -357,7 +357,6 @@
             triathlon: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=1123540638&single=true&output=csv'
         };
 
-        // 🧠 程式碼內不保留任何裝備清單，開局為完全空白，完全聽從雲端調配
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
@@ -368,14 +367,12 @@
         let customItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
 
-        // 🎯 修正核心：初始化三大運動類型按鈕的背景圖
         function initChoiceImages() {
             Object.keys(SPORT_BACKGROUNDS).forEach(key => {
                 const imgEl = document.getElementById(`img-choice-${key}`);
                 if (imgEl) {
                     imgEl.src = SPORT_BACKGROUNDS[key];
                     imgEl.onerror = function() {
-                        // 備用防破圖保護
                         this.src = `https://placehold.co/400x250/334155/ffffff?text=${key.toUpperCase()}`;
                     };
                 }
@@ -394,19 +391,18 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             initDate();
-            initChoiceImages(); // 👈 載入時順利呼叫此函數設定預覽圖路徑
+            initChoiceImages();
             
-            // 🚀 核心優化：渲染一個極簡的載入等待狀態
             document.getElementById('items-grid').innerHTML = `<div class="col-span-2 text-center py-12 text-brandRed font-medium text-sm animate-pulse"><i class="fa-solid fa-spinner animate-spin mr-2"></i> 同步雲端大會裝備清單中...</div>`;
 
             await fetchAllGoogleSheetsData();
 
-            // 檢查雲端下載完後是否有資料
-            if (!RACES_DATABASE[currentSport] || RACES_DATABASE[currentSport].length === 0) {
-                // 如果雲端尚未填寫任何資料，建立極簡保護殼
-                const genId = `general_${currentSport}`;
-                RACES_DATABASE[currentSport] = [{ id: genId, title: '基本裝備清單', update: '常態更新', url: '#' }];
-            }
+            Object.keys(RACES_DATABASE).forEach(sportKey => {
+                if (!RACES_DATABASE[sportKey] || RACES_DATABASE[sportKey].length === 0) {
+                    const genId = `general_${sportKey}`;
+                    RACES_DATABASE[sportKey] = [{ id: genId, title: '基本裝備清單', update: '常態更新', url: '#' }];
+                }
+            });
 
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
@@ -449,14 +445,14 @@
                     const lines = parseCSV(res.csv);
                     if (lines.length < 2) return; 
 
-                    const headers = lines[0].map(h => h.trim());
-                    const raceIdIdx = headers.indexOf('RaceID');
-                    const raceTitleIdx = headers.indexOf('RaceTitle');
-                    const updateIdx = headers.indexOf('LastUpdate');
-                    const categoryIdx = headers.indexOf('Category');
-                    const itemIdIdx = headers.indexOf('ItemID');
-                    const itemNameIdx = headers.indexOf('ItemName');
-                    const raceUrlIdx = headers.indexOf('RaceURL');
+                    const headers = lines[0].map(h => h.trim().toLowerCase());
+                    const raceIdIdx = headers.indexOf('raceid');
+                    const raceTitleIdx = headers.indexOf('racetitle');
+                    const updateIdx = headers.indexOf('lastupdate');
+                    const categoryIdx = headers.indexOf('category');
+                    const itemIdIdx = headers.indexOf('itemid');
+                    const itemNameIdx = headers.indexOf('itemname');
+                    const raceUrlIdx = headers.indexOf('raceurl');
 
                     if (raceIdIdx === -1 || itemNameIdx === -1) return;
 
@@ -490,6 +486,7 @@
 
                     const raceList = Array.from(raceMap.values());
                     const generalId = `general_${res.sport}`;
+                    
                     const sortedRaces = raceList.sort((a, b) => {
                         if (a.id === generalId) return -1;
                         if (b.id === generalId) return 1;
@@ -763,12 +760,10 @@
             if (!currentRace) return [];
             const generalId = `general_${currentSport}`;
             
-            // 1. 抓取雲端基本常規通用裝備做骨幹
             let baseItems = [];
             let cloudBase = getGearArrayFromSource(GEAR_DATA, generalId, currentTab);
             baseItems = JSON.parse(JSON.stringify(cloudBase));
 
-            // 2. 如果選擇了特定賽事，智慧防撞合流追加項目
             if (currentRace.id !== generalId) {
                 let cloudSpecific = getGearArrayFromSource(GEAR_DATA, currentRace.id, currentTab);
                 cloudSpecific.forEach(specItem => {
@@ -778,7 +773,6 @@
                 });
             }
 
-            // 3. 疊加個人手動輸入的客製化裝備
             if (currentTab === 'mandatory' && customItemsDatabase[currentRace.id]) {
                 baseItems = [...baseItems, ...customItemsDatabase[currentRace.id]];
             }
@@ -945,6 +939,9 @@
             }
         }
 
+        // =========================================================
+        // 🎨 雙欄自適應排版 Canvas 下載引擎（最高支援 32 項裝備集中一張）
+        // =========================================================
         function downloadPoster() {
             const btn = document.getElementById('download-btn');
             const icon = document.getElementById('download-icon');
@@ -959,9 +956,11 @@
                     const canvas = document.getElementById('export-canvas');
                     const ctx = canvas.getContext('2d');
 
+                    // 1. 底色
                     ctx.fillStyle = '#09090b';
                     ctx.fillRect(0, 0, 1080, 1920);
 
+                    // 2. 運動背景圖
                     const posterBgImg = document.getElementById('poster-bg');
                     if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
                         ctx.save();
@@ -982,6 +981,7 @@
                         ctx.restore();
                     }
 
+                    // 3. 漸層遮罩
                     const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
                     gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
                     gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
@@ -989,6 +989,7 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, 1080, 1920);
 
+                    // 4. 頂部標題與賽事資訊
                     ctx.fillStyle = '#e2001a';
                     ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
                     let tagText = document.getElementById('poster-race-tag').innerText;
@@ -1002,44 +1003,82 @@
                     ctx.font = '500 28px "Inter"';
                     ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
 
+                    // 紅色橫線分隔
                     ctx.fillStyle = '#e2001a';
                     ctx.fillRect(80, 340, 920, 4);
 
+                    // 5. 裝備框背景與外框
                     ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
                     ctx.fillRect(80, 380, 920, 1300);
                     ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
                     ctx.lineWidth = 2;
                     ctx.strokeRect(80, 380, 920, 1300);
 
+                    // 🚀 智慧自適應演算法：根據裝備總數動態縮小字級與調整排版 
                     const allItems = getEntireRaceItemsCollection();
+                    const totalItems = allItems.length;
+
+                    let fontSize = 32;       // 預設字體大小
+                    let lineHeight = 82;     // 預設行高
+                    let maxRows = 14;        // 單欄最大容納行數
+                    
+                    if (totalItems > 28) {
+                        fontSize = 24;
+                        lineHeight = 55;
+                        maxRows = 22;
+                    } else if (totalItems > 20) {
+                        fontSize = 26;
+                        lineHeight = 65;
+                        maxRows = 18;
+                    } else if (totalItems > 14) {
+                        fontSize = 28;
+                        lineHeight = 72;
+                        maxRows = 16;
+                    }
 
                     let startY = 460;
-                    const startX1 = 130;
-                    const startX2 = 570;
+                    const col1X = 130;       // 第一欄 X 座標
+                    const col2X = 580;       // 第二欄 X 座標
 
+                    // 繪製列表
                     allItems.forEach((item, index) => {
-                        const isChecked = checkedItems.has(item.id);
-                        const isLeftCol = index % 2 === 0;
-                        const xPos = isLeftCol ? startX1 : startX2;
-                        const yPos = startY + Math.floor(index / 2) * 82;
+                        // 當前要繪製哪一欄？
+                        const isLeftCol = index < maxRows;
+                        const xPos = isLeftCol ? col1X : col2X;
+                        
+                        // 計算行數索引
+                        const rowIndex = isLeftCol ? index : index - maxRows;
+                        const yPos = startY + rowIndex * lineHeight;
 
-                        if (yPos > 1620) return;
+                        // 防止極端狀況下高度爆框
+                        if (yPos > 1620) {
+                            // 接近底線時顯示剩餘項目
+                            if (index === allItems.length - 1 || yPos > 1640) {
+                                ctx.fillStyle = '#e2001a';
+                                ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
+                                ctx.fillText(`...及其他共 ${allItems.length - index} 項裝備`, xPos, 1610);
+                            }
+                            return;
+                        }
+
+                        const isChecked = checkedItems.has(item.id);
 
                         if (isChecked) {
                             ctx.fillStyle = '#e2001a';
-                            ctx.font = 'bold 32px "Noto Sans TC"';
+                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
                             ctx.fillText('✓', xPos, yPos);
                             ctx.fillStyle = '#ffffff';
-                            ctx.fillText(item.name, xPos + 45, yPos);
+                            ctx.fillText(item.name, xPos + 40, yPos);
                         } else {
                             ctx.fillStyle = '#4b5563';
-                            ctx.font = 'bold 32px "Noto Sans TC"';
+                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
                             ctx.fillText('☐', xPos, yPos);
                             ctx.fillStyle = '#71717a';
-                            ctx.fillText(item.name, xPos + 45, yPos);
+                            ctx.fillText(item.name, xPos + 40, yPos);
                         }
                     });
 
+                    // 6. 底部 Slogan 與活動標籤
                     ctx.fillStyle = '#a1a1aa'; 
                     ctx.font = '900 italic 30px "Inter"';
                     ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
@@ -1066,6 +1105,7 @@
                         ctx.fillText('COMPRESSPORT', 700, 1855);
                     }
 
+                    // 7. 轉換下載
                     const imageURL = canvas.toDataURL("image/png");
                     const link = document.createElement('a');
                     const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
