@@ -764,38 +764,64 @@
             const canvas = document.getElementById('export-canvas');
             const ctx = canvas.getContext('2d');
 
+            // 1. 清空畫布，填滿極深色底色
             ctx.fillStyle = '#09090b';
             ctx.fillRect(0, 0, 1080, 1920);
 
+            // 🚀 2. 繪製背景圖片（同步預覽圖設定：不透明度 55%）
+            const posterBgImg = document.getElementById('poster-bg');
+            if (posterBgImg && posterBgImg.src) {
+                ctx.save();
+                ctx.globalAlpha = 0.55; // 同步預覽的 opacity-55
+                // 繪製背景圖，保持滿版覆蓋 (Cover)
+                ctx.drawImage(posterBgImg, 0, 0, 1080, 1920);
+                ctx.restore();
+            }
+
+            // 🚀 3. 繪製漸層遮罩（同步預覽圖設定的 bg-gradient-to-b）
+            // 建立由上至下 (y: 0 到 1920) 的漸層
+            const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
+            gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    // 相當於 zinc-950/40
+            gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  // 相當於 zinc-950/50
+            gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   // 相當於 zinc-950/85
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1080, 1920);
+
+            // 4. 裝飾線條
             ctx.strokeStyle = 'rgba(226, 0, 26, 0.2)';
             ctx.lineWidth = 5;
             ctx.beginPath();
             ctx.moveTo(0, 1600); ctx.lineTo(400, 1300); ctx.lineTo(700, 1450); ctx.lineTo(1080, 1100);
             ctx.stroke();
 
+            // 5. 繪製頂部 Tag
             ctx.fillStyle = '#e2001a';
             ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
-            
             let tagText = document.getElementById('poster-race-tag').innerText;
             ctx.fillText(tagText.toUpperCase(), 80, 160);
 
+            // 6. 繪製標題
             ctx.fillStyle = '#ffffff';
             ctx.font = '900 76px "Noto Sans TC"';
             ctx.fillText('我的裝備清單', 80, 255);
 
+            // 7. 繪製日期
             ctx.fillStyle = '#71717a';
             ctx.font = '500 28px "Inter"';
             ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
 
+            // 8. 繪製紅色分割線
             ctx.fillStyle = '#e2001a';
             ctx.fillRect(80, 340, 920, 4);
 
+            // 9. 繪製內嵌裝備清單半透明背景外框
             ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
             ctx.fillRect(80, 380, 920, 1300);
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
             ctx.lineWidth = 2;
             ctx.strokeRect(80, 380, 920, 1300);
 
+            // 10. 準備繪製裝備清單文字與勾選框
             let mList = [], rList = [], wList = [];
             if (GEAR_DATA[currentRace.id]) {
                 mList = GEAR_DATA[currentRace.id].mandatory || [];
@@ -836,6 +862,7 @@
                 }
             });
 
+            // 11. 繪製底部文字
             ctx.fillStyle = '#52525b';
             ctx.font = '400 24px "Inter"';
             ctx.fillText('STATUS', 80, 1770);
@@ -850,6 +877,7 @@
             ctx.font = '900 32px "Inter"';
             ctx.fillText('COMPRESSPORT', 700, 1825);
 
+            // 12. 輸出下載圖片
             const imageURL = canvas.toDataURL("image/png");
             const link = document.createElement('a');
             const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
