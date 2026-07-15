@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;700;900&family=Noto+Sans+TC:wght=400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
         tailwind.config = {
@@ -336,10 +336,10 @@
     <canvas id="export-canvas" width="1080" height="1920" class="hidden"></canvas>
 
     <script>
-       const SPORT_BACKGROUNDS = {
-           trail: 'images/bg_trail.jpg',      
-           triathlon: 'images/bg_triathlon.jpg',  
-           road: 'images/bg_road.jpg'         
+        const SPORT_BACKGROUNDS = {
+            trail: 'images/bg_trail.jpg',      
+            triathlon: 'images/bg_triathlon.jpg',  
+            road: 'images/bg_road.jpg'         
         };
 
         const OFFICIAL_STORE_URLS = {
@@ -368,9 +368,33 @@
         let customItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
 
+        // 🎯 修正核心：初始化三大運動類型按鈕的背景圖
+        function initChoiceImages() {
+            Object.keys(SPORT_BACKGROUNDS).forEach(key => {
+                const imgEl = document.getElementById(`img-choice-${key}`);
+                if (imgEl) {
+                    imgEl.src = SPORT_BACKGROUNDS[key];
+                    imgEl.onerror = function() {
+                        // 備用防破圖保護
+                        this.src = `https://placehold.co/400x250/334155/ffffff?text=${key.toUpperCase()}`;
+                    };
+                }
+            });
+        }
+
+        function initDate() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const dateStr = `${yyyy}.${mm}.${dd}`;
+            const posterDate = document.getElementById('poster-date');
+            if (posterDate) posterDate.innerText = dateStr;
+        }
+
         window.addEventListener('DOMContentLoaded', async () => {
             initDate();
-            initChoiceImages(); 
+            initChoiceImages(); // 👈 載入時順利呼叫此函數設定預覽圖路徑
             
             // 🚀 核心優化：渲染一個極簡的載入等待狀態
             document.getElementById('items-grid').innerHTML = `<div class="col-span-2 text-center py-12 text-brandRed font-medium text-sm animate-pulse"><i class="fa-solid fa-spinner animate-spin mr-2"></i> 同步雲端大會裝備清單中...</div>`;
@@ -531,7 +555,6 @@
             localStorage.setItem(storageKey, JSON.stringify(arr));
         }
 
-        // 儲存自訂裝備清單到 LocalStorage
         function saveCustomItemsToStorage() {
             if(!currentRace) return;
             const customStorageKey = `compressport_custom_list_${currentRace.id}`;
@@ -634,8 +657,10 @@
 
         function updateSportVisuals() {
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport];
-            document.getElementById('hero-bg').src = currentImgUrl;
-            document.getElementById('poster-bg').src = currentImgUrl;
+            const heroBg = document.getElementById('hero-bg');
+            if (heroBg) heroBg.src = currentImgUrl;
+            const posterBg = document.getElementById('poster-bg');
+            if (posterBg) posterBg.src = currentImgUrl;
             
             const shopBtn = document.getElementById('shop-redirect-btn');
             if (shopBtn && OFFICIAL_STORE_URLS[currentSport]) {
@@ -734,9 +759,6 @@
             return [];
         }
 
-        // =========================================================
-        // 🚀 終極智慧合流：100% 聽從雲端 GEAR_DATA 調配
-        // =========================================================
         function getAllCurrentGearItems() {
             if (!currentRace) return [];
             const generalId = `general_${currentSport}`;
@@ -765,6 +787,7 @@
 
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid');
+            if (!grid) return;
             grid.innerHTML = '';
             let items = getAllCurrentGearItems();
 
@@ -876,6 +899,7 @@
 
         function syncPosterPreview() {
             const posterContainer = document.getElementById('poster-items');
+            if (!posterContainer) return;
             posterContainer.innerHTML = '';
             
             const allItems = getEntireRaceItemsCollection();
