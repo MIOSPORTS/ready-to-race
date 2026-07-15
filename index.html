@@ -743,7 +743,7 @@
             listContainer.innerHTML = '';
             
             if (!racesData || racesData.length <= 1) {
-                listContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">暫無精選合作賽事</div>`;
+                listContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">暫無精選熱門賽事</div>`;
                 return;
             }
 
@@ -1043,7 +1043,7 @@
             
             btn.disabled = true;
             icon.className = "fa-solid fa-spinner animate-spin mr-2";
-            text.innerText = "正在產生專屬清單海報...";
+            text.innerText = "正在產生專屬清單圖片...";
 
             setTimeout(() => {
                 try {
