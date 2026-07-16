@@ -308,8 +308,7 @@
                             <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
                         </div>
 
-                        <!-- 💡 修正後：讓半透明黑底直接成為滿版主體，自動撐滿從日期到標語之間的所有空間！ -->
-                      <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
+                        <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
                           <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1">
                           </div>
                       </div>
@@ -637,7 +636,7 @@
             loadChecklist();
         }
 
-function resetDeletedItems() {
+        function resetDeletedItems() {
             if (!currentRace) return;
             if (confirm("確定要恢復預設裝備嗎？這將會還原所有被刪除的原始項目，並清除您自訂新增的裝備。")) {
                 // 1. 清空被隱藏/刪除的公版裝備紀錄
@@ -647,12 +646,8 @@ function resetDeletedItems() {
                 // 2. 清空自訂新增的裝備紀錄
                 customItemsDatabase[currentRace.id] = [];
                 saveCustomItemsToStorage();
-
-                // 3. (選填) 如果希望恢復預設時，也順便清空所有已被勾選的狀態，可以解開下方註解：
-                // checkedItems.clear();
-                // saveChecklistToStorage();
                 
-                // 4. 重設狀態並重新渲染
+                // 3. 重設狀態並重新渲染
                 if (isEditMode) toggleEditMode();
                 loadChecklist();
             }
@@ -1112,44 +1107,77 @@ function resetDeletedItems() {
                     ctx.lineWidth = 2;
                     ctx.strokeRect(80, 380, 920, 1300);
 
+                    // ==========================================
+                    // 📐 動態排版與多排（兩排/三排）計算
+                    // ==========================================
                     const allItems = getEntireRaceItemsCollection();
                     const totalItems = allItems.length;
 
                     let fontSize = 32;       
                     let lineHeight = 82;     
-                    let maxRows = 14;        
+                    let maxRows = 14;        // 預設每排最大列數
+                    let columnsCount = 2;    // 預設為兩排
                     
-                    if (totalItems > 28) {
+                    // 根據總項目數量，動態調整字型、行高與最大列數
+                    if (totalItems > 44) {
+                        // 超過 44 樣，開啟「三排」模式！
+                        fontSize = 22;
+                        lineHeight = 52;
+                        maxRows = 22; 
+                        columnsCount = 3;
+                    } else if (totalItems > 28) {
                         fontSize = 24;
                         lineHeight = 55;
                         maxRows = 22;
+                        columnsCount = 2;
                     } else if (totalItems > 20) {
                         fontSize = 26;
                         lineHeight = 65;
                         maxRows = 18;
+                        columnsCount = 2;
                     } else if (totalItems > 14) {
                         fontSize = 28;
                         lineHeight = 72;
                         maxRows = 16;
+                        columnsCount = 2;
                     }
 
                     let startY = 460;
-                    const col1X = 130;       
-                    const col2X = 580;       
+                    
+                    // 定義不同排數時的 X 座標
+                    let xPositions = [];
+                    if (columnsCount === 3) {
+                        // 三排均分 920px 寬度 (左右留白 80px)
+                        xPositions = [110, 420, 730]; 
+                    } else {
+                        // 兩排配置
+                        xPositions = [130, 580]; 
+                    }
 
+                    // 開始繪製每一個裝備項目
                     allItems.forEach((item, index) => {
-                        const isLeftCol = index < maxRows;
-                        const xPos = isLeftCol ? col1X : col2X;
+                        // 判斷目前項目屬於第幾排 (0, 1, 或 2)
+                        const colIndex = Math.floor(index / maxRows);
                         
-                        const rowIndex = isLeftCol ? index : index - maxRows;
-                        const yPos = startY + rowIndex * lineHeight;
-
-                        if (yPos > 1620) {
-                            if (index === allItems.length - 1 || yPos > 1640) {
+                        // 如果超出了最大排數能容納的範圍，顯示「...及其他」
+                        if (colIndex >= columnsCount) {
+                            if (index === maxRows * columnsCount || index === allItems.length - 1) {
                                 ctx.fillStyle = '#e2001a';
                                 ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
-                                ctx.fillText(`...及其他共 ${allItems.length - index} 項裝備`, xPos, 1610);
+                                // 在最後一排的底部寫上未完待續
+                                const lastX = xPositions[columnsCount - 1];
+                                const lastY = startY + (maxRows - 1) * lineHeight;
+                                ctx.fillText(`...及其他共 ${allItems.length - index} 項`, lastX, lastY);
                             }
+                            return;
+                        }
+
+                        const xPos = xPositions[colIndex];
+                        const rowIndex = index % maxRows; // 在該排中的第幾個
+                        const yPos = startY + rowIndex * lineHeight;
+
+                        // 安全機制：避免畫出框線外 (1300px 高度內)
+                        if (yPos > 1620) {
                             return;
                         }
 
@@ -1160,13 +1188,13 @@ function resetDeletedItems() {
                             ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
                             ctx.fillText('✓', xPos, yPos);
                             ctx.fillStyle = '#ffffff';
-                            ctx.fillText(item.name, xPos + 40, yPos);
+                            ctx.fillText(item.name, xPos + 35, yPos); // 縮小勾勾與文字的間距以防擠下
                         } else {
                             ctx.fillStyle = '#4b5563';
                             ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
                             ctx.fillText('☐', xPos, yPos);
                             ctx.fillStyle = '#71717a';
-                            ctx.fillText(item.name, xPos + 40, yPos);
+                            ctx.fillText(item.name, xPos + 35, yPos);
                         }
                     });
 
