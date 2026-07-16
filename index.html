@@ -637,12 +637,22 @@
             loadChecklist();
         }
 
-        function resetDeletedItems() {
+function resetDeletedItems() {
             if (!currentRace) return;
-            if (confirm("確定要恢復本賽事的預設公版裝備清單嗎？這將會恢復所有被您刪除的原始項目。")) {
+            if (confirm("確定要恢復預設裝備嗎？這將會還原所有被刪除的原始項目，並清除您自訂新增的裝備。")) {
+                // 1. 清空被隱藏/刪除的公版裝備紀錄
                 deletedItemsDatabase[currentRace.id] = [];
                 saveDeletedItemsToStorage();
                 
+                // 2. 清空自訂新增的裝備紀錄
+                customItemsDatabase[currentRace.id] = [];
+                saveCustomItemsToStorage();
+
+                // 3. (選填) 如果希望恢復預設時，也順便清空所有已被勾選的狀態，可以解開下方註解：
+                // checkedItems.clear();
+                // saveChecklistToStorage();
+                
+                // 4. 重設狀態並重新渲染
                 if (isEditMode) toggleEditMode();
                 loadChecklist();
             }
