@@ -237,7 +237,7 @@
                     </div>
 
                     <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div class="flex flex-1">
+                        <div class="flex flex-1" id="tab-container">
                             <button onclick="switchTab('mandatory')" id="tab-mandatory" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">必要裝備</button>
                             <button onclick="switchTab('recommended')" id="tab-recommended" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">建議裝備</button>
                             <button onclick="switchTab('weather')" id="tab-weather" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">依天氣調整</button>
@@ -278,16 +278,17 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
+                    <!-- 💡 完美保留：原裝無損的進度欄結構與 Class 名稱，確保完全亮起並正常跳動數字！ -->
+                    <div id="progress-container-box" class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3 opacity-30 transition-all duration-300">
                         <div class="flex justify-between items-center font-bold text-sm md:text-base">
                             <div class="flex items-center space-x-2">
                                 <span class="text-slate-500 text-sm">準備完成度</span>
-                                <span id="completion-percentage" class="text-slate-300 text-2xl font-black transition-all">0%</span>
+                                <span id="completion-percentage" class="text-brandRed text-2xl font-black">0%</span>
                             </div>
-                            <span id="items-left-text" class="text-slate-500 text-sm">尚未準備 <span id="items-left-count" class="text-slate-300 text-base font-black transition-all">0</span> 項</span>
+                            <span id="items-left-text" class="text-slate-500 text-sm">尚未準備 <span id="items-left-count" class="text-brandRed text-base font-black">0</span> 項</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div id="progress-bar" class="bg-slate-300 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                            <div id="progress-bar" class="bg-brandRed h-full rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
 
@@ -302,7 +303,6 @@
                         </div>
                     </div>
 
-                    <!-- 📈 底部紅色補齊裝備按鈕 -->
                     <a id="shop-redirect-btn" href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Shop_Btn', currentSport || 'None')" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i><span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -359,9 +359,6 @@
     <canvas id="export-canvas" width="1080" height="1920" class="hidden"></canvas>
 
     <script>
-        // ==========================================
-        // 📈 Google Sheets 行為分析追蹤設定
-        // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
 
         function getOrCreateUserId() {
@@ -408,8 +405,6 @@
 
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
-        
-        // 🎯 核心更動一：初始改為 null 空白起跑
         let currentSport = null; 
         let currentTab = 'mandatory';
         let currentRace = null;
@@ -450,7 +445,6 @@
             const raceParam = urlParams.get('race');
 
             if (sportParam && RACES_DATABASE[sportParam] && RACES_DATABASE[sportParam].length > 0) {
-                // 情境 A：如果是點擊專屬賽事連結進來，跳過空白頁直接解鎖
                 currentSport = sportParam;
                 currentRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam) || RACES_DATABASE[currentSport][0];
                 setSportTypeVisuals(currentSport);
@@ -459,7 +453,6 @@
                 switchTab('mandatory');
                 updateSportVisuals(); 
             } else {
-                // 情境 B：如果是空網址進來，呈現完美的形象空白頁
                 document.getElementById('hero-bg').src = SPORT_BACKGROUNDS['all'];
                 document.getElementById('poster-bg').src = SPORT_BACKGROUNDS['all'];
                 renderChecklistItems(); 
@@ -505,7 +498,6 @@
             if (row.length > 1 || row[0] !== '') r.push(row); return r;
         }
 
-        // 🎯 核心修復二：徹底解除所有的灰字、游標鎖定，讓 Tab 與按鈕完全亮起恢復點擊
         function unlockUIElements() {
             document.getElementById('race-search').disabled = false;
             document.getElementById('race-search').className = "w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-sm transition cursor-pointer";
@@ -535,6 +527,9 @@
             document.getElementById('download-btn').className = "w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md cursor-pointer";
             document.getElementById('share-btn').disabled = false;
             document.getElementById('share-btn').className = "w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs cursor-pointer";
+            
+            // 🎯 解鎖時，同步將進度條大容器恢復 100% 不透明
+            document.getElementById('progress-container-box').className = "bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3 transition-all duration-300 opacity-100";
         }
 
         function setSportTypeVisuals(type) {
@@ -582,7 +577,6 @@
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
             
-            // 🎯 點擊項目時，同步切換對應運動別的 Banner 與海報圖
             updateSportVisuals(); 
             switchTab('mandatory'); 
         }
@@ -723,35 +717,18 @@
             renderChecklistItems();
         }
 
-        // 🎯 核心修正：將所有數據、顏色、字體粗細解鎖全部和 UI 的 currentSport 連動！
+        // 🎯 核心復活：原汁原味對齊你原始碼的更新機制，百分之百連動跳字！
         function updateProgress() {
             const allItems = getEntireRaceItemsCollection(); 
             const total = allItems.length;
             const checked = allItems.filter(item => checkedItems.has(item.id)).length;
             const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
             
-            // 1. 準備完成度百分比與顏色解鎖
-            const percentageEl = document.getElementById('completion-percentage');
-            if (percentageEl) {
-                percentageEl.innerText = `${pct}%`;
-                percentageEl.className = currentSport ? "text-brandRed text-2xl font-black transition-all" : "text-slate-300 text-2xl font-black transition-all";
-            }
-            
-            // 2. 尚未準備項數與顏色解鎖
-            const leftCountEl = document.getElementById('items-left-count');
-            if (leftCountEl) {
-                leftCountEl.innerText = total - checked;
-                leftCountEl.className = currentSport ? "text-brandRed text-base font-black transition-all" : "text-slate-300 text-base font-black transition-all";
-            }
-            
-            // 3. 進度條進度與顏色解鎖
-            const progressBar = document.getElementById('progress-bar');
-            if (progressBar) {
-                progressBar.style.width = `${pct}%`;
-                progressBar.className = currentSport ? "bg-brandRed h-full rounded-full transition-all duration-300" : "bg-slate-300 h-full rounded-full transition-all duration-300";
-            }
+            // 完美更新進度欄數字
+            document.getElementById('completion-percentage').innerText = `${pct}%`;
+            document.getElementById('items-left-count').innerText = total - checked;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
 
-            // 4. 尚未準備裝備列表框
             const ul = document.getElementById('unprepared-list'); 
             if (ul) {
                 ul.innerHTML = '';
@@ -792,6 +769,16 @@
 
         function handleCustomItemKey(e) { if (e.key === 'Enter') addCustomItem(); }
 
+        function loadSavedChecklist() {
+            checkedItems.clear(); if(!currentRace) return;
+            const storageKey = `compressport_checked_${currentRace.id}`; const savedData = localStorage.getItem(storageKey);
+            if (savedData) { JSON.parse(savedData).forEach(id => checkedItems.add(id)); }
+            const customStorageKey = `compressport_custom_list_${currentRace.id}`; const savedCustomData = localStorage.getItem(customStorageKey);
+            customItemsDatabase[currentRace.id] = savedCustomData ? JSON.parse(savedCustomData) : [];
+            const deletedStorageKey = `compressport_deleted_${currentRace.id}`; const savedDeletedData = localStorage.getItem(deletedStorageKey);
+            deletedItemsDatabase[currentRace.id] = savedDeletedData ? JSON.parse(savedDeletedData) : [];
+        }
+
         function shareList() {
             if(!currentRace) return; const shareUrl = `${window.location.origin}${window.location.pathname}?sport=${currentSport}&race=${currentRace.id}`;
             if (navigator.share) { navigator.share({ title: `COMPRESSPORT`, url: shareUrl }).then(() => logEvent('Share_App', currentSport)); } 
@@ -799,7 +786,8 @@
         }
 
         function downloadPoster() {
-            const btn = document.getElementById('download-btn'); btn.disabled = true;
+            const btn = document.getElementById('download-btn'); const icon = document.getElementById('download-icon'); const text = document.getElementById('download-text');
+            btn.disabled = true; if(icon) icon.className = "fa-solid fa-spinner animate-spin mr-2"; if(text) text.innerText = "正在產生專屬清單圖片...";
             setTimeout(() => {
                 try {
                     const canvas = document.getElementById('export-canvas'); const ctx = canvas.getContext('2d');
@@ -829,7 +817,7 @@
                     ctx.fillStyle = '#ffffff'; ctx.font = '900 italic 38px "Inter"'; ctx.fillText(document.getElementById('poster-status-ready').innerText, 80, 1855);
                     const link = document.createElement('a'); link.download = `${document.getElementById('poster-race-tag').innerText}_裝備清單.png`; link.href = canvas.toDataURL("image/png"); link.click();
                     logEvent('Download_Image', currentSport);
-                } catch (err) { console.error(err); } finally { btn.disabled = false; }
+                } catch (err) { console.error(err); } finally { btn.disabled = false; if(icon) icon.className = "fa-solid fa-download"; if(text) text.innerText = "下載圖片 (9:16)"; }
             }, 300);
         }
     </script>
