@@ -59,17 +59,17 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <!-- 📈 已加入官網點擊追蹤 -->
+            <!-- 📈 官網點擊追蹤 -->
             <a href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Nav_MioWebsite', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
-            <!-- 📈 已加入臉書點擊追蹤 -->
+            <!-- 📈 臉書點擊追蹤 -->
             <a href="https://www.facebook.com/MioSports" target="_blank" onclick="logEvent('Click_Nav_FB', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <!-- 📈 已加入IG點擊追蹤 -->
+            <!-- 📈 IG點擊追蹤 -->
             <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" onclick="logEvent('Click_Nav_IG', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
@@ -302,7 +302,7 @@
                         </div>
                     </div>
 
-                    <!-- 📈 底部紅色補齊裝備按鈕：已加入 onclick 點擊追蹤 -->
+                    <!-- 📈 底部紅色補齊裝備按鈕 -->
                     <a id="shop-redirect-btn" href="" target="_blank" onclick="logEvent('Click_Shop_Btn', currentSport)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
@@ -439,6 +439,7 @@
         let deletedItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
         let isEditMode = false;        
+        let isFirstLoad = true; // 📈 防止首頁載入自動灌水越野項目的防線！
 
         function initChoiceImages() {
             Object.keys(SPORT_BACKGROUNDS).forEach(key => {
@@ -500,8 +501,8 @@
             loadChecklist();
             updateSportVisuals(); 
 
-            // 📈 進入網頁：記錄使用人數 (Visitor)
-            logEvent('Visitor', currentSport);
+            // 📈 進入網頁：只記錄最乾淨的總瀏覽流量，類別留空
+            logEvent('Page_View', '');
         });
 
         async function fetchAllGoogleSheetsData() {
@@ -786,8 +787,13 @@
             loadChecklist();
             updateSportVisuals(); 
 
-            // 📈 點選切換：紀錄切換至不同運動別
-            logEvent('Visitor', type);
+            // 📈 精準防灌水邏輯
+            if (isFirstLoad) {
+                isFirstLoad = false; // 攔截成功的初始化，不發送事件
+            } else {
+                // 只有使用者後續點擊時，才記錄為主動切換
+                logEvent('Click_Sport_Tab', type); 
+            }
         }
 
         function updateSportVisuals() {
