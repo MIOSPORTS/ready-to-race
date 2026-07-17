@@ -60,17 +60,17 @@
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
             <!-- 📈 官網點擊追蹤 -->
-            <a href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Nav_MioWebsite', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Nav_MioWebsite', currentSport || 'None')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
             <!-- 📈 臉書點擊追蹤 -->
-            <a href="https://www.facebook.com/MioSports" target="_blank" onclick="logEvent('Click_Nav_FB', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.facebook.com/MioSports" target="_blank" onclick="logEvent('Click_Nav_FB', currentSport || 'None')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
             <!-- 📈 IG點擊追蹤 -->
-            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" onclick="logEvent('Click_Nav_IG', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" onclick="logEvent('Click_Nav_IG', currentSport || 'None')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
@@ -91,7 +91,7 @@
                     比賽前，<br><span class="text-brandRed">你準備好了嗎？</span>
                 </h1>
                 <p class="text-base md:text-lg text-zinc-300 max-w-xl font-light leading-relaxed">
-                    依照你的賽事需求，自動建立專屬裝備檢查清單。<br>出發前快速確認，不再漏帶任何重要裝備。
+                    依照你的賽事需求，自動建立專屬裝備檢查清單。<br>出發前快速確認，不再漏帶重要裝備。
                 </p>
             </div>
 
@@ -144,21 +144,21 @@
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                        <h3 class="text-xl font-bold">開始建立清單，選擇項目</h3>
+                        <h3 class="text-xl font-bold">開始建立，選擇項目</h3>
                     </div>
                     
                     <div class="grid grid-cols-3 gap-4">
-                        <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border-2 border-brandRed shadow-md transition-all duration-300 group select-none">
+                        <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 group select-none">
                             <img id="img-choice-trail" src="" alt="Trail" class="sport-btn-img absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105">
-                            <div class="sport-btn-mask absolute inset-0 bg-zinc-950/30 transition-all duration-300"></div>
+                            <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
                             
-                            <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full active-badge z-10">
+                            <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
-                                <i class="sport-icon fa-solid fa-mountain-sun text-2xl text-white drop-shadow-sm"></i>
-                                <span class="sport-text font-black text-sm text-white drop-shadow-md tracking-wider">越野跑裝備</span>
+                                <i class="sport-icon fa-solid fa-mountain-sun text-2xl text-zinc-300 drop-shadow-sm"></i>
+                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">越野跑裝備</span>
                             </div>
                         </button>
 
@@ -202,11 +202,12 @@
                         <div class="md:col-span-7 space-y-4">
                             <div class="relative">
                                 <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                <input type="text" id="race-search" oninput="searchRaces()" placeholder="搜尋目前分類下的賽事..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-sm transition">
+                                <input type="text" id="race-search" oninput="searchRaces()" disabled placeholder="請先選擇運動項目..." class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none text-sm transition cursor-not-allowed">
                             </div>
                             <div class="space-y-2">
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">對應熱門賽事</span>
                                 <div id="race-list" class="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto pr-1">
+                                    <div class="text-xs text-slate-400 py-4 text-center">請先於上方步驟一選擇運動項目</div>
                                 </div>
                             </div>
                         </div>
@@ -214,16 +215,16 @@
                         <div class="md:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
                             <div class="space-y-2">
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">我選擇的賽事</span>
-                                <h4 id="selected-race-title" class="font-bold text-base text-slate-800">載入中...</h4>
-                                <p id="selected-race-update" class="text-xs text-slate-400">最後更新：常態更新</p>
+                                <h4 id="selected-race-title" class="font-bold text-base text-slate-400">尚未選擇項目</h4>
+                                <p id="selected-race-update" class="text-xs text-slate-400">-</p>
                                 <p class="text-[10px] text-slate-400/80 font-normal leading-normal">※ 賽事資訊若有異動，以主辦單位公告為準</p>
                             </div>
                             <div class="pt-4 border-t border-slate-200 mt-4 flex justify-between items-center text-xs">
-                                <a href="#" id="race-rule-link" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1">
+                                <a href="#" id="race-rule-link" target="_blank" class="text-slate-300 pointer-events-none font-semibold flex items-center space-x-1">
                                     <span>查看賽事規定</span>
                                     <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                                 </a>
-                                <button onclick="resetToGeneral()" class="text-slate-400 hover:text-slate-600">清除選擇</button>
+                                <button id="clear-race-btn" disabled onclick="resetToGeneral()" class="text-slate-300 cursor-not-allowed">清除選擇</button>
                             </div>
                         </div>
                     </div>
@@ -237,38 +238,42 @@
 
                     <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div class="flex flex-1">
-                            <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
-                            <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">建議裝備</button>
-                            <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
+                            <button onclick="switchTab('mandatory')" id="tab-mandatory" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">必要裝備</button>
+                            <button onclick="switchTab('recommended')" id="tab-recommended" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">建議裝備</button>
+                            <button onclick="switchTab('weather')" id="tab-weather" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">依天氣調整</button>
                         </div>
                         <div class="flex items-center px-2 py-2 sm:py-0 select-none">
-                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-slate-700 transition">
-                                <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
+                            <label class="flex items-center space-x-2 text-xs font-bold text-slate-300 cursor-not-allowed">
+                                <input type="checkbox" id="toggle-unprepared" disabled class="rounded border-slate-200 text-slate-300 w-3.5 h-3.5 cursor-not-allowed">
                                 <span><i class="fa-solid fa-magnifying-glass mr-1 text-[10px]"></i>尚未準備清單</span>
                             </label>
                         </div>
                     </div>
 
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
+                        <div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400 text-sm">
+                             <i class="fa-solid fa-arrow-pointer text-2xl mb-2 text-slate-300"></i>
+                             <span>請先於上方步驟一選擇運動項目以建立清單</span>
+                        </div>
                     </div>
 
                     <div class="space-y-3 pt-2">
                         <div class="flex items-center gap-2">
                             <div class="relative flex-grow">
-                                <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                <input type="text" id="custom-item-input" onkeypress="handleCustomItemKey(event)" placeholder="新增個人裝備(例如：個人藥品、運動攝影機)" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-xs transition">
+                                <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
+                                <input type="text" id="custom-item-input" disabled placeholder="請先選擇項目..." class="w-full pl-9 pr-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none text-xs transition cursor-not-allowed">
                             </div>
-                            <button onclick="addCustomItem()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm">
+                            <button id="add-custom-btn" disabled class="bg-slate-300 text-white text-xs font-bold py-2.5 px-4 rounded-xl cursor-not-allowed">
                                 新增
                             </button>
                         </div>
                         
                         <div class="flex items-center gap-2">
-                            <button id="edit-mode-btn" onclick="toggleEditMode()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
-                                <i class="fa-solid fa-pen-to-square" id="edit-btn-icon"></i>
-                                <span id="edit-btn-text">編輯清單項目</span>
+                            <button id="edit-mode-btn" disabled onclick="toggleEditMode()" class="flex-1 py-2 bg-slate-50 text-slate-300 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-not-allowed">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                <span>編輯清單項目</span>
                             </button>
-                            <button onclick="resetDeletedItems()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                            <button id="reset-gear-btn" disabled onclick="resetDeletedItems()" class="flex-1 py-2 bg-slate-50 text-slate-300 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-not-allowed">
                                 <i class="fa-solid fa-rotate-left"></i>
                                 <span>恢復預設裝備</span>
                             </button>
@@ -278,20 +283,21 @@
                     <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
                         <div class="flex justify-between items-center font-bold text-sm md:text-base">
                             <div class="flex items-center space-x-2">
-                                <span class="text-slate-500 text-sm">準備完成度</span>
-                                <span id="completion-percentage" class="text-brandRed text-2xl font-black">0%</span>
+                                <span class="text-slate-400 text-sm">準備完成度</span>
+                                <span id="completion-percentage" class="text-slate-300 text-2xl font-black">0%</span>
                             </div>
-                            <span id="items-left-text" class="text-slate-500 text-sm">尚未準備 <span id="items-left-count" class="text-brandRed text-base font-black">0</span> 項</span>
+                            <span id="items-left-text" class="text-slate-400 text-sm">尚未準備 <span id="items-left-count" class="text-slate-300 text-base font-black">0</span> 項</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                            <div id="progress-bar" class="bg-brandRed h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                            <div id="progress-bar" class="bg-slate-300 h-full rounded-full" style="width: 0%"></div>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的運動裝備</span>
-                            <ul id="unprepared-list" class="text-xs text-slate-600 space-y-1 list-disc list-inside max-h-[100px] overflow-y-auto">
+                            <ul id="unprepared-list" class="text-xs text-slate-400 space-y-1 list-disc list-inside">
+                                <li class="list-none text-slate-400/70">無選取項目</li>
                             </ul>
                         </div>
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
@@ -303,7 +309,7 @@
                     </div>
 
                     <!-- 📈 底部紅色補齊裝備按鈕 -->
-                    <a id="shop-redirect-btn" href="" target="_blank" onclick="logEvent('Click_Shop_Btn', currentSport)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <a id="shop-redirect-btn" href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Shop_Btn', currentSport || 'None')" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -321,13 +327,15 @@
                        </div>
 
                         <div class="relative z-10 space-y-1">
-                            <p id="poster-race-tag" class="text-[10px] font-black text-brandRed uppercase tracking-widest">載入中...</p>
+                            <p id="poster-race-tag" class="text-[10px] font-black text-brandRed uppercase tracking-widest">COMPRESSPORT</p>
                             <h2 class="text-xl font-black tracking-tight">我的裝備清單</h2>
-                            <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
+                            <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">-</p>
                         </div>
 
-                      <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
-                          <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1">
+                      <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px] justify-center items-center">
+                          <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1 w-full text-center flex flex-col justify-center text-zinc-500">
+                               <i class="fa-solid fa-lock text-lg mb-1"></i>
+                               <span class="text-[10px]">選取運動項目後解鎖預覽</span>
                           </div>
                       </div>
 
@@ -344,11 +352,11 @@
                     </div>
 
                     <div class="mt-5 space-y-2">
-                        <button id="download-btn" onclick="downloadPoster()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed">
-                            <i class="fa-solid fa-download" id="download-icon"></i>
-                            <span id="download-text">下載圖片 (9:16)</span>
+                        <button id="download-btn" disabled onclick="downloadPoster()" class="w-full bg-slate-200 text-slate-400 font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs cursor-not-allowed">
+                            <i class="fa-solid fa-download"></i>
+                            <span>下載圖片 (9:16)</span>
                         </button>
-                        <button onclick="shareList()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs">
+                        <button id="share-btn" disabled onclick="shareList()" class="w-full bg-slate-50 text-slate-300 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs cursor-not-allowed">
                             <i class="fa-solid fa-share-nodes"></i>
                             <span>分享清單連結</span>
                         </button>
@@ -372,7 +380,6 @@
         // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
 
-        // 取得或產生唯一 UserID (維持瀏覽器不重複)
         function getOrCreateUserId() {
             let uid = localStorage.getItem('packing_list_user_id');
             if (!uid) {
@@ -383,17 +390,16 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 核心傳送函數
         function logEvent(actionName, categoryName = "") {
             if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
-                console.warn("⚠️ GAS_URL 尚未設定，無法上傳紀錄：", actionName, categoryName);
+                console.warn("⚠️ GAS_URL 尚未設定：", actionName, categoryName);
                 return;
             }
-            const currentRaceTitle = currentRace ? currentRace.title : "Unknown Race";
+            const currentRaceTitle = currentRace ? currentRace.title : "None";
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: categoryName ? `${categoryName} | ${currentRaceTitle}` : currentRaceTitle
+                category: categoryName !== "" && categoryName !== "None" ? `${categoryName} | ${currentRaceTitle}` : currentRaceTitle
             };
 
             fetch(GAS_URL, {
@@ -407,21 +413,21 @@
             .catch(err => console.error('❌ 數據寫入失敗:', err));
         }
 
+        // 🎯 預設全品類 Banner 背景設定為 images/bg_all.jpg
         const SPORT_BACKGROUNDS = {
+            all: 'images/bg_all.jpg',
             trail: 'images/bg_trail.jpg',      
             triathlon: 'images/bg_triathlon.jpg',  
             road: 'images/bg_road.jpg'         
         };
 
         const OFFICIAL_STORE_URLS = {
+            all: 'https://www.miosports.com.tw/',
             trail: 'https://bit.ly/4vBuJW6',
             triathlon: 'https://bit.ly/44xwYi6',
             road: 'https://bit.ly/4vtYOqx'
         };
 
-        // ==========================================
-        // 🚀 Google Sheets 雲端連動唯一資料源
-        // ==========================================
         const SPREADSHEET_CSV_URLS = {
             road: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=0&single=true&output=csv',
             trail: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=1816972335&single=true&output=csv',
@@ -431,7 +437,7 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        let currentSport = 'trail';
+        let currentSport = null; // 🎯 初始為空
         let currentTab = 'mandatory';
         let currentRace = null;
         let checkedItems = new Set();
@@ -439,10 +445,9 @@
         let deletedItemsDatabase = {}; 
         let isOnlyUnprepared = false; 
         let isEditMode = false;        
-        let isFirstLoad = true; // 📈 防止首頁載入自動灌水越野項目的防線！
 
         function initChoiceImages() {
-            Object.keys(SPORT_BACKGROUNDS).forEach(key => {
+            ['trail', 'triathlon', 'road'].forEach(key => {
                 const imgEl = document.getElementById(`img-choice-${key}`);
                 if (imgEl) {
                     imgEl.src = SPORT_BACKGROUNDS[key];
@@ -467,8 +472,6 @@
             initDate();
             initChoiceImages();
             
-            document.getElementById('items-grid').innerHTML = `<div class="col-span-2 text-center py-12 text-brandRed font-medium text-sm animate-pulse"><i class="fa-solid fa-spinner animate-spin mr-2"></i> 同步雲端大會裝備清單中...</div>`;
-
             await fetchAllGoogleSheetsData();
 
             Object.keys(RACES_DATABASE).forEach(sportKey => {
@@ -478,31 +481,33 @@
                 }
             });
 
+            // 檢查網址有沒有帶指定參數
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
 
             if (sportParam && RACES_DATABASE[sportParam] && RACES_DATABASE[sportParam].length > 0) {
+                // 如果有帶網址參數，直接進入該項目
                 currentSport = sportParam;
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
                 currentRace = foundRace ? foundRace : RACES_DATABASE[currentSport][0];
+                
+                setSportTypeVisuals(currentSport);
+                renderRaceList(RACES_DATABASE[currentSport]);
+                unlockUIElements();
+                if (raceParam && currentRace && currentRace.id !== RACES_DATABASE[currentSport][0].id) {
+                    selectRaceVisuals(currentRace);
+                }
+                loadSavedChecklist();
+                loadChecklist();
             } else {
-                currentRace = RACES_DATABASE[currentSport][0];
+                // 🎯 空白起跑：沒有帶參數，Banner 預設為全品類形象圖
+                document.getElementById('hero-bg').src = SPORT_BACKGROUNDS['all'];
+                document.getElementById('poster-bg').src = SPORT_BACKGROUNDS['all'];
             }
 
-            setSportTypeVisuals(currentSport);
-            renderRaceList(RACES_DATABASE[currentSport]);
-            
-            if (raceParam && currentRace && currentRace.id !== RACES_DATABASE[currentSport][0].id) {
-                selectRaceVisuals(currentRace);
-            }
-
-            loadSavedChecklist();
-            loadChecklist();
-            updateSportVisuals(); 
-
-            // 📈 進入網頁：只記錄最乾淨的總瀏覽流量，類別留空
-            logEvent('Page_View', '');
+            // 📈 數據最純淨：只記錄網頁被開啟的總次數
+            logEvent('Page_View', currentSport || 'None');
         });
 
         async function fetchAllGoogleSheetsData() {
@@ -514,9 +519,7 @@
                     const csvText = await response.text();
                     return { sport: sportKey, csv: csvText };
                 });
-
                 const results = await Promise.all(promises);
-                
                 results.forEach(res => {
                     if (!res) return;
                     const lines = parseCSV(res.csv);
@@ -532,7 +535,6 @@
                     const raceUrlIdx = headers.indexOf('raceurl');
 
                     if (raceIdIdx === -1 || itemNameIdx === -1) return;
-
                     const raceMap = new Map();
 
                     for (let i = 1; i < lines.length; i++) {
@@ -552,7 +554,6 @@
                         if (!raceMap.has(raceId)) {
                             raceMap.set(raceId, { id: raceId, title: raceTitle, update: lastUpdate, url: raceUrl });
                         }
-
                         if (!GEAR_DATA[raceId]) {
                             GEAR_DATA[raceId] = { mandatory: [], recommended: [], weather: [] };
                         }
@@ -563,261 +564,133 @@
 
                     const raceList = Array.from(raceMap.values());
                     const generalId = `general_${res.sport}`;
-                    
                     const sortedRaces = raceList.sort((a, b) => {
                         if (a.id === generalId) return -1;
                         if (b.id === generalId) return 1;
                         return 0;
                     });
-
-                    if (sortedRaces.length > 0) {
-                        RACES_DATABASE[res.sport] = sortedRaces;
-                    }
+                    if (sortedRaces.length > 0) RACES_DATABASE[res.sport] = sortedRaces;
                 });
-                console.log("🚀 Google Sheets 雲端連動核心完全就緒！");
-            } catch (err) {
-                console.error("⚠️ 雲端讀取失敗，試算表欄位或網路可能有誤：", err);
-            }
+            } catch (err) { console.error("雲端讀取失敗:", err); }
         }
 
         function parseCSV(text) {
-            let p = '', r = [];
-            let q = false;
-            let row = [''];
+            let p = '', r = []; let q = false; let row = [''];
             for (let i = 0; i < text.length; i++) {
                 let c = text[i];
                 if (c === '"') {
-                    if (q && text[i+1] === '"') { row[row.length-1] += '"'; i++; }
-                    else { q = !q; }
-                } else if (c === ',' && !q) {
-                    row.push('');
-                } else if (c === '\r' || c === '\n') {
+                    if (q && text[i+1] === '"') { row[row.length-1] += '"'; i++; } else { q = !q; }
+                } else if (c === ',' && !q) { row.push(''); }
+                else if (c === '\r' || c === '\n') {
                     if (c === '\r' && text[i+1] === '\n') { i++; }
-                    if (!q) { r.push(row); row = ['']; }
-                    else { row[row.length-1] += '\n'; }
-                } else {
-                    row[row.length-1] += c;
-                }
+                    if (!q) { r.push(row); row = ['']; } else { row[row.length-1] += '\n'; }
+                } else { row[row.length-1] += c; }
             }
             if (row.length > 1 || row[0] !== '') r.push(row);
             return r;
         }
 
-        function loadSavedChecklist() {
-            checkedItems.clear();
-            if(!currentRace) return;
-            const storageKey = `compressport_checked_${currentRace.id}`;
-            const savedData = localStorage.getItem(storageKey);
-            if (savedData) {
-                const arr = JSON.parse(savedData);
-                arr.forEach(id => checkedItems.add(id));
-            }
+        // 🎯 核心解鎖函數：當使用者選了運動項目後，才把底下的控制項打開
+        function unlockUIElements() {
+            document.getElementById('race-search').disabled = false;
+            document.getElementById('race-search').className = "w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-sm transition";
+            document.getElementById('race-search').placeholder = "搜尋目前分類下的賽事...";
 
-            const customStorageKey = `compressport_custom_list_${currentRace.id}`;
-            const savedCustomData = localStorage.getItem(customStorageKey);
-            if (savedCustomData) {
-                customItemsDatabase[currentRace.id] = JSON.parse(savedCustomData);
-            } else {
-                customItemsDatabase[currentRace.id] = [];
-            }
+            ['mandatory', 'recommended', 'weather'].forEach(t => {
+                document.getElementById(`tab-${t}`).disabled = false;
+            });
+            document.getElementById('toggle-unprepared').disabled = false;
+            document.getElementById('toggle-unprepared').parentElement.className = "flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-slate-700 transition";
+            document.getElementById('toggle-unprepared').className = "rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer";
 
-            const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
-            const savedDeletedData = localStorage.getItem(deletedStorageKey);
-            if (savedDeletedData) {
-                deletedItemsDatabase[currentRace.id] = JSON.parse(savedDeletedData);
-            } else {
-                deletedItemsDatabase[currentRace.id] = [];
-            }
-        }
+            document.getElementById('custom-item-input').disabled = false;
+            document.getElementById('custom-item-input').className = "w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-xs transition";
+            document.getElementById('custom-item-input').placeholder = "新增個人裝備(例如：個人藥品、運動攝影機)";
+            document.getElementById('add-custom-btn').disabled = false;
+            document.getElementById('add-custom-btn').className = "bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm";
 
-        function saveChecklistToStorage() {
-            if(!currentRace) return;
-            const storageKey = `compressport_checked_${currentRace.id}`;
-            const arr = Array.from(checkedItems);
-            localStorage.setItem(storageKey, JSON.stringify(arr));
-        }
+            document.getElementById('edit-mode-btn').disabled = false;
+            document.getElementById('edit-mode-btn').className = "flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
+            document.getElementById('reset-gear-btn').disabled = false;
+            document.getElementById('reset-gear-btn').className = "flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
 
-        function saveCustomItemsToStorage() {
-            if(!currentRace) return;
-            const customStorageKey = `compressport_custom_list_${currentRace.id}`;
-            localStorage.setItem(customStorageKey, JSON.stringify(customItemsDatabase[currentRace.id] || []));
-        }
-
-        function saveDeletedItemsToStorage() {
-            if(!currentRace) return;
-            const deletedStorageKey = `compressport_deleted_${currentRace.id}`;
-            localStorage.setItem(deletedStorageKey, JSON.stringify(deletedItemsDatabase[currentRace.id] || []));
-        }
-
-        function addCustomItem() {
-            if(!currentRace) return;
-            const input = document.getElementById('custom-item-input');
-            const name = input.value.trim();
-            if (!name) return;
-
-            const customId = `c_${Date.now()}`;
-            const newItem = { id: customId, name: name, isCustom: true };
-
-            if (!customItemsDatabase[currentRace.id]) {
-                customItemsDatabase[currentRace.id] = [];
-            }
-            customItemsDatabase[currentRace.id].push(newItem);
-
-            saveCustomItemsToStorage();
-            input.value = ''; 
-            loadChecklist(); 
-        }
-
-        function handleCustomItemKey(e) {
-            if (e.key === 'Enter') {
-                addCustomItem();
-            }
-        }
-
-        function deleteItem(id, isCustom, e) {
-            if (e) e.stopPropagation(); 
-            if(!currentRace) return;
-            
-            if (isCustom) {
-                if (customItemsDatabase[currentRace.id]) {
-                    customItemsDatabase[currentRace.id] = customItemsDatabase[currentRace.id].filter(item => item.id !== id);
-                    saveCustomItemsToStorage();
-                }
-            } else {
-                if (!deletedItemsDatabase[currentRace.id]) {
-                    deletedItemsDatabase[currentRace.id] = [];
-                }
-                if (!deletedItemsDatabase[currentRace.id].includes(id)) {
-                    deletedItemsDatabase[currentRace.id].push(id);
-                    saveDeletedItemsToStorage();
-                }
-            }
-            
-            checkedItems.delete(id); 
-            saveChecklistToStorage();
-            loadChecklist();
-        }
-
-        function resetDeletedItems() {
-            if (!currentRace) return;
-            if (confirm("確定要恢復預設裝備嗎？這將會還原所有被刪除的原始項目，並清除您自訂新增的裝備。")) {
-                deletedItemsDatabase[currentRace.id] = [];
-                saveDeletedItemsToStorage();
-                
-                customItemsDatabase[currentRace.id] = [];
-                saveCustomItemsToStorage();
-                
-                if (isEditMode) toggleEditMode();
-                loadChecklist();
-            }
-        }
-
-        function toggleEditMode() {
-            isEditMode = !isEditMode;
-            const btn = document.getElementById('edit-mode-btn');
-            const text = document.getElementById('edit-btn-text');
-            const icon = document.getElementById('edit-btn-icon');
-            
-            if (isEditMode) {
-                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-brandRed font-bold text-xs rounded-xl border border-brandRed/40 transition flex items-center justify-center space-x-1.5 shadow-sm";
-                text.innerText = "完成編輯";
-                if (icon) icon.className = "fa-solid fa-floppy-disk";
-            } else {
-                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
-                text.innerText = "編輯清單項目";
-                if (icon) icon.className = "fa-solid fa-pen-to-square";
-            }
-            renderChecklistItems();
+            document.getElementById('download-btn').disabled = false;
+            document.getElementById('download-btn').className = "w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed";
+            document.getElementById('share-btn').disabled = false;
+            document.getElementById('share-btn').className = "w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs";
         }
 
         function setSportTypeVisuals(type) {
             document.querySelectorAll('.sport-btn').forEach(btn => {
-                btn.classList.remove('border-brandRed', 'shadow-md');
-                btn.classList.add('border-slate-200', 'shadow-sm');
+                btn.className = "sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm duration-300 group select-none";
                 btn.querySelector('.active-badge').classList.add('hidden');
-                const img = btn.querySelector('.sport-btn-img');
-                if (img) img.classList.add('grayscale');
-                const mask = btn.querySelector('.sport-btn-mask');
-                if (mask) { mask.classList.remove('bg-zinc-950/30'); mask.classList.add('bg-zinc-950/60'); }
-                const icon = btn.querySelector('.sport-icon');
-                if (icon) { icon.classList.remove('text-white'); icon.classList.add('text-zinc-300'); }
-                const text = btn.querySelector('.sport-text');
-                if (text) { text.classList.remove('text-white'); text.classList.add('text-zinc-300'); }
+                const img = btn.querySelector('.sport-btn-img'); if (img) img.classList.add('grayscale');
+                const mask = btn.querySelector('.sport-btn-mask'); if (mask) { mask.className = "sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"; }
+                const icon = btn.querySelector('.sport-icon'); if (icon) { icon.className = "sport-icon fa-solid " + (btn.id.includes('trail') ? 'fa-mountain-sun' : btn.id.includes('triathlon') ? 'fa-bicycle' : 'fa-person-running') + " text-2xl text-zinc-300 drop-shadow-sm"; }
+                const text = btn.querySelector('.sport-text'); if (text) { text.className = "sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider"; }
             });
 
             const activeBtn = document.getElementById(`btn-${type}`);
             if (activeBtn) {
-                activeBtn.classList.add('border-brandRed', 'shadow-md');
-                activeBtn.classList.remove('border-slate-200', 'shadow-sm');
+                activeBtn.className = "sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border-2 border-brandRed shadow-md transition-all duration-300 group select-none";
                 activeBtn.querySelector('.active-badge').classList.remove('hidden');
-                const activeImg = activeBtn.querySelector('.sport-btn-img');
-                if (activeImg) activeImg.classList.remove('grayscale');
-                const activeMask = activeBtn.querySelector('.sport-btn-mask');
-                if (activeMask) { activeMask.classList.remove('bg-zinc-950/60'); activeMask.classList.add('bg-zinc-950/30'); }
-                const activeIcon = activeBtn.querySelector('.sport-icon');
-                if (activeIcon) { activeIcon.classList.remove('text-zinc-300'); activeIcon.classList.add('text-white'); }
-                const activeText = activeBtn.querySelector('.sport-text');
-                if (activeText) { activeText.classList.remove('text-zinc-300'); activeText.classList.add('text-white'); }
+                const activeImg = activeBtn.querySelector('.sport-btn-img'); if (activeImg) activeImg.classList.remove('grayscale');
+                const activeMask = activeBtn.querySelector('.sport-btn-mask'); if (activeMask) activeMask.className = "sport-btn-mask absolute inset-0 bg-zinc-950/30 transition-all duration-300";
+                const activeIcon = activeBtn.querySelector('.sport-icon'); if (activeIcon) activeIcon.className = activeIcon.className.replace('text-zinc-300', 'text-white');
+                const activeText = activeBtn.querySelector('.sport-text'); if (activeText) activeText.className = activeText.className.replace('text-zinc-300', 'text-white');
             }
 
             if(currentRace) {
                 document.getElementById('selected-race-title').innerText = currentRace.title;
+                document.getElementById('selected-race-title').className = "font-bold text-base text-slate-800";
                 document.getElementById('selected-race-update').innerText = currentRace.id.includes('general') ? `常態更新` : `最後更新：${currentRace.update}`;
                 document.getElementById('race-rule-link').href = currentRace.url;
+                document.getElementById('race-rule-link').className = "text-brandRed hover:underline font-semibold flex items-center space-x-1";
+                document.getElementById('clear-race-btn').disabled = false;
+                document.getElementById('clear-race-btn').className = "text-slate-400 hover:text-slate-600";
                 document.getElementById('poster-race-tag').innerText = currentRace.title;
             }
         }
 
         function setSportType(type) {
+            // 📈 精準分析：只有點擊時，才發送 Click 事件
+            logEvent('Click_Sport_Tab', type);
+
             currentSport = type;
+            unlockUIElements();
+            
             if (!RACES_DATABASE[type] || RACES_DATABASE[type].length === 0) {
                 const genId = `general_${type}`;
                 RACES_DATABASE[type] = [{ id: genId, title: '基本裝備清單', update: '常態更新', url: '#' }];
             }
             currentRace = RACES_DATABASE[type][0]; 
-            
             if (isEditMode) toggleEditMode();
 
             loadSavedChecklist();
             resetFilterCheckbox(); 
-
             document.getElementById('race-search').value = '';
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
-            loadChecklist();
+            switchTab('mandatory'); // 自動跳回必要裝備分頁
             updateSportVisuals(); 
-
-            // 📈 精準防灌水邏輯
-            if (isFirstLoad) {
-                isFirstLoad = false; // 攔截成功的初始化，不發送事件
-            } else {
-                // 只有使用者後續點擊時，才記錄為主動切換
-                logEvent('Click_Sport_Tab', type); 
-            }
         }
 
         function updateSportVisuals() {
+            if(!currentSport) return;
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport];
-            const heroBg = document.getElementById('hero-bg');
-            if (heroBg) heroBg.src = currentImgUrl;
-            const posterBg = document.getElementById('poster-bg');
-            if (posterBg) posterBg.src = currentImgUrl;
-            
-            const shopBtn = document.getElementById('shop-redirect-btn');
-            if (shopBtn && OFFICIAL_STORE_URLS[currentSport]) {
-                shopBtn.href = OFFICIAL_STORE_URLS[currentSport];
+            if (document.getElementById('hero-bg')) document.getElementById('hero-bg').src = currentImgUrl;
+            if (document.getElementById('poster-bg')) document.getElementById('poster-bg').src = currentImgUrl;
+            if (document.getElementById('shop-redirect-btn') && OFFICIAL_STORE_URLS[currentSport]) {
+                document.getElementById('shop-redirect-btn').href = OFFICIAL_STORE_URLS[currentSport];
             }
         }
 
         function renderRaceList(racesData) {
             const listContainer = document.getElementById('race-list');
             listContainer.innerHTML = '';
-            
             if (!racesData || racesData.length <= 1) {
-                listContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">暫無精選熱門賽事</div>`;
-                return;
+                listContainer.innerHTML = `<div class="text-xs text-slate-400 py-4 text-center">暫無精選熱門賽事</div>`; return;
             }
-
             racesData.slice(1).forEach(race => {
                 const item = document.createElement('div');
                 item.className = 'flex justify-between items-center py-2 px-3 hover:bg-slate-100 rounded-lg cursor-pointer transition text-xs text-slate-700 font-medium';
@@ -828,6 +701,7 @@
         }
 
         function searchRaces() {
+            if(!currentSport) return;
             const query = document.getElementById('race-search').value.toLowerCase().trim();
             const filtered = RACES_DATABASE[currentSport].filter(r => r.title.toLowerCase().includes(query));
             renderRaceList(filtered);
@@ -845,12 +719,9 @@
             currentRace = race;
             if (isEditMode) toggleEditMode(); 
             selectRaceVisuals(race);
-            
             loadSavedChecklist();
             resetFilterCheckbox(); 
             loadChecklist();
-
-            // 📈 選擇賽事：紀錄選擇新賽事的行為
             logEvent('Select_Race', currentSport);
         }
 
@@ -862,56 +733,32 @@
             document.getElementById('race-rule-link').href = '#';
             document.getElementById('race-search').value = '';
             renderRaceList(RACES_DATABASE[currentSport]);
-            
             loadSavedChecklist();
             resetFilterCheckbox(); 
             loadChecklist();
-
-            // 📈 清除選擇：回歸公版
             logEvent('Reset_To_General', currentSport);
         }
 
         function switchTab(tab) {
+            if(!currentSport) return;
             currentTab = tab;
             ['mandatory', 'recommended', 'weather'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                if (t === tab) {
-                    btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition';
-                } else {
-                    btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition';
-                }
+                if (t === tab) { btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition'; } 
+                else { btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition'; }
             });
             renderChecklistItems();
         }
 
-        function toggleUnpreparedFilter() {
-            isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
-            renderChecklistItems();
-        }
-
-        function resetFilterCheckbox() {
-            isOnlyUnprepared = false;
-            const chk = document.getElementById('toggle-unprepared');
-            if (chk) chk.checked = false;
-        }
-
-        function loadChecklist() {
-            renderChecklistItems();
-            updateProgress();
-            syncPosterPreview();
-        }
-
-        function getGearArrayFromSource(db, raceId, tab) {
-            if (db && db[raceId] && db[raceId][tab]) {
-                return db[raceId][tab];
-            }
-            return [];
-        }
+        function toggleUnpreparedFilter() { toggleUnpreparedFilterLogic(); }
+        function toggleUnpreparedFilterLogic() { isOnlyUnprepared = document.getElementById('toggle-unprepared').checked; renderChecklistItems(); }
+        function resetFilterCheckbox() { isOnlyUnprepared = false; const chk = document.getElementById('toggle-unprepared'); if (chk) chk.checked = false; }
+        function loadChecklist() { renderChecklistItems(); updateProgress(); syncPosterPreview(); }
+        function getGearArrayFromSource(db, raceId, tab) { if (db && db[raceId] && db[raceId][tab]) { return db[raceId][tab]; } return []; }
 
         function getAllCurrentGearItems() {
-            if (!currentRace) return [];
+            if (!currentSport || !currentRace) return [];
             const generalId = `general_${currentSport}`;
-            
             let baseItems = [];
             let cloudBase = getGearArrayFromSource(GEAR_DATA, generalId, currentTab);
             baseItems = JSON.parse(JSON.stringify(cloudBase));
@@ -919,172 +766,94 @@
             if (currentRace.id !== generalId) {
                 let cloudSpecific = getGearArrayFromSource(GEAR_DATA, currentRace.id, currentTab);
                 cloudSpecific.forEach(specItem => {
-                    if (!baseItems.some(b => b.id === specItem.id || b.name === specItem.name)) {
-                        baseItems.push(JSON.parse(JSON.stringify(specItem)));
-                    }
+                    if (!baseItems.some(b => b.id === specItem.id || b.name === specItem.name)) { baseItems.push(JSON.parse(JSON.stringify(specItem))); }
                 });
             }
-
             const deletedList = deletedItemsDatabase[currentRace.id] || [];
             baseItems = baseItems.filter(item => !deletedList.includes(item.id));
-
-            if (currentTab === 'mandatory' && customItemsDatabase[currentRace.id]) {
-                baseItems = [...baseItems, ...customItemsDatabase[currentRace.id]];
-            }
+            if (currentTab === 'mandatory' && customItemsDatabase[currentRace.id]) { baseItems = [...baseItems, ...customItemsDatabase[currentRace.id]]; }
             return baseItems;
         }
 
         function renderChecklistItems() {
-            const grid = document.getElementById('items-grid');
-            if (!grid) return;
-            grid.innerHTML = '';
+            const grid = document.getElementById('items-grid'); if (!grid) return; grid.innerHTML = '';
             let items = getAllCurrentGearItems();
-
-            if (isOnlyUnprepared) {
-                items = items.filter(item => !checkedItems.has(item.id));
-            }
-
+            if (isOnlyUnprepared) { items = items.filter(item => !checkedItems.has(item.id)); }
             if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '大會尚未於此分類填寫推薦裝備項目'}</div>`;
-                return;
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '大會尚未於此分類填寫推薦裝備項目'}</div>`; return;
             }
-
             items.forEach(item => {
-                const isChecked = checkedItems.has(item.id);
-                const itemDiv = document.createElement('div');
-                
-                if (isEditMode) {
-                    itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
-                } else {
+                const isChecked = checkedItems.has(item.id); const itemDiv = document.createElement('div');
+                if (isEditMode) { itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`; } 
+                else {
                     itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
                     itemDiv.onclick = () => toggleItem(item.id);
                 }
-
                 let deleteBtnHtml = '';
                 if (item.isCustom) {
-                    deleteBtnHtml = `
-                        <button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2">
-                            <i class="fa-regular fa-trash-can text-xs"></i>
-                        </button>
-                    `;
+                    deleteBtnHtml = `<button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2"><i class="fa-regular fa-trash-can text-xs"></i></button>`;
                 } else if (isEditMode) {
-                    deleteBtnHtml = `
-                        <button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2" title="隱藏此項目">
-                            <i class="fa-regular fa-trash-can text-xs"></i>
-                        </button>
-                    `;
+                    deleteBtnHtml = `<button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2" title="隱藏此項目"><i class="fa-regular fa-trash-can text-xs"></i></button>`;
                 }
-
                 itemDiv.innerHTML = `
                     <div class="flex items-center space-x-3 overflow-hidden flex-grow">
-                        ${!isEditMode ? `
-                        <div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">
-                            ${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
-                        </div>` : '<i class="fa-solid fa-circle text-[5px] text-slate-300 ml-1 flex-shrink-0"></i>'}
-                        
-                        <span class="text-xs font-semibold text-slate-700 truncate ${(!isEditMode && isChecked) ? 'line-through text-slate-400 font-normal' : ''}">
-                            ${item.name} 
-                            ${item.isCustom ? '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200/60 ml-1 font-normal">自訂</span>' : ''}
-                        </span>
-                    </div>
-                    ${deleteBtnHtml}
-                `;
+                        ${!isEditMode ? `<div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}</div>` : '<i class="fa-solid fa-circle text-[5px] text-slate-300 ml-1 flex-shrink-0"></i>'}
+                        <span class="text-xs font-semibold text-slate-700 truncate ${(!isEditMode && isChecked) ? 'line-through text-slate-400 font-normal' : ''}">${item.name}${item.isCustom ? '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200/60 ml-1 font-normal">自訂</span>' : ''}</span>
+                    </div>${deleteBtnHtml}`;
                 grid.appendChild(itemDiv);
             });
         }
 
         function toggleItem(id) {
-            if (isEditMode) return; 
-            
-            if (checkedItems.has(id)) checkedItems.delete(id);
-            else checkedItems.add(id);
-            
+            if (isEditMode) return;
+            if (checkedItems.has(id)) checkedItems.delete(id); else checkedItems.add(id);
             saveChecklistToStorage();
-            
-            if (isOnlyUnprepared) {
-                renderChecklistItems();
-                updateProgress();
-                syncPosterPreview();
-            } else {
-                loadChecklist();
-            }
+            if (isOnlyUnprepared) { renderChecklistItems(); updateProgress(); syncPosterPreview(); } else { loadChecklist(); }
         }
 
         function getEntireRaceItemsCollection() {
-            if (!currentRace) return [];
-            const generalId = `general_${currentSport}`;
-            const tabs = ['mandatory', 'recommended', 'weather'];
-            let entireList = [];
-
+            if (!currentSport || !currentRace) return [];
+            const generalId = `general_${currentSport}`; const tabs = ['mandatory', 'recommended', 'weather']; let entireList = [];
             tabs.forEach(tab => {
-                let cloudBase = getGearArrayFromSource(GEAR_DATA, generalId, tab);
-                let baseItems = JSON.parse(JSON.stringify(cloudBase));
-
+                let cloudBase = getGearArrayFromSource(GEAR_DATA, generalId, tab); let baseItems = JSON.parse(JSON.stringify(cloudBase));
                 if (currentRace.id !== generalId) {
                     let cloudSpecific = getGearArrayFromSource(GEAR_DATA, currentRace.id, tab);
-                    cloudSpecific.forEach(spec => {
-                        if (!baseItems.some(b => b.id === spec.id || b.name === spec.name)) {
-                            baseItems.push(JSON.parse(JSON.stringify(spec)));
-                        }
-                    });
+                    cloudSpecific.forEach(spec => { if (!baseItems.some(b => b.id === spec.id || b.name === spec.name)) { baseItems.push(JSON.parse(JSON.stringify(spec))); } });
                 }
                 entireList = [...entireList, ...baseItems];
             });
-
-            const deletedList = deletedItemsDatabase[currentRace.id] || [];
-            entireList = entireList.filter(item => !deletedList.includes(item.id));
-
-            const customList = customItemsDatabase[currentRace.id] || [];
-            return [...entireList, ...customList];
+            const deletedList = deletedItemsDatabase[currentRace.id] || []; entireList = entireList.filter(item => !deletedList.includes(item.id));
+            const customList = customItemsDatabase[currentRace.id] || []; return [...entireList, ...customList];
         }
 
         function updateProgress() {
             const allItems = getEntireRaceItemsCollection();
-            
-            const totalCount = allItems.length;
-            const checkedCount = allItems.filter(item => checkedItems.has(item.id)).length;
-            const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
-            const remainingCount = totalCount - checkedCount;
-
+            const totalCount = allItems.length; const checkedCount = allItems.filter(item => checkedItems.has(item.id)).length;
+            const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0; const remainingCount = totalCount - checkedCount;
             document.getElementById('completion-percentage').innerText = `${percentage}%`;
+            document.getElementById('completion-percentage').className = "text-brandRed text-2xl font-black";
             document.getElementById('items-left-count').innerText = remainingCount;
+            document.getElementById('items-left-count').className = "text-brandRed text-base font-black";
             document.getElementById('progress-bar').style.width = `${percentage}%`;
+            document.getElementById('progress-bar').className = "bg-brandRed h-full rounded-full transition-all duration-300";
 
-            const unpreparedUl = document.getElementById('unprepared-list');
-            unpreparedUl.innerHTML = '';
+            const unpreparedUl = document.getElementById('unprepared-list'); unpreparedUl.innerHTML = '';
             const unpreparedItems = allItems.filter(item => !checkedItems.has(item.id));
-            
-            if (unpreparedItems.length === 0) {
-                unpreparedUl.innerHTML = `<li class="text-emerald-600 font-bold list-none">✓ 所有裝備均已備妥！</li>`;
-            } else {
-                unpreparedItems.forEach(item => {
-                    const li = document.createElement('li');
-                    li.innerText = item.name;
-                    unpreparedUl.appendChild(li);
-                });
-            }
+            if (unpreparedItems.length === 0) { unpreparedUl.innerHTML = `<li class="text-emerald-600 font-bold list-none">✓ 所有裝備均已備妥！</li>`; } 
+            else { unpreparedItems.forEach(item => { const li = document.createElement('li'); li.innerText = item.name; li.className = "text-xs text-slate-600"; unpreparedUl.appendChild(li); }); }
         }
 
         function syncPosterPreview() {
-            const posterContainer = document.getElementById('poster-items');
-            if (!posterContainer) return;
-            posterContainer.innerHTML = '';
-            
+            const posterContainer = document.getElementById('poster-items'); if (!posterContainer) return; posterContainer.innerHTML = '';
+            posterContainer.className = "space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1 w-full";
             const allItems = getEntireRaceItemsCollection();
-
             allItems.forEach(item => {
-                const isChecked = checkedItems.has(item.id);
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "flex items-center space-x-2 text-[11px] py-0.5";
-                
-                if (isChecked) {
-                    itemDiv.innerHTML = `<i class="fa-solid fa-square-check text-brandRed text-xs"></i><span class="text-zinc-200 truncate">${item.name}</span>`;
-                } else {
-                    itemDiv.innerHTML = `<i class="fa-regular fa-square text-zinc-600 text-xs"></i><span class="text-zinc-500 truncate">${item.name}</span>`;
-                }
+                const isChecked = checkedItems.has(item.id); const itemDiv = document.createElement('div');
+                itemDiv.className = "flex items-center space-x-2 text-[11px] py-0.5 text-left";
+                if (isChecked) { itemDiv.innerHTML = `<i class="fa-solid fa-square-check text-brandRed text-xs"></i><span class="text-zinc-200 truncate">${item.name}</span>`; } 
+                else { itemDiv.innerHTML = `<i class="fa-regular fa-square text-zinc-600 text-xs"></i><span class="text-zinc-500 truncate">${item.name}</span>`; }
                 posterContainer.appendChild(itemDiv);
             });
-
             const readyTextElement = document.getElementById('poster-status-ready');
             if (readyTextElement) {
                 if (currentSport === 'trail') readyTextElement.innerText = 'READY TO TRAIL';
@@ -1093,220 +862,92 @@
             }
         }
 
+        function loadSavedChecklist() {
+            checkedItems.clear(); if(!currentRace) return;
+            const storageKey = `compressport_checked_${currentRace.id}`; const savedData = localStorage.getItem(storageKey);
+            if (savedData) { JSON.parse(savedData).forEach(id => checkedItems.add(id)); }
+            const customStorageKey = `compressport_custom_list_${currentRace.id}`; const savedCustomData = localStorage.getItem(customStorageKey);
+            customItemsDatabase[currentRace.id] = savedCustomData ? JSON.parse(savedCustomData) : [];
+            const deletedStorageKey = `compressport_deleted_${currentRace.id}`; const savedDeletedData = localStorage.getItem(deletedStorageKey);
+            deletedItemsDatabase[currentRace.id] = savedDeletedData ? JSON.parse(savedDeletedData) : [];
+        }
+
+        function addCustomItem() {
+            if(!currentRace) return; const input = document.getElementById('custom-item-input'); const name = input.value.trim(); if (!name) return;
+            const newItem = { id: `c_${Date.now()}`, name: name, isCustom: true };
+            if (!customItemsDatabase[currentRace.id]) { customItemsDatabase[currentRace.id] = []; }
+            customItemsDatabase[currentRace.id].push(newItem); saveCustomItemsToStorage(); input.value = ''; loadChecklist();
+        }
+
         function shareList() {
             if(!currentRace) return;
-            const baseUrl = window.location.origin + window.location.pathname;
-            const shareUrl = `${baseUrl}?sport=${currentSport}&race=${currentRace.id}`;
-
+            const shareUrl = `${window.location.origin}${window.location.pathname}?sport=${currentSport}&race=${currentRace.id}`;
             if (navigator.share) {
-                navigator.share({
-                    title: `COMPRESSPORT | ${currentRace.title}`,
-                    text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速確認，一起無傷完賽！`,
-                    url: shareUrl,
-                })
-                .then(() => {
-                    logEvent('Share_App', currentSport);
-                })
-                .catch(err => console.log('分享取消或未成功', err));
+                navigator.share({ title: `COMPRESSPORT | ${currentRace.title}`, text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單！`, url: shareUrl })
+                .then(() => logEvent('Share_App', currentSport))
+                .catch(err => console.log('分享取消', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的朋友吧！🤝`);
-                    logEvent('Share_CopyLink', currentSport);
-                }).catch(err => {
-                    console.error('無法複製連結', err);
+                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。`); logEvent('Share_CopyLink', currentSport);
                 });
             }
         }
 
         function downloadPoster() {
-            const btn = document.getElementById('download-btn');
-            const icon = document.getElementById('download-icon');
-            const text = document.getElementById('download-text');
-            
-            btn.disabled = true;
-            icon.className = "fa-solid fa-spinner animate-spin mr-2";
-            text.innerText = "正在產生專屬清單圖片...";
-
+            const btn = document.getElementById('download-btn'); const icon = document.getElementById('download-icon'); const text = document.getElementById('download-text');
+            btn.disabled = true; if(icon) icon.className = "fa-solid fa-spinner animate-spin mr-2"; if(text) text.innerText = "正在產生專屬清單圖片...";
             setTimeout(() => {
                 try {
-                    const canvas = document.getElementById('export-canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    ctx.fillStyle = '#09090b';
-                    ctx.fillRect(0, 0, 1080, 1920);
-
+                    const canvas = document.getElementById('export-canvas'); const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#09090b'; ctx.fillRect(0, 0, 1080, 1920);
                     const posterBgImg = document.getElementById('poster-bg');
-                    if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
-                        ctx.save();
-                        ctx.globalAlpha = 0.55; 
-                        
-                        const canvasWidth = 1080;
-                        const canvasHeight = 1920;
-                        const imgWidth = posterBgImg.naturalWidth;
-                        const imgHeight = posterBgImg.naturalHeight;
-
-                        const r = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
-                        const nw = imgWidth * r;
-                        const nh = imgHeight * r;
-                        const cx = (canvasWidth - nw) / 2;
-                        const cy = (canvasHeight - nh) / 2;
-
-                        ctx.drawImage(posterBgImg, cx, cy, nw, nh);
-                        ctx.restore();
+                    if (posterBgImg && posterBgImg.src && posterBgImg.complete) {
+                        ctx.save(); ctx.globalAlpha = 0.55;
+                        const r = Math.max(1080 / posterBgImg.naturalWidth, 1920 / posterBgImg.naturalHeight);
+                        const nw = posterBgImg.naturalWidth * r; const nh = posterBgImg.naturalHeight * r;
+                        ctx.drawImage(posterBgImg, (1080 - nw) / 2, (1920 - nh) / 2, nw, nh); ctx.restore();
                     }
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 1920); gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)'); gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)'); gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');
+                    ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1080, 1920);
+                    ctx.fillStyle = '#e2001a'; ctx.font = 'bold 36px "Inter"'; ctx.fillText(document.getElementById('poster-race-tag').innerText.toUpperCase(), 80, 160);
+                    ctx.fillStyle = '#ffffff'; ctx.font = '900 76px "Noto Sans TC"'; ctx.fillText('我的裝備清單', 80, 255);
+                    ctx.fillStyle = '#71717a'; ctx.font = '500 28px "Inter"'; ctx.fillText(new Date().getFullYear() + '.' + String(new Date().getMonth()+1).padStart(2,'0') + '.' + String(new Date().getDate()).padStart(2,'0'), 80, 310);
+                    ctx.fillStyle = '#e2001a'; ctx.fillRect(80, 340, 920, 4);
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)'; ctx.fillRect(80, 380, 920, 1300);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)'; ctx.lineWidth = 2; ctx.strokeRect(80, 380, 920, 1300);
 
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
-                    gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
-                    gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
-                    gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   
-                    ctx.fillStyle = gradient;
-                    ctx.fillRect(0, 0, 1080, 1920);
+                    const allItems = getEntireRaceItemsCollection(); const totalItems = allItems.length;
+                    let fontSize = 32; let lineHeight = 82; let maxRows = 14; let columnsCount = 2;
+                    if (totalItems > 44) { fontSize = 22; lineHeight = 52; maxRows = 22; columnsCount = 3; } 
+                    else if (totalItems > 28) { fontSize = 24; lineHeight = 55; maxRows = 22; columnsCount = 2; } 
+                    else if (totalItems > 20) { fontSize = 26; lineHeight = 65; maxRows = 18; columnsCount = 2; } 
+                    else if (totalItems > 14) { fontSize = 28; lineHeight = 72; maxRows = 16; columnsCount = 2; }
 
-                    ctx.fillStyle = '#e2001a';
-                    ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
-                    let tagText = document.getElementById('poster-race-tag').innerText;
-                    ctx.fillText(tagText.toUpperCase(), 80, 160);
-
-                    ctx.fillStyle = '#ffffff';
-                    ctx.font = '900 76px "Noto Sans TC"';
-                    ctx.fillText('我的裝備清單', 80, 255);
-
-                    ctx.fillStyle = '#71717a';
-                    ctx.font = '500 28px "Inter"';
-                    ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
-
-                    ctx.fillStyle = '#e2001a';
-                    ctx.fillRect(80, 340, 920, 4);
-
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
-                    ctx.fillRect(80, 380, 920, 1300);
-                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(80, 380, 920, 1300);
-
-                    // ==========================================
-                    // 📐 動態排版與多排計算
-                    // ==========================================
-                    const allItems = getEntireRaceItemsCollection();
-                    const totalItems = allItems.length;
-
-                    let fontSize = 32;       
-                    let lineHeight = 82;     
-                    let maxRows = 14;        
-                    let columnsCount = 2;    
-                    
-                    if (totalItems > 44) {
-                        fontSize = 22;
-                        lineHeight = 52;
-                        maxRows = 22; 
-                        columnsCount = 3;
-                    } else if (totalItems > 28) {
-                        fontSize = 24;
-                        lineHeight = 55;
-                        maxRows = 22;
-                        columnsCount = 2;
-                    } else if (totalItems > 20) {
-                        fontSize = 26;
-                        lineHeight = 65;
-                        maxRows = 18;
-                        columnsCount = 2;
-                    } else if (totalItems > 14) {
-                        fontSize = 28;
-                        lineHeight = 72;
-                        maxRows = 16;
-                        columnsCount = 2;
-                    }
-
-                    let startY = 460;
-                    
-                    let xPositions = [];
-                    if (columnsCount === 3) {
-                        xPositions = [110, 420, 730]; 
-                    } else {
-                        xPositions = [130, 580]; 
-                    }
-
+                    let startY = 460; let xPositions = columnsCount === 3 ? [110, 420, 730] : [130, 580];
                     allItems.forEach((item, index) => {
                         const colIndex = Math.floor(index / maxRows);
-                        
                         if (colIndex >= columnsCount) {
-                            if (index === maxRows * columnsCount || index === allItems.length - 1) {
-                                ctx.fillStyle = '#e2001a';
-                                ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
-                                const lastX = xPositions[columnsCount - 1];
-                                const lastY = startY + (maxRows - 1) * lineHeight;
-                                ctx.fillText(`...及其他共 ${allItems.length - index} 項`, lastX, lastY);
-                            }
-                            return;
+                            if (index === maxRows * columnsCount) { ctx.fillStyle = '#e2001a'; ctx.font = `bold ${fontSize}px "Noto Sans TC"`; ctx.fillText(`...及其他共 ${allItems.length - index} 項`, xPositions[columnsCount - 1], startY + (maxRows - 1) * lineHeight); } return;
                         }
-
-                        const xPos = xPositions[colIndex];
-                        const rowIndex = index % maxRows;
-                        const yPos = startY + rowIndex * lineHeight;
-
-                        if (yPos > 1620) {
-                            return;
-                        }
-
+                        const yPos = startY + (index % maxRows) * lineHeight; if (yPos > 1620) return;
                         const isChecked = checkedItems.has(item.id);
-
-                        if (isChecked) {
-                            ctx.fillStyle = '#e2001a';
-                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
-                            ctx.fillText('✓', xPos, yPos);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillText(item.name, xPos + 35, yPos);
-                        } else {
-                            ctx.fillStyle = '#4b5563';
-                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
-                            ctx.fillText('☐', xPos, yPos);
-                            ctx.fillStyle = '#71717a';
-                            ctx.fillText(item.name, xPos + 35, yPos);
-                        }
+                        ctx.fillStyle = isChecked ? '#e2001a' : '#4b5563'; ctx.font = `bold ${fontSize}px "Noto Sans TC"`; ctx.fillText(isChecked ? '✓' : '☐', xPositions[colIndex], yPos);
+                        ctx.fillStyle = isChecked ? '#ffffff' : '#71717a'; ctx.fillText(item.name, xPositions[colIndex] + 35, yPos);
                     });
 
-                    ctx.fillStyle = '#a1a1aa'; 
-                    ctx.font = '900 italic 30px "Inter"';
-                    ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
-
-                    ctx.fillStyle = '#ffffff'; 
-                    ctx.font = '900 italic 38px "Inter"';
-                    if (currentSport === 'trail') ctx.fillText('READY TO TRAIL', 80, 1855);
-                    if (currentSport === 'triathlon') ctx.fillText('READY TO TRIATHLON', 80, 1855);
-                    if (currentSport === 'road') ctx.fillText('READY TO RUN', 80, 1855);
-
+                    ctx.fillStyle = '#a1a1aa'; ctx.font = '900 italic 30px "Inter"'; ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
+                    ctx.fillStyle = '#ffffff'; ctx.font = '900 italic 38px "Inter"';
+                    ctx.fillText(currentSport === 'trail' ? 'READY TO TRAIL' : currentSport === 'triathlon' ? 'READY TO TRIATHLON' : 'READY TO RUN', 80, 1855);
+                    
                     const navLogo = document.getElementById('nav-logo');
                     if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
-                        const targetLogoHeight = 40; 
-                        const aspectRatio = navLogo.naturalWidth / navLogo.naturalHeight;
-                        const targetLogoWidth = targetLogoHeight * aspectRatio;
-                        
-                        const logoX = 1000 - targetLogoWidth; 
-                        const logoY = 1855 - targetLogoHeight + 8; 
+                        const targetW = 40 * (navLogo.naturalWidth / navLogo.naturalHeight); ctx.drawImage(navLogo, 1000 - targetW, 1823, targetW, 40);
+                    } else { ctx.fillStyle = '#ffffff'; ctx.font = '900 32px "Inter"'; ctx.fillText('COMPRESSPORT', 700, 1855); }
 
-                        ctx.drawImage(navLogo, logoX, logoY, targetLogoWidth, targetLogoHeight);
-                    } else {
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = '900 32px "Inter"';
-                        ctx.fillText('COMPRESSPORT', 700, 1855);
-                    }
-
-                    const imageURL = canvas.toDataURL("image/png");
-                    const link = document.createElement('a');
-                    const fileName = tagText ? `${tagText}_裝備檢查清單.png` : 'COMPRESSPORT_裝備檢查清單.png';
-                    link.download = fileName;
-                    link.href = imageURL;
-                    link.click();
-
+                    const link = document.createElement('a'); link.download = `${document.getElementById('poster-race-tag').innerText}_裝備檢查清單.png`; link.href = canvas.toDataURL("image/png"); link.click();
                     logEvent('Download_Image', currentSport);
-
-                } catch (error) {
-                    console.error("下載圖片失敗", error);
-                } finally {
-                    btn.disabled = false;
-                    icon.className = "fa-solid fa-download";
-                    text.innerText = "下載圖片 (9:16)";
-                }
+                } catch (error) { console.error("下載失敗", error); } 
+                finally { btn.disabled = false; if(icon) icon.className = "fa-solid fa-download"; if(text) text.innerText = "下載圖片 (9:16)"; }
             }, 300);
         }
     </script>
