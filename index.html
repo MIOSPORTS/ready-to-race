@@ -76,7 +76,7 @@
 
     <header class="relative bg-zinc-950 text-white overflow-hidden py-16 px-6 md:px-16 lg:px-24">
         <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900 transition-all duration-500">
-            <!-- 💡 預設使用一張形象底圖，若沒有則會漸層兜底 -->
+            <!-- 💡 預設使用品牌形象圖，若沒有會用 CSS 漸層兜底 -->
             <img id="hero-bg" src="images/bg_brand.jpg" alt="Sport Background" class="w-full h-full object-cover object-center" onerror="this.style.display='none'">
             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-transparent"></div>
         </div>
@@ -138,7 +138,7 @@
             
             <div class="lg:col-span-8 space-y-10 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
                 
-                <!-- 🎯 第一關：選擇項目（維持一進來就看得到，作為入口） -->
+                <!-- 🎯 第一步：選擇運動項目（常駐顯示） -->
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
@@ -190,7 +190,7 @@
                     </div>
                 </section>
 
-                <!-- 💡 初始隱藏區域 1：賽事選擇區 -->
+                <!-- 💡 初始隱藏區 1：賽事選擇 -->
                 <section id="section-race" class="space-y-4 hidden">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
@@ -228,7 +228,7 @@
                     </div>
                 </section>
 
-                <!-- 💡 初始隱藏區域 2：裝備清單主區 -->
+                <!-- 💡 初始隱藏區 2：裝備清單 -->
                 <section id="section-checklist" class="space-y-6 hidden">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
@@ -309,7 +309,7 @@
                 </section>
             </div>
 
-            <!-- 右側海報預覽區：💡 初始狀態隱藏，點擊按鈕後才展開 -->
+            <!-- 💡 初始隱藏區 3：右側海報預覽區 -->
             <div id="aside-poster" class="lg:col-span-4 lg:sticky lg:top-6 space-y-6 hidden">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
                     <h3 class="text-base font-bold mb-3">你的裝備清單圖片 <span class="text-xs text-slate-400 font-normal">（預覽）</span></h3>
@@ -388,7 +388,7 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        // 💡 預設改為 null，代表尚未點選任何運動項目
+        // 💡 預設為 null，代表使用者還沒點擊項目
         let currentSport = null; 
         let currentTab = 'mandatory';
         let currentRace = null;
@@ -435,18 +435,15 @@
                 }
             });
 
-            // 解析網址 Parameter 
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
 
             if (sportParam && RACES_DATABASE[sportParam] && RACES_DATABASE[sportParam].length > 0) {
-                // 若網址已有 sport 參數，代表使用者點開分享連結，則直接解鎖運作
                 currentSport = sportParam;
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
                 currentRace = foundRace ? foundRace : RACES_DATABASE[currentSport][0];
                 
-                // 顯示隱藏區域並照常渲染
                 unlockAppSections();
                 setSportTypeVisuals(currentSport);
                 renderRaceList(RACES_DATABASE[currentSport]);
@@ -459,12 +456,12 @@
                 loadChecklist();
                 updateSportVisuals(); 
             } else {
-                // 💡 預設無運動狀態：按鈕都是未選灰色，隱藏清單與側欄區，首頁放品牌形象圖
+                // 💡 初始沒有參數：不呈現任何運動、不執行清單載入、顯示初始形象
                 setSportTypeVisuals(null); 
+                updateSportVisuals(); 
             }
         });
 
-        // 💡 點選運動按鈕解鎖網頁區塊
         function unlockAppSections() {
             document.getElementById('section-race').classList.remove('hidden');
             document.getElementById('section-checklist').classList.remove('hidden');
@@ -711,7 +708,6 @@
                 if (text) { text.classList.remove('text-white'); text.classList.add('text-zinc-300'); }
             });
 
-            // 💡 若有傳入運動項目(type)，則高亮該項
             if (type) {
                 const activeBtn = document.getElementById(`btn-${type}`);
                 if (activeBtn) {
@@ -739,8 +735,6 @@
 
         function setSportType(type) {
             currentSport = type;
-            
-            // 💡 使用者點選任何一項運動，立即解除隱藏，展示對應清單與海報
             unlockAppSections();
 
             if (!RACES_DATABASE[type] || RACES_DATABASE[type].length === 0) {
@@ -762,6 +756,7 @@
         }
 
         function updateSportVisuals() {
+            // 💡 安全保險：若 currentSport 還沒有被點選，則顯示預設的形象圖
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
             if (heroBg) heroBg.src = currentImgUrl;
@@ -769,8 +764,12 @@
             if (posterBg) posterBg.src = currentImgUrl;
             
             const shopBtn = document.getElementById('shop-redirect-btn');
-            if (shopBtn && OFFICIAL_STORE_URLS[currentSport]) {
-                shopBtn.href = OFFICIAL_STORE_URLS[currentSport];
+            if (shopBtn) {
+                if (currentSport && OFFICIAL_STORE_URLS[currentSport]) {
+                    shopBtn.href = OFFICIAL_STORE_URLS[currentSport];
+                } else {
+                    shopBtn.href = "https://www.miosports.com.tw/";
+                }
             }
         }
 
@@ -855,6 +854,8 @@
         }
 
         function loadChecklist() {
+            // 💡 安全保險：若尚未選擇運動項目，直接跳過清單渲染與計算防止報錯
+            if (!currentSport || !currentRace) return;
             renderChecklistItems();
             updateProgress();
             syncPosterPreview();
@@ -868,7 +869,8 @@
         }
 
         function getAllCurrentGearItems() {
-            if (!currentRace) return [];
+            // 💡 安全保險：若尚未選擇運動，直接回傳空陣列
+            if (!currentSport || !currentRace) return [];
             const generalId = `general_${currentSport}`;
             
             let baseItems = [];
@@ -897,6 +899,13 @@
             const grid = document.getElementById('items-grid');
             if (!grid) return;
             grid.innerHTML = '';
+            
+            // 💡 安全保險
+            if (!currentSport) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">請先選擇上方運動項目</div>`;
+                return;
+            }
+
             let items = getAllCurrentGearItems();
 
             if (isOnlyUnprepared) {
@@ -970,7 +979,8 @@
         }
 
         function getEntireRaceItemsCollection() {
-            if (!currentRace) return [];
+            // 💡 安全保險
+            if (!currentSport || !currentRace) return [];
             const generalId = `general_${currentSport}`;
             const tabs = ['mandatory', 'recommended', 'weather'];
             let entireList = [];
@@ -998,6 +1008,9 @@
         }
 
         function updateProgress() {
+            // 💡 安全保險
+            if (!currentSport) return;
+
             const allItems = getEntireRaceItemsCollection();
             
             const totalCount = allItems.length;
@@ -1029,6 +1042,9 @@
             if (!posterContainer) return;
             posterContainer.innerHTML = '';
             
+            // 💡 安全保險
+            if (!currentSport) return;
+
             const allItems = getEntireRaceItemsCollection();
 
             allItems.forEach(item => {
