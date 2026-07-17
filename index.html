@@ -59,15 +59,18 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <a href="https://www.miosports.com.tw/" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <!-- 📈 已加入官網點擊追蹤 -->
+            <a href="https://www.miosports.com.tw/" target="_blank" onclick="logEvent('Click_Nav_MioWebsite', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
-            <a href="https://www.facebook.com/MioSports" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <!-- 📈 已加入臉書點擊追蹤 -->
+            <a href="https://www.facebook.com/MioSports" target="_blank" onclick="logEvent('Click_Nav_FB', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <!-- 📈 已加入IG點擊追蹤 -->
+            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" onclick="logEvent('Click_Nav_IG', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
@@ -83,7 +86,7 @@
         <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-7 space-y-6">
                 <span class="bg-brandRed text-white text-xs font-bold tracking-widest px-3 py-1 rounded">COMPRESSPORT | READY TO RACE</span>
-                <!-- 🎯 SEO H1 標題：置入馬拉松、三鐵、越野與裝備清單等字詞 -->
+                <!-- 🎯 SEO H1 標題 -->
                 <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                     比賽前，<br><span class="text-brandRed">你準備好了嗎？</span>
                 </h1>
@@ -155,7 +158,6 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-mountain-sun text-2xl text-white drop-shadow-sm"></i>
-                                <!-- 🎯 SEO 優化文字 -->
                                 <span class="sport-text font-black text-sm text-white drop-shadow-md tracking-wider">越野跑裝備</span>
                             </div>
                         </button>
@@ -170,7 +172,6 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-bicycle text-2xl text-zinc-300 drop-shadow-sm"></i>
-                                <!-- 🎯 SEO 優化文字 -->
                                 <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">三鐵鐵人裝備</span>
                             </div>
                         </button>
@@ -185,7 +186,6 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-person-running text-2xl text-zinc-300 drop-shadow-sm"></i>
-                                <!-- 🎯 SEO 優化文字 -->
                                 <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">馬拉松路跑裝備</span>
                             </div>
                         </button>
@@ -232,7 +232,6 @@
                 <section class="space-y-6">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
-                        <!-- 🎯 SEO 優化字：裝備清單 -->
                         <h3 class="text-xl font-bold">運動裝備清單 <span class="text-sm text-slate-400 font-normal">（勾選你已準備的裝備）</span></h3>
                     </div>
 
@@ -291,7 +290,6 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                            <!-- 🎯 SEO 優化字：裝備 -->
                             <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的運動裝備</span>
                             <ul id="unprepared-list" class="text-xs text-slate-600 space-y-1 list-disc list-inside max-h-[100px] overflow-y-auto">
                             </ul>
@@ -304,7 +302,8 @@
                         </div>
                     </div>
 
-                    <a id="shop-redirect-btn" href="" target="_blank" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 📈 底部紅色補齊裝備按鈕：已加入 onclick 點擊追蹤 -->
+                    <a id="shop-redirect-btn" href="" target="_blank" onclick="logEvent('Click_Shop_Btn', currentSport)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -327,7 +326,6 @@
                             <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.07.13</p>
                         </div>
 
-                        <!-- 💡 修正後：讓半透明黑底直接成為滿版主體，自動撐滿從日期到標語之間的所有空間！ -->
                       <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
                           <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1">
                           </div>
@@ -372,7 +370,7 @@
         // ==========================================
         // 📈 Google Sheets 行為分析設定
         // ==========================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec"; // 👈 已自動填入你的專屬網址！
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
 
         // 取得或產生唯一 UserID (維持瀏覽器不重複)
         function getOrCreateUserId() {
@@ -702,15 +700,12 @@
         function resetDeletedItems() {
             if (!currentRace) return;
             if (confirm("確定要恢復預設裝備嗎？這將會還原所有被刪除的原始項目，並清除您自訂新增的裝備。")) {
-                // 1. 清空被隱藏/刪除的公版裝備紀錄
                 deletedItemsDatabase[currentRace.id] = [];
                 saveDeletedItemsToStorage();
                 
-                // 2. 清空自訂新增的裝備紀錄
                 customItemsDatabase[currentRace.id] = [];
                 saveCustomItemsToStorage();
                 
-                // 3. 重設狀態並重新渲染
                 if (isEditMode) toggleEditMode();
                 loadChecklist();
             }
@@ -1104,15 +1099,12 @@
                     url: shareUrl,
                 })
                 .then(() => {
-                    // 📈 行動分享成功（大多代表 LINE/FB 呼叫成功）
                     logEvent('Share_App', currentSport);
                 })
                 .catch(err => console.log('分享取消或未成功', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的朋友吧！🤝`);
-                    
-                    // 📈 複製分享連結成功
                     logEvent('Share_CopyLink', currentSport);
                 }).catch(err => {
                     console.error('無法複製連結', err);
@@ -1187,19 +1179,17 @@
                     ctx.strokeRect(80, 380, 920, 1300);
 
                     // ==========================================
-                    // 📐 動態排版與多排（兩排/三排）計算
+                    // 📐 動態排版與多排計算
                     // ==========================================
                     const allItems = getEntireRaceItemsCollection();
                     const totalItems = allItems.length;
 
                     let fontSize = 32;       
                     let lineHeight = 82;     
-                    let maxRows = 14;        // 預設每排最大列數
-                    let columnsCount = 2;    // 預設為兩排
+                    let maxRows = 14;        
+                    let columnsCount = 2;    
                     
-                    // 根據總項目數量，動態調整字型、行高與最大列數
                     if (totalItems > 44) {
-                        // 超過 44 樣，開啟「三排」模式！
                         fontSize = 22;
                         lineHeight = 52;
                         maxRows = 22; 
@@ -1223,7 +1213,6 @@
 
                     let startY = 460;
                     
-                    // 定義不同排數時的 X 座標
                     let xPositions = [];
                     if (columnsCount === 3) {
                         xPositions = [110, 420, 730]; 
@@ -1231,7 +1220,6 @@
                         xPositions = [130, 580]; 
                     }
 
-                    // 開始繪製每一個裝備項目
                     allItems.forEach((item, index) => {
                         const colIndex = Math.floor(index / maxRows);
                         
@@ -1304,7 +1292,6 @@
                     link.href = imageURL;
                     link.click();
 
-                    // 📈 下載成功：紀錄下載事件
                     logEvent('Download_Image', currentSport);
 
                 } catch (error) {
