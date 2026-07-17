@@ -286,7 +286,7 @@
                                 <span class="text-slate-400 text-sm">準備完成度</span>
                                 <span id="completion-percentage" class="text-slate-300 text-2xl font-black">0%</span>
                             </div>
-                            <span id="items-left-text" class="text-slate-400 text-sm">尚未準備 <span id="items-left-count" class="text-brandRed text-base font-black">0</span> 項</span>
+                            <span id="items-left-text" class="text-slate-400 text-sm">尚未準備 <span id="items-left-count" class="text-slate-300 text-base font-black">0</span> 項</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
                             <div id="progress-bar" class="bg-slate-300 h-full rounded-full" style="width: 0%"></div>
@@ -611,7 +611,7 @@
             document.getElementById('download-btn').disabled = false;
             document.getElementById('download-btn').className = "w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed";
             document.getElementById('share-btn').disabled = false;
-            document.getElementById('share-btn').className = "w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs";
+            document.getElementById('share-btn').className = "w-full bg-white hover:bg-slate-700 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs";
         }
 
         function setSportTypeVisuals(type) {
@@ -664,6 +664,8 @@
             document.getElementById('race-search').value = '';
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
+            
+            // 🎯 終極修復核心：解鎖大類時，必須主動呼叫一次 switchTab 重新啟動分頁與事件！
             switchTab('mandatory'); 
             updateSportVisuals(); 
         }
@@ -733,14 +735,14 @@
         }
 
         function switchTab(tab) {
-            // 🎯 修正關鍵：移除原本卡死的 currentSport 嚴格防線，改為由 UI 狀態控制
             currentTab = tab;
             ['mandatory', 'recommended', 'weather'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
                 if (t === tab) { btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition'; } 
                 else { btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition'; }
             });
-            renderChecklistItems();
+            // 🎯 每次切換分頁或啟動項目時，重新刷新清單與打勾偵聽狀態
+            loadChecklist();
         }
 
         function toggleUnpreparedFilter() { isOnlyUnprepared = document.getElementById('toggle-unprepared').checked; renderChecklistItems(); }
@@ -770,6 +772,17 @@
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid'); if (!grid) return; grid.innerHTML = '';
             let items = getAllCurrentGearItems();
+            
+            // 🎯 如果目前還沒選運動項目，顯示初始空白導引
+            if (!currentSport) {
+                grid.innerHTML = `
+                    <div class="col-span-2 flex flex-col items-center justify-center py-12 text-slate-400 text-sm">
+                         <i class="fa-solid fa-arrow-pointer text-2xl mb-2 text-slate-300"></i>
+                         <span>請先於上方步驟一選擇運動項目以建立清單</span>
+                    </div>`;
+                return;
+            }
+
             if (isOnlyUnprepared) { items = items.filter(item => !checkedItems.has(item.id)); }
             if (items.length === 0) {
                 grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '大會尚未於此分類填寫推薦裝備項目'}</div>`; return;
@@ -883,7 +896,7 @@
                 .catch(err => console.log('分享取消', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製 to 剪貼簿。`); logEvent('Share_CopyLink', currentSport);
+                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。`); logEvent('Share_CopyLink', currentSport);
                 });
             }
         }
