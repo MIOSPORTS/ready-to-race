@@ -8,7 +8,7 @@
     <title>COMPRESSPORT | 賽前裝備清單工具 - 馬拉松、三鐵、越野跑運動裝備檢查</title>
     
     <!-- 🎯 SEO 網頁描述（Meta Description）：點擊率的關鍵 -->
-    <meta name="description" content="專業運動品牌 COMPRESSPORT 專為跑者、鐵人與越野玩家設計的賽前裝備清單工具。一鍵自動建立馬拉松路跑、鐵人三項（三鐵）、越野跑必備裝備清單，出發前快速勾選，助你突破 PB、安全完賽！">
+    <meta name="description" content="專業運動 brand COMPRESSPORT 專為跑者、鐵人與越野玩家設計的賽前裝備清單工具。一鍵自動建立馬拉松路跑、鐵人三項（三鐵）、越野跑必備裝備清單，出發前快速勾選，助你突破 PB、安全完賽！">
     <meta name="keywords" content="裝備清單, 越野, 越野跑, 馬拉松, 三鐵, 鐵人三項, 運動裝備, COMPRESSPORT, MIOSPORTS">
     
     <!-- Open Graph 臉書與 LINE 分享預覽優化 -->
@@ -369,6 +369,46 @@
     <canvas id="export-canvas" width="1080" height="1920" class="hidden"></canvas>
 
     <script>
+        // ==========================================
+        // 📈 Google Sheets 行為分析設定
+        // ==========================================
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec"; // 👈 已自動填入你的專屬網址！
+
+        // 取得或產生唯一 UserID (維持瀏覽器不重複)
+        function getOrCreateUserId() {
+            let uid = localStorage.getItem('packing_list_user_id');
+            if (!uid) {
+                uid = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                localStorage.setItem('packing_list_user_id', uid);
+            }
+            return uid;
+        }
+        const USER_ID = getOrCreateUserId();
+
+        // 核心傳送函數
+        function logEvent(actionName, categoryName = "") {
+            if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
+                console.warn("⚠️ GAS_URL 尚未設定，無法上傳紀錄：", actionName, categoryName);
+                return;
+            }
+            const currentRaceTitle = currentRace ? currentRace.title : "Unknown Race";
+            const data = {
+                userId: USER_ID,
+                action: actionName,
+                category: categoryName ? `${categoryName} | ${currentRaceTitle}` : currentRaceTitle
+            };
+
+            fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => console.log('✅ 數據寫入成功:', res))
+            .catch(err => console.error('❌ 數據寫入失敗:', err));
+        }
+
         const SPORT_BACKGROUNDS = {
             trail: 'images/bg_trail.jpg',      
             triathlon: 'images/bg_triathlon.jpg',  
@@ -461,6 +501,9 @@
             loadSavedChecklist();
             loadChecklist();
             updateSportVisuals(); 
+
+            // 📈 進入網頁：記錄使用人數 (Visitor)
+            logEvent('Visitor', currentSport);
         });
 
         async function fetchAllGoogleSheetsData() {
@@ -747,6 +790,9 @@
             renderRaceList(RACES_DATABASE[type]);
             loadChecklist();
             updateSportVisuals(); 
+
+            // 📈 點選切換：紀錄切換至不同運動別
+            logEvent('Visitor', type);
         }
 
         function updateSportVisuals() {
@@ -802,6 +848,9 @@
             loadSavedChecklist();
             resetFilterCheckbox(); 
             loadChecklist();
+
+            // 📈 選擇賽事：紀錄選擇新賽事的行為
+            logEvent('Select_Race', currentSport);
         }
 
         function resetToGeneral() {
@@ -816,6 +865,9 @@
             loadSavedChecklist();
             resetFilterCheckbox(); 
             loadChecklist();
+
+            // 📈 清除選擇：回歸公版
+            logEvent('Reset_To_General', currentSport);
         }
 
         function switchTab(tab) {
@@ -1050,10 +1102,18 @@
                     title: `COMPRESSPORT | ${currentRace.title}`,
                     text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速確認，一起無傷完賽！`,
                     url: shareUrl,
-                }).catch(err => console.log('分享取消或未成功', err));
+                })
+                .then(() => {
+                    // 📈 行動分享成功（大多代表 LINE/FB 呼叫成功）
+                    logEvent('Share_App', currentSport);
+                })
+                .catch(err => console.log('分享取消或未成功', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的朋友吧！🤝`);
+                    
+                    // 📈 複製分享連結成功
+                    logEvent('Share_CopyLink', currentSport);
                 }).catch(err => {
                     console.error('無法複製連結', err);
                 });
@@ -1166,24 +1226,19 @@
                     // 定義不同排數時的 X 座標
                     let xPositions = [];
                     if (columnsCount === 3) {
-                        // 三排均分 920px 寬度 (左右留白 80px)
                         xPositions = [110, 420, 730]; 
                     } else {
-                        // 兩排配置
                         xPositions = [130, 580]; 
                     }
 
                     // 開始繪製每一個裝備項目
                     allItems.forEach((item, index) => {
-                        // 判斷目前項目屬於第幾排 (0, 1, 或 2)
                         const colIndex = Math.floor(index / maxRows);
                         
-                        // 如果超出了最大排數能容納的範圍，顯示「...及其他」
                         if (colIndex >= columnsCount) {
                             if (index === maxRows * columnsCount || index === allItems.length - 1) {
                                 ctx.fillStyle = '#e2001a';
                                 ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
-                                // 在最後一排的底部寫上未完待續
                                 const lastX = xPositions[columnsCount - 1];
                                 const lastY = startY + (maxRows - 1) * lineHeight;
                                 ctx.fillText(`...及其他共 ${allItems.length - index} 項`, lastX, lastY);
@@ -1192,10 +1247,9 @@
                         }
 
                         const xPos = xPositions[colIndex];
-                        const rowIndex = index % maxRows; // 在該排中的第幾個
+                        const rowIndex = index % maxRows;
                         const yPos = startY + rowIndex * lineHeight;
 
-                        // 安全機制：避免畫出框線外 (1300px 高度內)
                         if (yPos > 1620) {
                             return;
                         }
@@ -1207,7 +1261,7 @@
                             ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
                             ctx.fillText('✓', xPos, yPos);
                             ctx.fillStyle = '#ffffff';
-                            ctx.fillText(item.name, xPos + 35, yPos); // 縮小勾勾與文字的間距以防擠下
+                            ctx.fillText(item.name, xPos + 35, yPos);
                         } else {
                             ctx.fillStyle = '#4b5563';
                             ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
@@ -1249,6 +1303,10 @@
                     link.download = fileName;
                     link.href = imageURL;
                     link.click();
+
+                    // 📈 下載成功：紀錄下載事件
+                    logEvent('Download_Image', currentSport);
+
                 } catch (error) {
                     console.error("下載圖片失敗", error);
                 } finally {
