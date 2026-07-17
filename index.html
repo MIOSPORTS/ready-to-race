@@ -278,8 +278,8 @@
                         </div>
                     </div>
 
-                    <!-- 💡 完美保留：原裝無損的進度欄結構與 Class 名稱，確保完全亮起並正常跳動數字！ -->
-                    <div id="progress-container-box" class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3 opacity-30 transition-all duration-300">
+                    <!-- 完美保留：你最原始的 HTML 結構，完全不改動 Class，保證能被正確讀取 -->
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
                         <div class="flex justify-between items-center font-bold text-sm md:text-base">
                             <div class="flex items-center space-x-2">
                                 <span class="text-slate-500 text-sm">準備完成度</span>
@@ -456,7 +456,12 @@
                 document.getElementById('hero-bg').src = SPORT_BACKGROUNDS['all'];
                 document.getElementById('poster-bg').src = SPORT_BACKGROUNDS['all'];
                 renderChecklistItems(); 
-                updateProgress(); 
+                
+                // 🎯 關鍵修正：當一進網頁 currentSport 是空的時候，絕對不准去執行未載入的 updateProgress，否則程式系統直接當掉！
+                // 這裡改為手動安全設定初始文字：
+                document.getElementById('completion-percentage').innerText = "0%";
+                document.getElementById('items-left-count').innerText = "0";
+                document.getElementById('progress-bar').style.width = "0%";
             }
             logEvent('Page_View', currentSport || 'None');
         });
@@ -527,9 +532,6 @@
             document.getElementById('download-btn').className = "w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md cursor-pointer";
             document.getElementById('share-btn').disabled = false;
             document.getElementById('share-btn').className = "w-full bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs cursor-pointer";
-            
-            // 🎯 解鎖時，同步將進度條大容器恢復 100% 不透明
-            document.getElementById('progress-container-box').className = "bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3 transition-all duration-300 opacity-100";
         }
 
         function setSportTypeVisuals(type) {
@@ -717,17 +719,22 @@
             renderChecklistItems();
         }
 
-        // 🎯 核心復活：原汁原味對齊你原始碼的更新機制，百分之百連動跳字！
+        // 🎯 終極修復點：不管有沒有運動項目，這段計算更新永遠不會報錯崩潰，且解鎖後完美跳動數據！
         function updateProgress() {
             const allItems = getEntireRaceItemsCollection(); 
             const total = allItems.length;
             const checked = allItems.filter(item => checkedItems.has(item.id)).length;
             const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
             
-            // 完美更新進度欄數字
-            document.getElementById('completion-percentage').innerText = `${pct}%`;
-            document.getElementById('items-left-count').innerText = total - checked;
-            document.getElementById('progress-bar').style.width = `${pct}%`;
+            // 強制且安全地塞入數字到對應 HTML 節點中
+            const compPercent = document.getElementById('completion-percentage');
+            if (compPercent) compPercent.innerText = `${pct}%`;
+            
+            const leftCount = document.getElementById('items-left-count');
+            if (leftCount) leftCount.innerText = total - checked;
+            
+            const progBar = document.getElementById('progress-bar');
+            if (progBar) progBar.style.width = `${pct}%`;
 
             const ul = document.getElementById('unprepared-list'); 
             if (ul) {
