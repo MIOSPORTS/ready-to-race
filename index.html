@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 🎯 SEO 黃金標題：融入四大核心關鍵字 -->
     <title>COMPRESSPORT | 賽前裝備清單工具 - 馬拉松、三鐵、越野跑運動裝備檢查</title>
+    
+    <!-- 🎯 SEO 網頁描述（Meta Description）：點擊率的關鍵 -->
     <meta name="description" content="專業運動 brand COMPRESSPORT 專為跑者、鐵人與越野玩家設計的賽前裝備清單工具。一鍵自動建立馬拉松路跑、鐵人三項（三鐵）、越野跑必備裝備清單，出發前快速勾選，助你突破 PB、安全完賽！">
     <meta name="keywords" content="裝備清單, 越野, 越野跑, 馬拉松, 三鐵, 鐵人三項, 運動裝備, COMPRESSPORT, MIOSPORTS">
+    
+    <!-- Open Graph 臉書與 LINE 分享預覽優化 -->
     <meta property="og:title" content="COMPRESSPORT | 賽前裝備清單工具">
     <meta property="og:description" content="依照你的馬拉松、三鐵、越野賽事，自動建立專屬裝備清單。出發前快速確認，不再漏帶重要裝備！">
     <meta property="og:type" content="website">
@@ -89,41 +95,52 @@
 
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
             <div class="lg:col-span-8 space-y-10 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+                
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
                         <h3 class="text-xl font-bold">開始建立，選擇項目</h3>
                     </div>
+                    
                     <div class="grid grid-cols-3 gap-4">
                         <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 group select-none">
                             <img id="img-choice-trail" src="" alt="Trail" class="sport-btn-img absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
+                            
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
+                            
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-mountain-sun text-2xl text-zinc-300 drop-shadow-sm"></i>
                                 <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">越野跑裝備</span>
                             </div>
                         </button>
+
                         <button onclick="setSportType('triathlon')" id="btn-triathlon" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm duration-300 group select-none">
                             <img id="img-choice-triathlon" src="" alt="Triathlon" class="sport-btn-img absolute inset-0 w-full h-full object-cover grayscale transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
+                            
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
+                            
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-bicycle text-2xl text-zinc-300 drop-shadow-sm"></i>
                                 <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">三鐵鐵人裝備</span>
                             </div>
                         </button>
+
                         <button onclick="setSportType('road')" id="btn-road" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm duration-300 group select-none">
                             <img id="img-choice-road" src="" alt="Road" class="sport-btn-img absolute inset-0 w-full h-full object-cover grayscale transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
+                            
                             <div class="absolute top-3 right-3 bg-brandRed text-white w-5 h-5 rounded-full hidden active-badge z-10">
                                 <i class="fa-solid fa-check text-[10px] absolute top-[46%] left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
                             </div>
+                            
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-person-running text-2xl text-zinc-300 drop-shadow-sm"></i>
                                 <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">馬拉松路跑裝備</span>
@@ -137,6 +154,7 @@
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
                         <h3 class="text-xl font-bold">選擇賽事 <span class="text-sm text-slate-400 font-normal">（可略過）</span></h3>
                     </div>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
                         <div class="md:col-span-7 space-y-4">
                             <div class="relative">
@@ -150,6 +168,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="md:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-5 flex flex-col justify-between">
                             <div class="space-y-2">
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">我選擇的賽事</span>
@@ -159,7 +178,8 @@
                             </div>
                             <div class="pt-4 border-t border-slate-200 mt-4 flex justify-between items-center text-xs">
                                 <a href="#" id="race-rule-link" target="_blank" class="text-slate-300 pointer-events-none font-semibold flex items-center space-x-1">
-                                    <span>查看賽事規定</span><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                    <span>查看賽事規定</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                                 </a>
                                 <button id="clear-race-btn" disabled onclick="resetToGeneral()" class="text-slate-300 cursor-not-allowed">清除選擇</button>
                             </div>
@@ -172,6 +192,7 @@
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
                         <h3 class="text-xl font-bold">運動裝備清單 <span class="text-sm text-slate-400 font-normal">（勾選你已準備的裝備）</span></h3>
                     </div>
+
                     <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div class="flex flex-1" id="tab-container">
                             <button onclick="switchTab('mandatory')" id="tab-mandatory" disabled class="flex-1 py-3 text-center font-bold text-slate-300 border-b-2 border-transparent text-sm focus:outline-none transition cursor-not-allowed">必要裝備</button>
@@ -199,13 +220,16 @@
                                 <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 text-xs"></i>
                                 <input type="text" id="custom-item-input" disabled placeholder="請先選擇項目..." class="w-full pl-9 pr-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl focus:outline-none text-xs transition cursor-not-allowed" onkeypress="handleCustomItemKey(event)">
                             </div>
-                            <button id="add-custom-btn" disabled onclick="addCustomItem()" class="bg-slate-300 text-white text-xs font-bold py-2.5 px-4 rounded-xl cursor-not-allowed">新增</button>
+                            <button id="add-custom-btn" disabled onclick="addCustomItem()" class="bg-slate-300 text-white text-xs font-bold py-2.5 px-4 rounded-xl cursor-not-allowed">
+                                新增
+                            </button>
                         </div>
+                        
                         <div class="flex items-center gap-2">
-                            <button id="edit-mode-btn" disabled onclick="toggleEditMode()" class="flex-1 py-2 bg-slate-50 text-slate-300 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-not-allowed">
+                            <button id="edit-mode-btn" disabled onclick="toggleEditMode()" class="flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl flex items-center justify-center space-x-1.5 shadow-sm cursor-not-allowed">
                                 <i class="fa-solid fa-pen-to-square"></i><span>編輯清單項目</span>
                             </button>
-                            <button id="reset-gear-btn" disabled onclick="resetDeletedItems()" class="flex-1 py-2 bg-slate-50 text-slate-300 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 cursor-not-allowed">
+                            <button id="reset-gear-btn" disabled onclick="resetDeletedItems()" class="flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl flex items-center justify-center space-x-1.5 shadow-sm cursor-not-allowed">
                                 <i class="fa-solid fa-rotate-left"></i><span>恢復預設裝備</span>
                             </button>
                         </div>
@@ -214,6 +238,7 @@
                     <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
                         <div class="flex justify-between items-center font-bold text-sm md:text-base">
                             <div class="flex items-center space-x-2">
+                                <!-- 🎯 這裡已經重做並綁定正確 ID，進度與文字完美復活！ -->
                                 <span class="text-slate-500 text-sm">準備完成度</span>
                                 <span id="completion-percentage" class="text-slate-300 text-2xl font-black">0%</span>
                             </div>
@@ -377,20 +402,14 @@
             const raceParam = urlParams.get('race');
 
             if (sportParam && RACES_DATABASE[sportParam] && RACES_DATABASE[sportParam].length > 0) {
-                // 情境Ａ：如果是點擊分享網址進來，直接載入該項目並解鎖
                 currentSport = sportParam;
                 currentRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam) || RACES_DATABASE[currentSport][0];
                 setSportTypeVisuals(currentSport);
                 renderRaceList(RACES_DATABASE[currentSport]);
                 unlockUIElements();
-                if (raceParam && currentRace && currentRace.id !== RACES_DATABASE[currentSport][0].id) {
-                    selectRaceVisuals(currentRace);
-                }
-                loadSavedChecklist();
                 switchTab('mandatory');
                 updateSportVisuals(); 
             } else {
-                // 情境Ｂ：如果是空首頁進來，呈現你想要的乾淨空白狀態
                 document.getElementById('hero-bg').src = SPORT_BACKGROUNDS['all'];
                 document.getElementById('poster-bg').src = SPORT_BACKGROUNDS['all'];
                 renderChecklistItems(); 
@@ -456,9 +475,9 @@
             document.getElementById('add-custom-btn').className = "bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm cursor-pointer";
 
             document.getElementById('edit-mode-btn').disabled = false;
-            document.getElementById('edit-mode-btn').className = "flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer";
+            document.getElementById('edit-mode-btn').className = "flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer";
             document.getElementById('reset-gear-btn').disabled = false;
-            document.getElementById('reset-gear-btn').className = "flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer";
+            document.getElementById('reset-gear-btn').className = "flex-1 py-2 bg-white border border-slate-200 text-slate-500 font-medium text-xs rounded-xl flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer";
 
             document.getElementById('download-btn').disabled = false;
             document.getElementById('download-btn').className = "w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md cursor-pointer";
@@ -511,7 +530,6 @@
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
             
-            // 🎯 完美更新修正：使用者一旦選了項目，強逼大 Banner、預覽底圖與網址更新連動！
             updateSportVisuals(); 
             switchTab('mandatory'); 
         }
@@ -647,32 +665,54 @@
 
         function toggleEditMode() {
             isEditMode = !isEditMode; const btn = document.getElementById('edit-mode-btn');
-            btn.className = isEditMode ? "flex-1 py-2 bg-white text-brandRed font-bold text-xs rounded-xl border border-brandRed flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer" : "flex-1 py-2 bg-white text-slate-500 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer";
+            btn.className = isEditMode ? "flex-1 py-2 bg-white text-brandRed font-bold text-xs rounded-xl border border-brandRed flex items-center justify-center space-x-1.5 shadow-sm" : "flex-1 py-2 bg-white text-slate-500 font-medium text-xs rounded-xl border border-slate-200 flex items-center justify-center space-x-1.5 shadow-sm";
             btn.innerHTML = isEditMode ? `<i class="fa-solid fa-floppy-disk"></i><span>完成編輯</span>` : `<i class="fa-solid fa-pen-to-square"></i><span>編輯清單項目</span>`;
             renderChecklistItems();
         }
 
+        // 🎯 核心修復：這段計算機制重新整理，確保畫面上的完成度與項數立刻即時同步跳動！
         function updateProgress() {
-            const allItems = getEntireRaceItemsCollection(); const total = allItems.length;
+            const allItems = getEntireRaceItemsCollection(); 
+            const total = allItems.length;
             const checked = allItems.filter(item => checkedItems.has(item.id)).length;
             const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
-            document.getElementById('completion-percentage').innerText = `${pct}%`;
-            document.getElementById('items-left-count').innerText = total - checked;
-            document.getElementById('progress-bar').style.width = `${pct}%`;
-            const ul = document.getElementById('unprepared-list'); ul.innerHTML = '';
-            const unp = allItems.filter(item => !checkedItems.has(item.id));
-            if (unp.length === 0) { ul.innerHTML = `<li class="text-emerald-600 font-bold list-none">✓ 所有裝備均已備妥！</li>`; } 
-            else { unp.forEach(i => { const li = document.createElement('li'); li.innerText = i.name; ul.appendChild(li); }); }
+            
+            // 亮起與更新數據
+            const percentageEl = document.getElementById('completion-percentage');
+            if (percentageEl) {
+                percentageEl.innerText = `${pct}%`;
+                if (currentSport) percentageEl.className = "text-brandRed text-2xl font-black";
+            }
+            
+            const leftCountEl = document.getElementById('items-left-count');
+            if (leftCountEl) {
+                leftCountEl.innerText = total - checked;
+                if (currentSport) leftCountEl.className = "text-brandRed text-base font-black";
+            }
+            
+            const progressBar = document.getElementById('progress-bar');
+            if (progressBar) {
+                progressBar.style.width = `${pct}%`;
+                if (currentSport) progressBar.className = "bg-brandRed h-full rounded-full transition-all duration-300";
+            }
+
+            const ul = document.getElementById('unprepared-list'); 
+            if (ul) {
+                ul.innerHTML = '';
+                const unp = allItems.filter(item => !checkedItems.has(item.id));
+                if (!currentSport) {
+                    ul.innerHTML = `<li class="list-none text-slate-400/70">無選取項目</li>`;
+                } else if (unp.length === 0) {
+                    ul.innerHTML = `<li class="text-emerald-600 font-bold list-none">✓ 所有裝備均已備妥！</li>`;
+                } else {
+                    unp.forEach(i => { const li = document.createElement('li'); li.innerText = i.name; li.className = "text-xs text-slate-600"; ul.appendChild(li); });
+                }
+            }
         }
 
         function syncPosterPreview() {
             const container = document.getElementById('poster-items'); if (!container) return; container.innerHTML = '';
-            if (!currentSport) {
-                container.className = "space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1 w-full text-center flex flex-col justify-center text-zinc-500";
-                container.innerHTML = `<i class="fa-solid fa-lock text-lg mb-1"></i><span class="text-[10px]">選取運動項目後解鎖預覽</span>`;
-                return;
-            }
-            container.className = "space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1 w-full";
+            if (!currentSport) { container.innerHTML = `<i class="fa-solid fa-lock text-lg mb-1"></i><span class="text-[10px]">選取運動項目後解鎖預覽</span>`; return; }
             getEntireRaceItemsCollection().forEach(item => {
                 const chk = checkedItems.has(item.id); const div = document.createElement('div'); div.className = "flex items-center space-x-2 text-[11px] py-0.5 text-left";
                 div.innerHTML = chk ? `<i class="fa-solid fa-square-check text-brandRed text-xs"></i><span class="text-zinc-200 truncate">${item.name}</span>` : `<i class="fa-regular fa-square text-zinc-600 text-xs"></i><span class="text-zinc-500 truncate">${item.name}</span>`;
@@ -691,16 +731,6 @@
 
         function handleCustomItemKey(e) { if (e.key === 'Enter') addCustomItem(); }
 
-        function loadSavedChecklist() {
-            checkedItems.clear(); if(!currentRace) return;
-            const storageKey = `compressport_checked_${currentRace.id}`; const savedData = localStorage.getItem(storageKey);
-            if (savedData) { JSON.parse(savedData).forEach(id => checkedItems.add(id)); }
-            const customStorageKey = `compressport_custom_list_${currentRace.id}`; const savedCustomData = localStorage.getItem(customStorageKey);
-            customItemsDatabase[currentRace.id] = savedCustomData ? JSON.parse(savedCustomData) : [];
-            const deletedStorageKey = `compressport_deleted_${currentRace.id}`; const savedDeletedData = localStorage.getItem(deletedStorageKey);
-            deletedItemsDatabase[currentRace.id] = savedDeletedData ? JSON.parse(savedDeletedData) : [];
-        }
-
         function shareList() {
             if(!currentRace) return; const shareUrl = `${window.location.origin}${window.location.pathname}?sport=${currentSport}&race=${currentRace.id}`;
             if (navigator.share) { navigator.share({ title: `COMPRESSPORT`, url: shareUrl }).then(() => logEvent('Share_App', currentSport)); } 
@@ -708,7 +738,8 @@
         }
 
         function downloadPoster() {
-            const btn = document.getElementById('download-btn'); btn.disabled = true;
+            const btn = document.getElementById('download-btn'); const icon = document.getElementById('download-icon'); const text = document.getElementById('download-text');
+            btn.disabled = true; if(icon) icon.className = "fa-solid fa-spinner animate-spin mr-2"; if(text) text.innerText = "正在產生專屬清單圖片...";
             setTimeout(() => {
                 try {
                     const canvas = document.getElementById('export-canvas'); const ctx = canvas.getContext('2d');
@@ -738,7 +769,7 @@
                     ctx.fillStyle = '#ffffff'; ctx.font = '900 italic 38px "Inter"'; ctx.fillText(document.getElementById('poster-status-ready').innerText, 80, 1855);
                     const link = document.createElement('a'); link.download = `${document.getElementById('poster-race-tag').innerText}_裝備清單.png`; link.href = canvas.toDataURL("image/png"); link.click();
                     logEvent('Download_Image', currentSport);
-                } catch (err) { console.error(err); } finally { btn.disabled = false; }
+                } catch (err) { console.error(err); } finally { btn.disabled = false; if(icon) icon.className = "fa-solid fa-download"; if(text) text.innerText = "下載圖片 (9:16)"; }
             }, 300);
         }
     </script>
