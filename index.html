@@ -286,7 +286,7 @@
                                 <span class="text-slate-400 text-sm">準備完成度</span>
                                 <span id="completion-percentage" class="text-slate-300 text-2xl font-black">0%</span>
                             </div>
-                            <span id="items-left-text" class="text-slate-400 text-sm">尚未準備 <span id="items-left-count" class="text-slate-300 text-base font-black">0</span> 項</span>
+                            <span id="items-left-text" class="text-slate-400 text-sm">尚未準備 <span id="items-left-count" class="text-brandRed text-base font-black">0</span> 項</span>
                         </div>
                         <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
                             <div id="progress-bar" class="bg-slate-300 h-full rounded-full" style="width: 0%"></div>
@@ -413,7 +413,6 @@
             .catch(err => console.error('❌ 數據寫入失敗:', err));
         }
 
-        // 🎯 預設全品類 Banner 背景設定為 images/bg_all.jpg
         const SPORT_BACKGROUNDS = {
             all: 'images/bg_all.jpg',
             trail: 'images/bg_trail.jpg',      
@@ -437,7 +436,7 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        let currentSport = null; // 🎯 初始為空
+        let currentSport = null; 
         let currentTab = 'mandatory';
         let currentRace = null;
         let checkedItems = new Set();
@@ -481,13 +480,11 @@
                 }
             });
 
-            // 檢查網址有沒有帶指定參數
             const urlParams = new URLSearchParams(window.location.search);
             const sportParam = urlParams.get('sport');
             const raceParam = urlParams.get('race');
 
             if (sportParam && RACES_DATABASE[sportParam] && RACES_DATABASE[sportParam].length > 0) {
-                // 如果有帶網址參數，直接進入該項目
                 currentSport = sportParam;
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
                 currentRace = foundRace ? foundRace : RACES_DATABASE[currentSport][0];
@@ -501,12 +498,10 @@
                 loadSavedChecklist();
                 loadChecklist();
             } else {
-                // 🎯 空白起跑：沒有帶參數，Banner 預設為全品類形象圖
                 document.getElementById('hero-bg').src = SPORT_BACKGROUNDS['all'];
                 document.getElementById('poster-bg').src = SPORT_BACKGROUNDS['all'];
             }
 
-            // 📈 數據最純淨：只記錄網頁被開啟的總次數
             logEvent('Page_View', currentSport || 'None');
         });
 
@@ -590,7 +585,6 @@
             return r;
         }
 
-        // 🎯 核心解鎖函數：當使用者選了運動項目後，才把底下的控制項打開
         function unlockUIElements() {
             document.getElementById('race-search').disabled = false;
             document.getElementById('race-search').className = "w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-sm transition";
@@ -653,7 +647,6 @@
         }
 
         function setSportType(type) {
-            // 📈 精準分析：只有點擊時，才發送 Click 事件
             logEvent('Click_Sport_Tab', type);
 
             currentSport = type;
@@ -671,7 +664,7 @@
             document.getElementById('race-search').value = '';
             setSportTypeVisuals(type);
             renderRaceList(RACES_DATABASE[type]);
-            switchTab('mandatory'); // 自動跳回必要裝備分頁
+            switchTab('mandatory'); 
             updateSportVisuals(); 
         }
 
@@ -740,7 +733,7 @@
         }
 
         function switchTab(tab) {
-            if(!currentSport) return;
+            // 🎯 修正關鍵：移除原本卡死的 currentSport 嚴格防線，改為由 UI 狀態控制
             currentTab = tab;
             ['mandatory', 'recommended', 'weather'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
@@ -750,8 +743,7 @@
             renderChecklistItems();
         }
 
-        function toggleUnpreparedFilter() { toggleUnpreparedFilterLogic(); }
-        function toggleUnpreparedFilterLogic() { isOnlyUnprepared = document.getElementById('toggle-unprepared').checked; renderChecklistItems(); }
+        function toggleUnpreparedFilter() { isOnlyUnprepared = document.getElementById('toggle-unprepared').checked; renderChecklistItems(); }
         function resetFilterCheckbox() { isOnlyUnprepared = false; const chk = document.getElementById('toggle-unprepared'); if (chk) chk.checked = false; }
         function loadChecklist() { renderChecklistItems(); updateProgress(); syncPosterPreview(); }
         function getGearArrayFromSource(db, raceId, tab) { if (db && db[raceId] && db[raceId][tab]) { return db[raceId][tab]; } return []; }
@@ -879,6 +871,9 @@
             customItemsDatabase[currentRace.id].push(newItem); saveCustomItemsToStorage(); input.value = ''; loadChecklist();
         }
 
+        function saveCustomItemsToStorage() { if(!currentRace) return; localStorage.setItem(`compressport_custom_list_${currentRace.id}`, JSON.stringify(customItemsDatabase[currentRace.id] || [])); }
+        function saveDeletedItemsToStorage() { if(!currentRace) return; localStorage.setItem(`compressport_deleted_${currentRace.id}`, JSON.stringify(deletedItemsDatabase[currentRace.id] || [])); }
+
         function shareList() {
             if(!currentRace) return;
             const shareUrl = `${window.location.origin}${window.location.pathname}?sport=${currentSport}&race=${currentRace.id}`;
@@ -888,7 +883,7 @@
                 .catch(err => console.log('分享取消', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
-                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。`); logEvent('Share_CopyLink', currentSport);
+                    alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製 to 剪貼簿。`); logEvent('Share_CopyLink', currentSport);
                 });
             }
         }
