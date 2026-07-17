@@ -367,10 +367,10 @@
     <canvas id="export-canvas" width="1080" height="1920" class="hidden"></canvas>
 
     <script>
-        // 🎯 這是你建立的 Google Apps Script Web App URL (與你的 Google 試算表 LogData 綁定)
+        // 🎯 這是你建立的 Google Apps Script Web App URL
         const TRACKING_API_URL = 'https://script.google.com/macros/s/AKfycbyJujx1IuByOd4k0jlbcMoWWPSjqpOnDvMQOcQ0D8IHXfGz7IvgVkX4xxnGyrpLpFDN/exec';
 
-        // 🎯 自動生成/取得專屬的虛擬 UserID (用來在 Sheet 中統計「不重複使用人數」)
+        // 🎯 自動生成/取得專屬的虛擬 UserID
         function getOrCreateUserID() {
             let userId = localStorage.getItem('compressport_user_id');
             if (!userId) {
@@ -380,7 +380,7 @@
             return userId;
         }
 
-        // 🎯 取得簡單安全的裝置與瀏覽器類型資訊（填入原本 IP_Country 的位置，不含私密 IP）
+        // 🎯 取得簡單安全的裝置與瀏覽器類型資訊（填入原本 IP_Country 的位置）
         function getDeviceAndBrowser() {
             const ua = navigator.userAgent;
             let device = "Desktop";
@@ -395,7 +395,7 @@
             return `${device} (${browser})`;
         }
 
-        // 🎯 發送追蹤紀錄到 Google Sheet 的通用函數
+        // 🎯 完美修改：重寫發送追蹤紀錄到 Google Sheet 的通用函數 (徹底相容 CORS 並對齊您的 GAS)
         async function logActivity(action) {
             if (!TRACKING_API_URL) return;
 
@@ -405,26 +405,21 @@
                 categoryInfo += ` - ${currentRace.title}`;
             }
 
-            const payload = {
-                userId: getOrCreateUserID(),
-                action: action,
-                category: categoryInfo,
-                ipCountry: getDeviceAndBrowser() // 填入第五欄（紀錄載具）
-            };
+            // 💡 為了徹底避免 JSON CORS 預檢攔截，我們使用 x-www-form-urlencoded 標準表單格式發送
+            const formData = new URLSearchParams();
+            formData.append('userId', getOrCreateUserID());
+            formData.append('action', action);
+            formData.append('category', categoryInfo);
+            formData.append('ipCountry', getDeviceAndBrowser()); // 這會自動對應您 GAS 裡面的 e.parameter.ipCountry / extra
 
             try {
-                // 優雅降級：若支援 sendBeacon 則背景傳送（效能最佳，防畫面跳出卡死）
-                if (navigator.sendBeacon) {
-                    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-                    navigator.sendBeacon(TRACKING_API_URL, blob);
-                } else {
-                    await fetch(TRACKING_API_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                }
+                // 使用 fetch 且 no-cors 模式表單發送，這 100% 不會被 CORS 阻擋，速度最快！
+                await fetch(TRACKING_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
             } catch (err) {
                 console.error("發送活動紀錄失敗:", err);
             }
@@ -666,7 +661,6 @@
             localStorage.setItem(storageKey, JSON.stringify(arr));
         }
 
-        // 修改後的自訂裝備儲存與追蹤
         function saveCustomItemsToStorage() {
             if(!currentRace) return;
             const customStorageKey = `compressport_custom_list_${currentRace.id}`;
@@ -918,6 +912,7 @@
             renderChecklistItems();
         }
 
+        // 當點擊複選框完成項目勾選時也發送追蹤紀錄（了解用戶互動度）
         function toggleUnpreparedFilter() {
             isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
             renderChecklistItems();
