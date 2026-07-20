@@ -59,15 +59,16 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <a href="javascript:void(0);" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <!-- 💡 【修正】：補上 event 參數與正確的 href 跳轉網址，防範非同步掐斷問題 -->
+            <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
-            <a href="javascript:void(0);" onclick="logEvent('Click_Nav_FB', currentSport, 'https://www.facebook.com/MioSports')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.facebook.com/MioSports" onclick="logEvent('Click_Nav_FB', currentSport, 'https://www.facebook.com/MioSports', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <a href="javascript:void(0);" onclick="logActivity ? logActivity('前往IG', event, 'https://www.instagram.com/compressport_taiwan/') : logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.instagram.com/compressport_taiwan/" onclick="logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
@@ -202,7 +203,6 @@
                                 <input type="text" id="race-search" oninput="searchRaces()" placeholder="搜尋目前分類下的賽事..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-sm transition">
                             </div>
                             <div class="space-y-2">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">對應熱門賽事</span>
                                 <div id="race-list" class="grid grid-cols-1 gap-1 max-h-[160px] overflow-y-auto pr-1">
                                 </div>
                             </div>
@@ -299,7 +299,8 @@
                         </div>
                     </div>
 
-                    <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport])" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 💡 【修正】：初始化 onclick 補上 event，以利進行安全跳轉追蹤 -->
+                    <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport], event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -364,7 +365,7 @@
 
     <script>
         // ==========================================
-        // 📈 Google Sheets 行為分析設定（100% 沿用你提供、能動的舊版網址與變數名稱）
+        // 📈 Google Sheets 行為分析設定
         // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
 
@@ -378,15 +379,19 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（加上安全保護防卡死 Bug，並修正連結掐斷問題）
-        function logEvent(actionName, categoryName = "", targetUrl = "") {
+        // 🎯 核心傳送函數（徹底解決網頁跳轉導致 Fetch 被掐斷、紀錄失敗的問題）
+        function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
+            // 1. 如果有傳入 event，且有明確導向網址，先阻止瀏覽器立刻跳轉
+            if (event && targetUrl) {
+                event.preventDefault();
+            }
+
             if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
                 console.warn("⚠️ GAS_URL 尚未設定，無法上傳紀錄：", actionName, categoryName);
-                if (targetUrl) window.open(targetUrl, '_blank');
+                if (targetUrl) window.location.href = targetUrl;
                 return;
             }
             
-            // 💡 【黃金修正】：加上安全判斷，防範 currentRace 為空時讀取 title 噴錯導致網頁全面癱瘓的 Bug
             const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
             const currentSportCategory = categoryName || currentSport || "Initial";
             
@@ -395,6 +400,18 @@
                 action: actionName,
                 category: currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle
             };
+
+            // 建立一個安全的單次跳轉控制項
+            let hasRedirected = false;
+            const safeRedirect = () => {
+                if (targetUrl && !hasRedirected) {
+                    hasRedirected = true;
+                    window.location.href = targetUrl; // 在當前頁面順暢跳轉，避開新視窗被判定為惡意彈窗阻擋
+                }
+            };
+
+            // 設定 800ms 防卡死超時機制，避免 Google 回應慢導致使用者畫面被卡死
+            const timeoutId = setTimeout(safeRedirect, 800);
 
             fetch(GAS_URL, {
                 method: 'POST',
@@ -406,9 +423,8 @@
             .then(res => console.log('✅ 數據寫入成功:', res))
             .catch(err => console.error('❌ 數據寫入失敗:', err))
             .finally(() => {
-                if (targetUrl) {
-                    window.open(targetUrl, '_blank');
-                }
+                clearTimeout(timeoutId); // 成功、失敗、超時，最終都清除定時並前往外部網址
+                safeRedirect();
             });
         }
 
@@ -433,7 +449,6 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        // 💡 預設為 null，優化初始隱藏狀態
         let currentSport = null;
         let currentTab = 'mandatory';
         let currentRace = null;
@@ -505,8 +520,6 @@
             } else {
                 setSportTypeVisuals(null);
                 updateSportVisuals();
-                
-                // 💡 【重要Bug修正】：初始傳送 Visitor 時，由於未選擇運動，帶入 'Initial' 字串防止後端代碼崩潰
                 logEvent('Visitor', 'Initial');
             }
         });
@@ -786,7 +799,7 @@
 
         function setSportType(type) {
             currentSport = type;
-            unlockAppSections(); // 順暢動態解鎖畫面
+            unlockAppSections();
 
             if (!RACES_DATABASE[type] || RACES_DATABASE[type].length === 0) {
                 const genId = `general_${type}`;
@@ -808,6 +821,7 @@
             logEvent('Visitor', type);
         }
 
+        // 💡 【修正】：覆寫點擊按鈕時，將 event 引數一併寫入綁定，解決大按鈕換項目後無法上傳的臭蟲
         function updateSportVisuals() {
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
@@ -818,9 +832,9 @@
             const shopBtn = document.getElementById('shop-redirect-btn');
             if (shopBtn) {
                 if (currentSport && OFFICIAL_STORE_URLS[currentSport]) {
-                    shopBtn.setAttribute('onclick', `logEvent('Click_Shop_Btn', currentSport, '${OFFICIAL_STORE_URLS[currentSport]}')`);
+                    shopBtn.setAttribute('onclick', `logEvent('Click_Shop_Btn', currentSport, '${OFFICIAL_STORE_URLS[currentSport]}', event)`);
                 } else {
-                    shopBtn.setAttribute('onclick', `logEvent('Click_Shop_Btn', 'None', 'https://www.miosports.com.tw/')`);
+                    shopBtn.setAttribute('onclick', `logEvent('Click_Shop_Btn', 'None', 'https://www.miosports.com.tw/', event)`);
                 }
             }
         }
@@ -1045,7 +1059,7 @@
                     let cloudSpecific = getGearArrayFromSource(GEAR_DATA, currentRace.id, tab);
                     cloudSpecific.forEach(spec => {
                         if (!baseItems.some(b => b.id === spec.id || b.name === spec.name)) {
-                            baseItems.push(JSON.stringify(spec));
+                            baseItems.push(spec);
                         }
                     });
                 }
