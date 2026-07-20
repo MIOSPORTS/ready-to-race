@@ -212,7 +212,7 @@
                                 <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">我選擇的賽事</span>
                                 <h4 id="selected-race-title" class="font-bold text-base text-slate-800">載入中...</h4>
                                 <p id="selected-race-update" class="text-xs text-slate-400">最後更新：常態更新</p>
-                                <p class="text-[10px] text-slate-400/80 font-normal leading-normal">※ 賽事資訊若有異動，以主辦單位公告為準</p>
+                                <p class="text-[10px] text-slate-400/80 font-normal Pottery-normal leading-normal">※ 賽事資訊若有異動，以主辦單位公告為準</p>
                             </div>
                             <div class="pt-4 border-t border-slate-200 mt-4 flex justify-between items-center text-xs">
                                 <a href="#" id="race-rule-link" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1">
@@ -377,7 +377,7 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（已完美升級為自動辨識、打包「缺少裝備項目」送往試算表）
+        // 🎯 核心傳送函數（已升級為終極 HTML 畫面元素裝備掃描機制，100% 抓取缺少的商品項目）
         function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
             if (event && targetUrl) {
                 event.preventDefault();
@@ -392,20 +392,40 @@
             const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
             const currentSportCategory = categoryName || currentSport || "Initial";
             
-            // 💡 1. 核心大優化：當點擊前往官網補裝備時，自動提取當前未勾選（也就是使用者缺少）的裝備名稱
+            // 💡 【黃金修正】：當使用者點擊補齊裝備按鈕時，直接去扒目前的 DOM 畫面結構，精確揪出哪些裝備沒打勾
             let unpreparedItemsStr = "";
             if (actionName === 'Click_Shop_Btn') {
-                const allGearItems = getEntireRaceItemsCollection();
-                const unpreparedNames = allGearItems
-                    .filter(item => !checkedItems.has(item.id))
-                    .map(item => item.name);
+                let missingList = [];
                 
-                if (unpreparedNames.length > 0) {
-                    unpreparedItemsStr = unpreparedNames.join('、');
+                // 1. 先抓中間大區塊裝備格子（目前分頁顯示的裝備）
+                document.querySelectorAll('#items-grid > div').forEach(el => {
+                    // 如果這個卡片裡面找不到勾勾元件（代表處於未勾選狀態）
+                    if (!el.querySelector('.fa-check')) {
+                        const nameSpan = el.querySelector('span.truncate');
+                        if (nameSpan) {
+                            // 擷取名稱文字、剃除自訂標籤與空白
+                            let nameText = nameSpan.textContent.replace('自訂', '').trim();
+                            if (nameText) missingList.push(nameText);
+                        }
+                    }
+                });
+                
+                // 2. 如果使用者切換到別的分頁，或者使用了篩選，防呆改從下方「尚未準備的運動裝備」文字清單抓
+                if (missingList.length === 0) {
+                    document.querySelectorAll('#unprepared-list li').forEach(li => {
+                        let liText = li.textContent.trim();
+                        if (liText && !liText.includes('所有裝備均已備妥')) {
+                            missingList.push(liText);
+                        }
+                    });
+                }
+
+                if (missingList.length > 0) {
+                    unpreparedItemsStr = missingList.join('、');
                 }
             }
 
-            // 💡 2. 裝置辨識相容性處理
+            // 裝置辨識
             const userAgent = navigator.userAgent;
             let deviceType = "Desktop (Chrome)"; 
             if (/Mobi|Android|iPhone/i.test(userAgent)) {
@@ -414,9 +434,9 @@
                 deviceType = "Desktop (Safari)";
             }
 
-            // 💡 3. 欄位整合：如果有點擊補裝備按鈕，就把缺少清單包裝在原本的 Category (D欄) 裡一起回傳
+            // 💡 組合 Category 欄位字串：只要有缺少的裝備，直接重組寫入，無痛對齊 D 欄
             let finalCategory = currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle;
-            if (actionName === 'Click_Shop_Btn' && unpreparedItemsStr) {
+            if (unpreparedItemsStr) {
                 finalCategory = `${currentSportCategory} | 缺少：${unpreparedItemsStr}`;
             }
 
