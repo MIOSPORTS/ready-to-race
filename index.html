@@ -58,7 +58,7 @@
             <img id="nav-logo" src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
         </div>
         
-        <!-- 🎯 頂部導覽列按鈕完美追蹤版：移除 href 直接跳轉，改由 JS 發送追蹤後才跳轉 -->
+        <!-- 🎯 頂部導覽列按鈕：使用新版 sendBeacon 機制，不影響點擊體驗 -->
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
             <a href="javascript:void(0);" onclick="logActivity('前往官網(頂部)', event, 'https://www.miosports.com.tw/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
@@ -303,8 +303,8 @@
                         </div>
                     </div>
 
-                    <!-- 🎯 底部前往官網按鈕：改由傳入 event 來防掐斷跳轉 -->
-                    <a id="shop-redirect-btn" href="" onclick="logActivity('前往官網', event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 🎯 底部前往官網按鈕：回歸最原生的 href 加上 target="_blank"，並綁定 sendBeacon 背景追蹤 -->
+                    <a id="shop-redirect-btn" href="" onclick="logActivity('前往官網', event)" target="_blank" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -397,14 +397,9 @@
             return `${device} (${browser})`;
         }
 
-        // 🎯 完美升級版：100% 攔截所有跳轉按鈕，確保追蹤表單資料送出才跳轉
-        async function logActivity(action, event, targetUrl) {
+        // 🎯 終極修正：使用 navigator.sendBeacon，100% 解決跳轉掐斷問題，同時秒開新視窗不被瀏覽器攔截
+        function logActivity(action, event, targetUrl) {
             if (!TRACKING_API_URL) return;
-
-            // 攔截跳轉行為，防止連線被瀏覽器攔腰切斷
-            if (event) {
-                event.preventDefault();
-            }
 
             // 將運動類別與當前選擇的賽事名稱打包進 Category
             let categoryInfo = currentSport || "None";
@@ -418,26 +413,15 @@
             formData.append('category', categoryInfo);
             formData.append('ipCountry', getDeviceAndBrowser());
 
-            try {
-                // 以表單格式同步發送
-                await fetch(TRACKING_API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formData.toString()
-                });
-            } catch (err) {
-                console.error("發送活動紀錄失敗:", err);
-            } finally {
-                // 不論 API 回傳成功或失敗（finally），都確保使用者順暢前往網址
-                if (targetUrl) {
-                    window.open(targetUrl, '_blank');
-                } else if (action === '前往官網') {
-                    const shopBtn = document.getElementById('shop-redirect-btn');
-                    if (shopBtn && shopBtn.href) {
-                        window.open(shopBtn.href, '_blank');
-                    }
-                }
+            // 將 URLSearchParams 轉化為二進位 Blob，以便透過 sendBeacon 背景快速安全傳送
+            const blob = new Blob([formData.toString()], { type: 'application/x-www-form-urlencoded' });
+            
+            navigator.sendBeacon(TRACKING_API_URL, blob);
+            
+            // 處理手動帶入 targetUrl 的頂部三個社群按鈕，確保百分百安全開啟新視窗
+            if (targetUrl && event) {
+                event.preventDefault();
+                window.open(targetUrl, '_blank');
             }
         }
 
@@ -815,7 +799,7 @@
 
             if (!RACES_DATABASE[type] || RACES_DATABASE[type].length === 0) {
                 const genId = `general_${type}`;
-                RACES_DATABASE[type] = [{ id: genId, title: '基本裝備清單', update: '常態更新', url: '#' }];
+                RACES_DATABASE[type] = [{ id: genId, title: '基本裝裝備清單', update: '常態更新', url: '#' }];
             }
             currentRace = RACES_DATABASE[type][0]; 
             
