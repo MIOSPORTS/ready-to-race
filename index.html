@@ -59,7 +59,7 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <!-- 💡 【修正】：補上 event 參數與正確的 href 跳轉網址，防範非同步掐斷問題 -->
+            <!-- 💡 點擊外部連結均帶入 event 參數以啟動安全跳轉機制 -->
             <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
@@ -299,7 +299,7 @@
                         </div>
                     </div>
 
-                    <!-- 💡 【修正】：初始化 onclick 補上 event，以利進行安全跳轉追蹤 -->
+                    <!-- 💡 補齊裝備按鈕 -->
                     <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport], event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
@@ -379,9 +379,8 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（徹底解決網頁跳轉導致 Fetch 被掐斷、紀錄失敗的問題）
+        // 🎯 核心傳送函數（同步整合「防跳轉掐斷鎖」與「動態裝置偵測」）
         function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
-            // 1. 如果有傳入 event，且有明確導向網址，先阻止瀏覽器立刻跳轉
             if (event && targetUrl) {
                 event.preventDefault();
             }
@@ -395,22 +394,30 @@
             const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
             const currentSportCategory = categoryName || currentSport || "Initial";
             
+            // 💡 動態辨識使用者目前是用手機還是電腦瀏覽器，解決 E 欄空白問題
+            const userAgent = navigator.userAgent;
+            let deviceType = "Desktop (Chrome)"; 
+            if (/Mobi|Android|iPhone/i.test(userAgent)) {
+                deviceType = "Mobile (Browser)";
+            } else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) {
+                deviceType = "Desktop (Safari)";
+            }
+
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle
+                category: currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle,
+                ipCountry: deviceType // 打包進 ipCountry 欄位送出，完美對齊後端
             };
 
-            // 建立一個安全的單次跳轉控制項
             let hasRedirected = false;
             const safeRedirect = () => {
                 if (targetUrl && !hasRedirected) {
                     hasRedirected = true;
-                    window.location.href = targetUrl; // 在當前頁面順暢跳轉，避開新視窗被判定為惡意彈窗阻擋
+                    window.location.href = targetUrl;
                 }
             };
 
-            // 設定 800ms 防卡死超時機制，避免 Google 回應慢導致使用者畫面被卡死
             const timeoutId = setTimeout(safeRedirect, 800);
 
             fetch(GAS_URL, {
@@ -423,7 +430,7 @@
             .then(res => console.log('✅ 數據寫入成功:', res))
             .catch(err => console.error('❌ 數據寫入失敗:', err))
             .finally(() => {
-                clearTimeout(timeoutId); // 成功、失敗、超時，最終都清除定時並前往外部網址
+                clearTimeout(timeoutId);
                 safeRedirect();
             });
         }
@@ -821,7 +828,7 @@
             logEvent('Visitor', type);
         }
 
-        // 💡 【修正】：覆寫點擊按鈕時，將 event 引數一併寫入綁定，解決大按鈕換項目後無法上傳的臭蟲
+        // 💡 覆寫大按鈕屬性時，同樣帶上 event
         function updateSportVisuals() {
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
@@ -949,7 +956,7 @@
                 let cloudSpecific = getGearArrayFromSource(GEAR_DATA, currentRace.id, currentTab);
                 cloudSpecific.forEach(specItem => {
                     if (!baseItems.some(b => b.id === specItem.id || b.name === specItem.name)) {
-                        baseItems.push(JSON.parse(JSON.stringify(specItem)));
+                        baseItems.push(specItem);
                     }
                 });
             }
