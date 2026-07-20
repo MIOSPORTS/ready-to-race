@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 🎯 SEO 黃金標題：融入四大核心關鍵字 -->
+    <!-- 🎯 SEO 黃金標題 -->
     <title>COMPRESSPORT | 賽前裝備清單工具 - 馬拉松、三鐵、越野跑運動裝備檢查</title>
     
-    <!-- 🎯 SEO 網頁描述（Meta Description）：點擊率的關鍵 -->
+    <!-- 🎯 SEO 網頁描述 -->
     <meta name="description" content="專業運動 brand COMPRESSPORT 專為跑者、鐵人與越野玩家設計的賽前裝備清單工具。一鍵自動建立馬拉松路跑、鐵人三項（三鐵）、越野跑必備裝備清單，出發前快速勾選，助你突破 PB、安全完賽！">
     <meta name="keywords" content="裝備清單, 越野, 越野跑, 馬拉松, 三鐵, 鐵人三項, 運動裝備, COMPRESSPORT, MIOSPORTS">
     
-    <!-- Open Graph 臉書與 LINE 分享預覽優化 -->
+    <!-- Open Graph -->
     <meta property="og:title" content="COMPRESSPORT | 賽前裝備清單工具">
     <meta property="og:description" content="依照你的馬拉松、三鐵、越野賽事，自動建立專屬裝備清單。出發前快速確認，不再漏帶重要裝備！">
     <meta property="og:type" content="website">
@@ -59,7 +59,6 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <!-- 📈 完美保留你原始的導流點擊與 logEvent 追蹤，加入 targetUrl 參數確保安全開分頁不被掐斷 -->
             <a href="javascript:void(0);" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
@@ -68,7 +67,7 @@
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <a href="javascript:void(0);" onclick="logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="javascript:void(0);" onclick="logActivity ? logActivity('前往IG', event, 'https://www.instagram.com/compressport_taiwan/') : logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
@@ -77,7 +76,6 @@
 
     <header class="relative bg-zinc-950 text-white overflow-hidden py-16 px-6 md:px-16 lg:px-24">
         <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900 transition-all duration-500">
-            <!-- 💡 完美結合：新版動態調整的品牌預設背景圖 -->
             <img id="hero-bg" src="images/bg_brand.jpg" alt="Sport Background" class="w-full h-full object-cover object-center" onerror="this.style.display='none'">
             <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/65 to-transparent"></div>
         </div>
@@ -85,7 +83,6 @@
         <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div class="lg:col-span-7 space-y-6">
                 <span class="bg-brandRed text-white text-xs font-bold tracking-widest px-3 py-1 rounded">COMPRESSPORT | READY TO RACE</span>
-                <!-- 🎯 SEO H1 標題 -->
                 <h1 class="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                     比賽前，<br><span class="text-brandRed">你準備好了嗎？</span>
                 </h1>
@@ -140,6 +137,7 @@
             
             <div class="lg:col-span-8 space-y-10 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
                 
+                <!-- 🎯 第一步：選擇運動項目（常駐顯示） -->
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
@@ -147,7 +145,6 @@
                     </div>
                     
                     <div class="grid grid-cols-3 gap-4">
-                        <!-- 💡 完美結合：將按鈕邊框改回未選擇的預設灰色樣式，符合初始隱藏時的外觀優化 -->
                         <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn block relative w-full h-32 md:h-36 rounded-2xl overflow-hidden border border-slate-200 shadow-sm transition-all duration-300 group select-none">
                             <img id="img-choice-trail" src="" alt="Trail" class="sport-btn-img absolute inset-0 w-full h-full object-cover transition-all duration-500 scale-100 group-hover:scale-105">
                             <div class="sport-btn-mask absolute inset-0 bg-zinc-950/60 transition-all duration-300"></div>
@@ -192,7 +189,6 @@
                     </div>
                 </section>
 
-                <!-- 💡 完美結合：初始設定為 hidden 隱藏的全新版展開型介面區塊 -->
                 <section id="section-race" class="space-y-4 hidden">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
@@ -303,7 +299,6 @@
                         </div>
                     </div>
 
-                    <!-- 📈 底部補齊裝備按鈕：融合舊版確定能用的追蹤機制，完全排除被防禦阻擋問題 -->
                     <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport])" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
@@ -311,14 +306,13 @@
                 </section>
             </div>
 
-            <!-- 💡 完美結合：初始隱藏的右側海報區 -->
             <div id="aside-poster" class="lg:col-span-4 lg:sticky lg:top-6 space-y-6 hidden">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
                     <h3 class="text-base font-bold mb-3">你的裝備清單圖片 <span class="text-xs text-slate-400 font-normal">（預覽）</span></h3>
                     
                     <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-md text-white flex flex-col justify-between p-5" id="poster-preview">
                        <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
-                          <img id="poster-bg" src="" alt="Poster Background" class="w-full h-full object-cover object-center opacity-55">
+                          <img id="poster-bg" src="images/bg_brand.jpg" alt="Poster Background" class="w-full h-full object-cover object-center opacity-55" onerror="this.style.display='none'">
                           <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/50 to-zinc-950/85"></div>
                        </div>
 
@@ -374,7 +368,6 @@
         // ==========================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
 
-        // 取得或產生唯一 UserID (維持瀏覽器不重複)
         function getOrCreateUserId() {
             let uid = localStorage.getItem('packing_list_user_id');
             if (!uid) {
@@ -385,18 +378,22 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（保留你原本百分之百成功運行的 JSON fetch 核心，加入 finally 確保安全開啟連結）
+        // 🎯 核心傳送函數（加上安全保護防卡死 Bug，並修正連結掐斷問題）
         function logEvent(actionName, categoryName = "", targetUrl = "") {
             if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
                 console.warn("⚠️ GAS_URL 尚未設定，無法上傳紀錄：", actionName, categoryName);
                 if (targetUrl) window.open(targetUrl, '_blank');
                 return;
             }
-            const currentRaceTitle = currentRace ? currentRace.title : "Unknown Race";
+            
+            // 💡 【黃金修正】：加上安全判斷，防範 currentRace 為空時讀取 title 噴錯導致網頁全面癱瘓的 Bug
+            const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
+            const currentSportCategory = categoryName || currentSport || "Initial";
+            
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: categoryName ? `${categoryName} | ${currentRaceTitle}` : currentRaceTitle
+                category: currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle
             };
 
             fetch(GAS_URL, {
@@ -409,7 +406,6 @@
             .then(res => console.log('✅ 數據寫入成功:', res))
             .catch(err => console.error('❌ 數據寫入失敗:', err))
             .finally(() => {
-                // 如果有傳入跳轉網址（官網、FB、IG），一律等追蹤請求完結後才安全執行 window.open，完美防掐斷
                 if (targetUrl) {
                     window.open(targetUrl, '_blank');
                 }
@@ -428,9 +424,6 @@
             road: 'https://bit.ly/4vtYOqx'
         };
 
-        // ==========================================
-        // 🚀 Google Sheets 雲端連動唯一資料源
-        // ==========================================
         const SPREADSHEET_CSV_URLS = {
             road: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=0&single=true&output=csv',
             trail: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=1816972335&single=true&output=csv',
@@ -440,7 +433,7 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        // 💡 調整為新版特徵：初始為 null，代表尚未選取的優化初始狀態
+        // 💡 預設為 null，優化初始隱藏狀態
         let currentSport = null;
         let currentTab = 'mandatory';
         let currentRace = null;
@@ -496,7 +489,6 @@
                 const foundRace = RACES_DATABASE[currentSport].find(r => r.id === raceParam);
                 currentRace = foundRace ? foundRace : RACES_DATABASE[currentSport][0];
                 
-                // 🎯 關鍵修正：當網址帶有參數進入時，也必須正常執行展開
                 unlockAppSections();
                 setSportTypeVisuals(currentSport);
                 renderRaceList(RACES_DATABASE[currentSport]);
@@ -511,13 +503,14 @@
 
                 logEvent('Visitor', currentSport);
             } else {
-                // 初始保持新版的安全隱藏狀態與外觀
                 setSportTypeVisuals(null);
                 updateSportVisuals();
+                
+                // 💡 【重要Bug修正】：初始傳送 Visitor 時，由於未選擇運動，帶入 'Initial' 字串防止後端代碼崩潰
+                logEvent('Visitor', 'Initial');
             }
         });
 
-        // 🎯 關鍵修正：用來解鎖展開 hidden 區塊的關鍵函式，完全補回！
         function unlockAppSections() {
             document.getElementById('section-race').classList.remove('hidden');
             document.getElementById('section-checklist').classList.remove('hidden');
@@ -685,6 +678,8 @@
             saveCustomItemsToStorage();
             input.value = ''; 
             loadChecklist(); 
+
+            logEvent('Add_Custom_Item', currentSport);
         }
 
         function handleCustomItemKey(e) {
@@ -791,9 +786,7 @@
 
         function setSportType(type) {
             currentSport = type;
-            
-            // 🎯 關鍵修正：點擊運動項目時，必須觸發這個解鎖函式，否則下方一律卡死 hidden！
-            unlockAppSections();
+            unlockAppSections(); // 順暢動態解鎖畫面
 
             if (!RACES_DATABASE[type] || RACES_DATABASE[type].length === 0) {
                 const genId = `general_${type}`;
@@ -812,12 +805,10 @@
             loadChecklist();
             updateSportVisuals(); 
 
-            // 📈 100% 呼叫你的核心追蹤 Visitor
             logEvent('Visitor', type);
         }
 
         function updateSportVisuals() {
-            // 💡 保險優化：初始尚未點擊時顯示預設背景
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
             if (heroBg) heroBg.src = currentImgUrl;
