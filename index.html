@@ -59,7 +59,6 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <!-- 💡 點擊外部連結均帶入 event 參數以啟動安全跳轉機制 -->
             <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
@@ -299,7 +298,6 @@
                         </div>
                     </div>
 
-                    <!-- 💡 補齊裝備按鈕 -->
                     <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport], event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
@@ -379,7 +377,7 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（同步整合「防跳轉掐斷鎖」與「動態裝置偵測」）
+        // 🎯 核心傳送函數（已完美升級為自動辨識、打包「缺少裝備項目」送往試算表）
         function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
             if (event && targetUrl) {
                 event.preventDefault();
@@ -394,7 +392,20 @@
             const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
             const currentSportCategory = categoryName || currentSport || "Initial";
             
-            // 💡 動態辨識使用者目前是用手機還是電腦瀏覽器，解決 E 欄空白問題
+            // 💡 1. 核心大優化：當點擊前往官網補裝備時，自動提取當前未勾選（也就是使用者缺少）的裝備名稱
+            let unpreparedItemsStr = "";
+            if (actionName === 'Click_Shop_Btn') {
+                const allGearItems = getEntireRaceItemsCollection();
+                const unpreparedNames = allGearItems
+                    .filter(item => !checkedItems.has(item.id))
+                    .map(item => item.name);
+                
+                if (unpreparedNames.length > 0) {
+                    unpreparedItemsStr = unpreparedNames.join('、');
+                }
+            }
+
+            // 💡 2. 裝置辨識相容性處理
             const userAgent = navigator.userAgent;
             let deviceType = "Desktop (Chrome)"; 
             if (/Mobi|Android|iPhone/i.test(userAgent)) {
@@ -403,11 +414,17 @@
                 deviceType = "Desktop (Safari)";
             }
 
+            // 💡 3. 欄位整合：如果有點擊補裝備按鈕，就把缺少清單包裝在原本的 Category (D欄) 裡一起回傳
+            let finalCategory = currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle;
+            if (actionName === 'Click_Shop_Btn' && unpreparedItemsStr) {
+                finalCategory = `${currentSportCategory} | 缺少：${unpreparedItemsStr}`;
+            }
+
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle,
-                ipCountry: deviceType // 打包進 ipCountry 欄位送出，完美對齊後端
+                category: finalCategory,
+                ipCountry: deviceType 
             };
 
             let hasRedirected = false;
@@ -828,7 +845,6 @@
             logEvent('Visitor', type);
         }
 
-        // 💡 覆寫大按鈕屬性時，同樣帶上 event
         function updateSportVisuals() {
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
