@@ -58,16 +58,17 @@
             <img id="nav-logo" src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
         </div>
         
+        <!-- 🎯 頂部導覽列按鈕完美追蹤版：移除 href 直接跳轉，改由 JS 發送追蹤後才跳轉 -->
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <a href="https://www.miosports.com.tw/" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="javascript:void(0);" onclick="logActivity('前往官網(頂部)', event, 'https://www.miosports.com.tw/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
-            <a href="https://www.facebook.com/MioSports" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="javascript:void(0);" onclick="logActivity('前往FB', event, 'https://www.facebook.com/MioSports')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="javascript:void(0);" onclick="logActivity('前往IG', event, 'https://www.instagram.com/compressport_taiwan/')" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
@@ -302,8 +303,8 @@
                         </div>
                     </div>
 
-                    <!-- 🎯 追蹤點：前往官網補裝備 -->
-                    <a id="shop-redirect-btn" href="" onclick="logActivity('前往官網')" target="_blank" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 🎯 底部前往官網按鈕：改由傳入 event 來防掐斷跳轉 -->
+                    <a id="shop-redirect-btn" href="" onclick="logActivity('前往官網', event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -381,7 +382,7 @@
             return userId;
         }
 
-        // 🎯 取得簡單安全的裝置與瀏覽器類型資訊（填入原本 IP_Country 的位置）
+        // 🎯 取得簡單安全的裝置與瀏覽器類型資訊
         function getDeviceAndBrowser() {
             const ua = navigator.userAgent;
             let device = "Desktop";
@@ -396,9 +397,14 @@
             return `${device} (${browser})`;
         }
 
-        // 🎯 完美修改：重寫發送追蹤紀錄到 Google Sheet 的通用函數 (徹底相容 CORS)
-        async function logActivity(action) {
+        // 🎯 完美升級版：100% 攔截所有跳轉按鈕，確保追蹤表單資料送出才跳轉
+        async function logActivity(action, event, targetUrl) {
             if (!TRACKING_API_URL) return;
+
+            // 攔截跳轉行為，防止連線被瀏覽器攔腰切斷
+            if (event) {
+                event.preventDefault();
+            }
 
             // 將運動類別與當前選擇的賽事名稱打包進 Category
             let categoryInfo = currentSport || "None";
@@ -406,15 +412,14 @@
                 categoryInfo += ` - ${currentRace.title}`;
             }
 
-            // 💡 為了徹底避免 JSON CORS 預檢攔截，使用 x-www-form-urlencoded 標準表單格式發送
             const formData = new URLSearchParams();
             formData.append('userId', getOrCreateUserID());
             formData.append('action', action);
             formData.append('category', categoryInfo);
-            formData.append('ipCountry', getDeviceAndBrowser()); // 對應 GAS 裡面的 e.parameter.ipCountry
+            formData.append('ipCountry', getDeviceAndBrowser());
 
             try {
-                // 使用 fetch 且 no-cors 模式表單發送，100% 不會被 CORS 阻擋
+                // 以表單格式同步發送
                 await fetch(TRACKING_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -423,6 +428,16 @@
                 });
             } catch (err) {
                 console.error("發送活動紀錄失敗:", err);
+            } finally {
+                // 不論 API 回傳成功或失敗（finally），都確保使用者順暢前往網址
+                if (targetUrl) {
+                    window.open(targetUrl, '_blank');
+                } else if (action === '前往官網') {
+                    const shopBtn = document.getElementById('shop-redirect-btn');
+                    if (shopBtn && shopBtn.href) {
+                        window.open(shopBtn.href, '_blank');
+                    }
+                }
             }
         }
 
@@ -447,7 +462,6 @@
         let RACES_DATABASE = { road: [], trail: [], triathlon: [] };
         let GEAR_DATA = {};
 
-        // 💡 預設為 null，代表使用者還沒點擊項目
         let currentSport = null; 
         let currentTab = 'mandatory';
         let currentRace = null;
@@ -515,10 +529,8 @@
                 loadChecklist();
                 updateSportVisuals(); 
                 
-                // 🎯 追蹤點：使用者帶有參數直接載入
                 logActivity('直接載入參數進入');
             } else {
-                // 💡 初始沒有參數：不呈現任何運動、不執行清單載入、顯示初始形象
                 setSportTypeVisuals(null); 
                 updateSportVisuals(); 
             }
@@ -692,7 +704,6 @@
             input.value = ''; 
             loadChecklist(); 
             
-            // 🎯 追蹤點：新增自訂項目
             logActivity('自訂裝備項目');
         }
 
@@ -819,12 +830,10 @@
             loadChecklist();
             updateSportVisuals(); 
             
-            // 🎯 追蹤點：選取運動項目（使用人數核心紀錄點）
             logActivity('選擇運動項目');
         }
 
         function updateSportVisuals() {
-            // 💡 安全保險：若 currentSport 還沒有被點選，則顯示預設的形象圖
             const currentImgUrl = SPORT_BACKGROUNDS[currentSport] || 'images/bg_brand.jpg';
             const heroBg = document.getElementById('hero-bg');
             if (heroBg) heroBg.src = currentImgUrl;
@@ -882,7 +891,6 @@
             resetFilterCheckbox(); 
             loadChecklist();
             
-            // 🎯 追蹤點：選取特定賽事
             logActivity('切換指定賽事');
         }
 
@@ -925,7 +933,6 @@
         }
 
         function loadChecklist() {
-            // 💡 安全保險：若尚未選擇運動項目，直接跳過清單渲染與計算防止報錯
             if (!currentSport || !currentRace) return;
             renderChecklistItems();
             updateProgress();
@@ -940,7 +947,6 @@
         }
 
         function getAllCurrentGearItems() {
-            // 💡 安全保險：若尚未選擇運動，直接回傳空陣列
             if (!currentSport || !currentRace) return [];
             const generalId = `general_${currentSport}`;
             
@@ -971,7 +977,6 @@
             if (!grid) return;
             grid.innerHTML = '';
             
-            // 💡 安全保險
             if (!currentSport) {
                 grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">請先選擇上方運動項目</div>`;
                 return;
@@ -1050,7 +1055,6 @@
         }
 
         function getEntireRaceItemsCollection() {
-            // 💡 安全保險
             if (!currentSport || !currentRace) return [];
             const generalId = `general_${currentSport}`;
             const tabs = ['mandatory', 'recommended', 'weather'];
@@ -1079,7 +1083,6 @@
         }
 
         function updateProgress() {
-            // 💡 安全保險
             if (!currentSport) return;
 
             const allItems = getEntireRaceItemsCollection();
@@ -1113,7 +1116,6 @@
             if (!posterContainer) return;
             posterContainer.innerHTML = '';
             
-            // 💡 安全保險
             if (!currentSport) return;
 
             const allItems = getEntireRaceItemsCollection();
@@ -1150,14 +1152,11 @@
                     text: `我正在準備比賽裝備，這是自動建立的專屬裝備檢查清單，出發前快速確認，一起無傷完賽！`,
                     url: shareUrl,
                 }).then(() => {
-                    // 🎯 追蹤點：社群分享成功
                     logActivity('社群分享連結');
                 }).catch(err => console.log('分享取消或未成功', err));
             } else {
                 navigator.clipboard.writeText(shareUrl).then(() => {
                     alert(`【連結已複製！】\n\n已成功將「${currentRace.title}」專屬裝備連結複製到剪貼簿。趕快分享傳給一起報名參賽的朋友吧！🤝`);
-                    
-                    // 🎯 追蹤點：複製剪貼簿分享
                     logActivity('複製分享連結');
                 }).catch(err => {
                     console.error('無法複製連結', err);
@@ -1341,7 +1340,6 @@
                     link.href = imageURL;
                     link.click();
                     
-                    // 🎯 追蹤點：下載圖片成功
                     logActivity('下載圖片');
                 } catch (error) {
                     console.error("下載圖片失敗", error);
