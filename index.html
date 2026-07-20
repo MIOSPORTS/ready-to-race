@@ -30,7 +30,7 @@
                         brandDark: '#121212',
                         brandLight: '#f8fafc',
                         brandGray: '#475569',
-                    },
+                    }
                     fontFamily: {
                         sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
                     }
@@ -58,7 +58,8 @@
             <img id="nav-logo" src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
         </div>
         
-        <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
+        <!-- 💡 導覽列連結區塊：已加入 LINE 官方帳號 -->
+        <div class="flex space-x-4 md:space-x-6 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
             <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
@@ -70,6 +71,11 @@
             <a href="https://www.instagram.com/compressport_taiwan/" onclick="logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
+            </a>
+            <!-- 🎯 新增的 LINE 連結（請記得將下方 href 的網址替換成你們真正的官方 LINE 連結） -->
+            <a href="https://lin.ee/Zq3Io8l" onclick="logEvent('Click_Nav_LINE', currentSport, 'https://lin.ee/Zq3Io8l', event)" class="hover:text-[#06C755] cursor-pointer transition flex items-center space-x-1.5 py-1">
+                <i class="fa-brands fa-line text-base text-[#06C755]"></i>
+                <span class="hidden sm:inline text-zinc-400 hover:text-[#06C755]">LINE</span>
             </a>
         </div>
     </nav>
@@ -141,7 +147,7 @@
                 <section class="space-y-4">
                     <div class="flex items-center space-x-2">
                         <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
-                        <h3 class="text-xl font-bold">開始建立，選擇項目</h3>
+                        <h3 class="text-xl font-bold">開始建立清單，選擇項目</h3>
                     </div>
                     
                     <div class="grid grid-cols-3 gap-4">
@@ -155,7 +161,7 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-mountain-sun text-2xl text-zinc-300 drop-shadow-sm"></i>
-                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">越野跑裝備</span>
+                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">越野跑</span>
                             </div>
                         </button>
 
@@ -169,7 +175,7 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-bicycle text-2xl text-zinc-300 drop-shadow-sm"></i>
-                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">三鐵鐵人裝備</span>
+                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">鐵人三項</span>
                             </div>
                         </button>
 
@@ -183,7 +189,7 @@
                             
                             <div class="absolute inset-0 flex flex-col items-center justify-center space-y-1 z-10">
                                 <i class="sport-icon fa-solid fa-person-running text-2xl text-zinc-300 drop-shadow-sm"></i>
-                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">馬拉松路跑裝備</span>
+                                <span class="sport-text font-black text-sm text-zinc-300 drop-shadow-md tracking-wider">馬拉松/路跑</span>
                             </div>
                         </button>
                     </div>
@@ -579,7 +585,7 @@
                         const lastUpdate = row[updateIdx]?.trim() || '常態更新';
                         const category = row[categoryIdx]?.trim()?.toLowerCase() || 'mandatory';
                         const itemId = row[itemIdIdx]?.trim() || `item_${i}`;
-                        const itemName = row[itemNameIdx]?.trim();
+                        const itemName = row[itemIdIdxIdx]?.trim() || row[itemNameIdx]?.trim();
                         const raceUrl = row[raceUrlIdx]?.trim() || '#';
 
                         if (!raceId || !itemName) continue;
@@ -1215,7 +1221,7 @@
 
                     ctx.fillStyle = '#ffffff';
                     ctx.font = '900 76px "Noto Sans TC"';
-                    ctx.fillText('我的裝裝備清單', 80, 255);
+                    ctx.fillText('我的裝備清單', 80, 255);
 
                     ctx.fillStyle = '#71717a';
                     ctx.font = '500 28px "Inter"';
