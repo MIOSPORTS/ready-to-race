@@ -377,7 +377,7 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（已完美升級為自動辨識、打包「缺少裝備項目」送往試算表）
+        // 🎯 核心傳送函數（頂規正規化升級：不對網頁做繁瑣文字撈取，只秒速打包打勾 ID 陣列，100% 不卡死、不壞掉）
         function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
             if (event && targetUrl) {
                 event.preventDefault();
@@ -392,20 +392,7 @@
             const currentRaceTitle = currentRace ? (currentRace.title || "公版檢查") : "尚未選取賽事";
             const currentSportCategory = categoryName || currentSport || "Initial";
             
-            // 💡 1. 核心大優化：當點擊前往官網補裝備時，自動提取當前未勾選（也就是使用者缺少）的裝備名稱
-            let unpreparedItemsStr = "";
-            if (actionName === 'Click_Shop_Btn') {
-                const allGearItems = getEntireRaceItemsCollection();
-                const unpreparedNames = allGearItems
-                    .filter(item => !checkedItems.has(item.id))
-                    .map(item => item.name);
-                
-                if (unpreparedNames.length > 0) {
-                    unpreparedItemsStr = unpreparedNames.join('、');
-                }
-            }
-
-            // 💡 2. 裝置辨識相容性處理
+            // 裝置辨識
             const userAgent = navigator.userAgent;
             let deviceType = "Desktop (Chrome)"; 
             if (/Mobi|Android|iPhone/i.test(userAgent)) {
@@ -414,17 +401,17 @@
                 deviceType = "Desktop (Safari)";
             }
 
-            // 💡 3. 欄位整合：如果有點擊補裝備按鈕，就把缺少清單包裝在原本的 Category (D欄) 裡一起回傳
-            let finalCategory = currentSportCategory ? `${currentSportCategory} | ${currentRaceTitle}` : currentRaceTitle;
-            if (actionName === 'Click_Shop_Btn' && unpreparedItemsStr) {
-                finalCategory = `${currentSportCategory} | 缺少：${unpreparedItemsStr}`;
-            }
-
+            // 💡 頂規做法：前端行李箱只塞乾淨的變數，不浪費效能，點擊後零時差執行
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: finalCategory,
-                ipCountry: deviceType 
+                category: `${currentSportCategory} | ${currentRaceTitle}`,
+                ipCountry: deviceType,
+                // 🎯 這裡新增三個輕量化標籤，用來給後端 GAS 自動比對缺少項目：
+                sport: currentSport,
+                raceId: currentRace ? currentRace.id : null,
+                currentTab: currentTab,
+                checkedIds: Array.from(checkedItems) // 將 Set 轉換成單純陣列送出
             };
 
             let hasRedirected = false;
