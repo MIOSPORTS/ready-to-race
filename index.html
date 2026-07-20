@@ -377,7 +377,7 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        // 🎯 核心傳送函數（頂規正規化升級：不對網頁做繁瑣文字撈取，只秒速打包打勾 ID 陣列，100% 不卡死、不壞掉）
+        // 🎯 核心傳送函數（徹底移除了前端蓋掉 Category 的贅殘代碼，實現最穩定的分離傳輸）
         function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
             if (event && targetUrl) {
                 event.preventDefault();
@@ -401,17 +401,16 @@
                 deviceType = "Desktop (Safari)";
             }
 
-            // 💡 頂規做法：前端行李箱只塞乾淨的變數，不浪費效能，點擊後零時差執行
+            // 💡 【黃金修正點】：保持 Category 永遠是純淨的項目標題（對齊 D 欄），把未勾選清單當成純變數發送，杜絕越界干擾
             const data = {
                 userId: USER_ID,
                 action: actionName,
-                category: `${currentSportCategory} | ${currentRaceTitle}`,
+                category: `${currentSportCategory} | ${currentRaceTitle}`, 
                 ipCountry: deviceType,
-                // 🎯 這裡新增三個輕量化標籤，用來給後端 GAS 自動比對缺少項目：
                 sport: currentSport,
                 raceId: currentRace ? currentRace.id : null,
                 currentTab: currentTab,
-                checkedIds: Array.from(checkedItems) // 將 Set 轉換成單純陣列送出
+                checkedIds: Array.from(checkedItems) 
             };
 
             let hasRedirected = false;
@@ -1216,7 +1215,7 @@
 
                     ctx.fillStyle = '#ffffff';
                     ctx.font = '900 76px "Noto Sans TC"';
-                    ctx.fillText('我的裝備清單', 80, 255);
+                    ctx.fillText('我的裝裝備清單', 80, 255);
 
                     ctx.fillStyle = '#71717a';
                     ctx.font = '500 28px "Inter"';
