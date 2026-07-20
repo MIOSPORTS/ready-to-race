@@ -302,7 +302,8 @@
                         </div>
                     </div>
 
-                    <a id="shop-redirect-btn" href="" target="_blank" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 🎯 追蹤點：前往官網補裝備 -->
+                    <a id="shop-redirect-btn" href="" onclick="logActivity('前往官網')" target="_blank" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的比賽裝備 ➔</span>
                     </a>
@@ -395,7 +396,7 @@
             return `${device} (${browser})`;
         }
 
-        // 🎯 完美修改：重寫發送追蹤紀錄到 Google Sheet 的通用函數 (徹底相容 CORS 並對齊您的 GAS)
+        // 🎯 完美修改：重寫發送追蹤紀錄到 Google Sheet 的通用函數 (徹底相容 CORS)
         async function logActivity(action) {
             if (!TRACKING_API_URL) return;
 
@@ -405,15 +406,15 @@
                 categoryInfo += ` - ${currentRace.title}`;
             }
 
-            // 💡 為了徹底避免 JSON CORS 預檢攔截，我們使用 x-www-form-urlencoded 標準表單格式發送
+            // 💡 為了徹底避免 JSON CORS 預檢攔截，使用 x-www-form-urlencoded 標準表單格式發送
             const formData = new URLSearchParams();
             formData.append('userId', getOrCreateUserID());
             formData.append('action', action);
             formData.append('category', categoryInfo);
-            formData.append('ipCountry', getDeviceAndBrowser()); // 這會自動對應您 GAS 裡面的 e.parameter.ipCountry / extra
+            formData.append('ipCountry', getDeviceAndBrowser()); // 對應 GAS 裡面的 e.parameter.ipCountry
 
             try {
-                // 使用 fetch 且 no-cors 模式表單發送，這 100% 不會被 CORS 阻擋，速度最快！
+                // 使用 fetch 且 no-cors 模式表單發送，100% 不會被 CORS 阻擋
                 await fetch(TRACKING_API_URL, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -818,7 +819,7 @@
             loadChecklist();
             updateSportVisuals(); 
             
-            // 🎯 追蹤點：選取運動項目（使用人數紀錄點）
+            // 🎯 追蹤點：選取運動項目（使用人數核心紀錄點）
             logActivity('選擇運動項目');
         }
 
@@ -912,7 +913,6 @@
             renderChecklistItems();
         }
 
-        // 當點擊複選框完成項目勾選時也發送追蹤紀錄（了解用戶互動度）
         function toggleUnpreparedFilter() {
             isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
             renderChecklistItems();
