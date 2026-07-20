@@ -30,7 +30,7 @@
                         brandDark: '#121212',
                         brandLight: '#f8fafc',
                         brandGray: '#475569',
-                    }, // ⚙️ 修正點：這裡補上了遺漏的逗號，Tailwind 設定恢復正常了
+                    },
                     fontFamily: {
                         sans: ['Inter', 'Noto Sans TC', 'sans-serif'],
                     }
@@ -71,7 +71,7 @@
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
-            <!-- 🎯 LINE 連結：保持經典黑灰配，與其他項目完美同步 -->
+            <!-- 🎯 LINE 連結：完美同步原本的高質感黑灰風格 -->
             <a href="https://lin.ee/Zq3Io8l" onclick="logEvent('Click_Nav_LINE', currentSport, 'https://lin.ee/Zq3Io8l', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-line text-base"></i>
                 <span class="hidden sm:inline">LINE</span>
@@ -584,7 +584,7 @@
                         const lastUpdate = row[updateIdx]?.trim() || '常態更新';
                         const category = row[categoryIdx]?.trim()?.toLowerCase() || 'mandatory';
                         const itemId = row[itemIdIdx]?.trim() || `item_${i}`;
-                        const itemName = row[itemIdIdxIdx]?.trim() || row[itemNameIdx]?.trim();
+                        const itemName = row[itemNameIdx]?.trim(); // ⚙️ 修正點：修復了這裡原本不小心多打的 itemIdIdxIdx 語法手誤
                         const raceUrl = row[raceUrlIdx]?.trim() || '#';
 
                         if (!raceId || !itemName) continue;
@@ -597,7 +597,7 @@
                             GEAR_DATA[raceId] = { mandatory: [], recommended: [], weather: [] };
                         }
                         if (GEAR_DATA[raceId][category]) {
-                            GEAR_DATA[raceId][category].push({ id: itemId, name: textItemName });
+                            GEAR_DATA[raceId][category].push({ id: itemId, name: itemName });
                         }
                     }
 
