@@ -57,4 +57,91 @@
             <img id="nav-logo" src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
         </div>
         
-        <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc
+        <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
+            <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+                <i class="fa-solid fa-globe text-sm"></i>
+                <span class="hidden sm:inline">MIOSPORTS 官網</span>
+            </a>
+            <a href="https://www.facebook.com/MioSports" onclick="logEvent('Click_Nav_FB', currentSport, 'https://www.facebook.com/MioSports', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+                <i class="fa-brands fa-facebook text-base"></i>
+                <span class="hidden sm:inline">FACEBOOK</span>
+            </a>
+            <a href="https://www.instagram.com/compressport_taiwan/" onclick="logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+                <i class="fa-brands fa-instagram text-base"></i>
+                <span class="hidden sm:inline">INSTAGRAM</span>
+            </a>
+            <a href="https://lin.ee/Zq3Io8l" onclick="logEvent('Click_Nav_LINE', currentSport, 'https://lin.ee/Zq3Io8l', event)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+                <i class="fa-brands fa-line text-base"></i>
+                <span class="hidden sm:inline">LINE</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 🎯 展場優化 Hero Header -->
+    <header class="relative bg-zinc-950 text-white overflow-hidden py-10 md:py-14 px-6 md:px-16 lg:px-24">
+        <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900">
+            <img id="hero-bg" src="images/bg_road.jpg" alt="Road Marathon Background" class="w-full h-full object-cover object-center" onerror="this.src='images/bg_brand.jpg'">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/40"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-3">
+                <div class="inline-flex items-center space-x-2">
+                    <span class="bg-emerald-600 text-white text-[11px] font-black tracking-widest px-2.5 py-0.5 rounded">長榮航空 2026 跑旅航站 EXPO</span>
+                    <span class="bg-brandRed text-white text-[11px] font-black tracking-widest px-2.5 py-0.5 rounded">COMPRESSPORT</span>
+                </div>
+                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+                    長榮馬拉松｜<span class="text-brandRed">賽前裝備清單</span>
+                </h1>
+                <p class="text-xs sm:text-sm md:text-base text-zinc-300 font-light leading-relaxed max-w-2xl">
+                    比賽前，一項一項確認你的裝備是否準備完成。線上逐項勾選，不再漏帶任何關鍵配件！
+                </p>
+            </div>
+
+            <div class="bg-black/60 backdrop-blur-md border border-zinc-800 rounded-xl p-4 flex items-center space-x-4 max-w-sm">
+                <div class="bg-brandRed/20 p-3 rounded-lg text-brandRed flex-shrink-0">
+                    <i class="fa-solid fa-person-running text-xl"></i>
+                </div>
+                <div class="space-y-0.5 text-xs">
+                    <p class="text-zinc-400">目前賽事</p>
+                    <p id="header-race-title" class="font-bold text-white text-sm">長榮航空馬拉松</p>
+                    <p id="header-race-update" class="text-[11px] text-zinc-400">最後更新：常態更新</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- 主要 Checklist 區塊 -->
+            <div class="lg:col-span-8 space-y-8 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
+                
+                <section id="section-checklist" class="space-y-6">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-check text-[10px]"></i>
+                            </span>
+                            <h3 class="text-lg md:text-xl font-bold">馬拉松賽前裝備 <span class="text-xs md:text-sm text-slate-400 font-normal">（逐項勾選已備妥項目）</span></h3>
+                        </div>
+                        <a href="https://www.evaairrun.com/" id="race-rule-link" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1 text-xs">
+                            <span>大會規章</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+
+                    <!-- 分類切換 Tabs 與尚未準備篩選 -->
+                    <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex flex-1">
+                            <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
+                            <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">建議裝備</button>
+                            <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
+                        </div>
+                        <div class="flex items-center px-2 py-2 sm:py-0 select-none">
+                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-slate-700 transition">
+                                <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
+                                <span><i class="fa-solid fa-magnifying-glass mr-1 text-[10px]"></i>尚未準備清單</span>
+                            </label>
+                        </div>
+                    </div>
