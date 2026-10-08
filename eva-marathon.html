@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 🎯 SEO 專屬標題與描述 -->
+    <!-- 🎯 SEO 黃金標題 -->
     <title>長榮馬拉松｜賽前裝備清單 - COMPRESSPORT x 長榮航空 2026 跑旅航站 EXPO</title>
-    <meta name="description" content="長榮航空 2026 跑旅航站 EXPO 專屬！COMPRESSPORT 專為長榮馬拉松跑者打造的賽前裝備檢查清單。比賽前逐項確認跑鞋、能量補給與路跑配件，助你突破 PB、無傷完賽！">
-    <meta name="keywords" content="長榮馬拉松, 長榮航空跑旅航站EXPO, 裝備清單, 馬拉松, 路跑, 運動裝備, COMPRESSPORT">
+    <meta name="description" content="長榮航空 2026 跑旅航站 EXPO 專屬！COMPRESSPORT 專為長榮馬拉松跑者打造的賽前裝備檢查清單。比賽前快速勾選，助你突破 PB、安全完賽！">
+    <meta name="keywords" content="長榮馬拉松, 長榮航空跑旅航站EXPO, 裝備清單, 馬拉松, COMPRESSPORT">
     
     <!-- Open Graph -->
     <meta property="og:title" content="長榮馬拉松｜賽前裝備清單 - COMPRESSPORT">
-    <meta property="og:description" content="長榮馬拉松賽前裝備確認！一鍵確認必備裝備，不再漏帶關鍵物品。">
+    <meta property="og:description" content="長榮馬拉松賽前裝備快速確認，逐項檢查不再漏帶任何關鍵配件！">
     <meta property="og:type" content="website">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -51,7 +51,6 @@
 </head>
 <body class="bg-[#f1f5f9] font-sans antialiased text-slate-800">
 
-    <!-- 導航列 -->
     <nav class="bg-brandDark text-white py-3 px-6 md:px-12 flex justify-between items-center border-b border-zinc-800">
         <div class="flex items-center">
             <img id="nav-logo" src="images/logo.jpg" alt="COMPRESSPORT" class="h-9 md:h-10 object-contain" onerror="this.src='https://placehold.co/180x40/121212/white?text=COMPRESSPORT'">
@@ -77,11 +76,11 @@
         </div>
     </nav>
 
-    <!-- 🎯 展場優化 Hero Header -->
+    <!-- 🎯 展場專屬 Header -->
     <header class="relative bg-zinc-950 text-white overflow-hidden py-10 md:py-14 px-6 md:px-16 lg:px-24">
-        <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900">
-            <img id="hero-bg" src="images/bg_road.jpg" alt="Road Marathon Background" class="w-full h-full object-cover object-center" onerror="this.src='images/bg_brand.jpg'">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/40"></div>
+        <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900 transition-all duration-500">
+            <img id="hero-bg" src="images/bg_road.jpg" alt="Sport Background" class="w-full h-full object-cover object-center" onerror="this.src='images/bg_brand.jpg'">
+            <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/70 to-transparent"></div>
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -93,19 +92,19 @@
                 <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
                     長榮馬拉松｜<span class="text-brandRed">賽前裝備清單</span>
                 </h1>
-                <p class="text-xs sm:text-sm md:text-base text-zinc-300 font-light leading-relaxed max-w-2xl">
-                    比賽前，一項一項確認你的裝備是否準備完成。線上逐項勾選，不再漏帶任何關鍵配件！
+                <p class="text-xs sm:text-sm md:text-base text-zinc-300 max-w-xl font-light leading-relaxed">
+                    比賽前，一項一項確認你的裝備是否準備完成。<br>出發前線上快速勾選，不再漏帶任何重要裝備。
                 </p>
             </div>
 
-            <div class="bg-black/60 backdrop-blur-md border border-zinc-800 rounded-xl p-4 flex items-center space-x-4 max-w-sm">
-                <div class="bg-brandRed/20 p-3 rounded-lg text-brandRed flex-shrink-0">
+            <div class="bg-black/60 backdrop-blur-md border border-zinc-800 rounded-2xl p-4 md:p-5 flex items-center space-x-4 max-w-sm">
+                <div class="bg-brandRed/20 p-3 rounded-xl text-brandRed flex-shrink-0">
                     <i class="fa-solid fa-person-running text-xl"></i>
                 </div>
-                <div class="space-y-0.5 text-xs">
-                    <p class="text-zinc-400">目前賽事</p>
-                    <p id="header-race-title" class="font-bold text-white text-sm">長榮航空馬拉松</p>
-                    <p id="header-race-update" class="text-[11px] text-zinc-400">最後更新：常態更新</p>
+                <div>
+                    <span class="text-xs font-bold text-zinc-400 block">目前清單</span>
+                    <h4 id="header-display-title" class="font-bold text-white text-base">馬拉松賽前裝備</h4>
+                    <p class="text-[11px] text-zinc-400 mt-0.5">※ 賽事資訊若有異動，以大會公告為準</p>
                 </div>
             </div>
         </div>
@@ -114,24 +113,36 @@
     <main class="max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            <!-- 主要 Checklist 區塊 -->
             <div class="lg:col-span-8 space-y-8 bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100">
                 
+                <!-- 🎯 隱藏不必要的選擇步驟（母系統元件保留在 DOM 供核心邏輯運作，但畫面不顯示） -->
+                <div class="hidden">
+                    <button onclick="setSportType('road')" id="btn-road" class="sport-btn"></button>
+                    <button onclick="setSportType('trail')" id="btn-trail" class="sport-btn"></button>
+                    <button onclick="setSportType('triathlon')" id="btn-triathlon" class="sport-btn"></button>
+                    <section id="section-race"></section>
+                    <input type="text" id="race-search">
+                    <div id="race-list"></div>
+                    <span id="selected-race-title"></span>
+                    <span id="selected-race-update"></span>
+                    <a href="#" id="race-rule-link"></a>
+                </div>
+
+                <!-- 🎯 直接展開 Checklist -->
                 <section id="section-checklist" class="space-y-6">
-                    <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div class="flex items-center space-x-2">
                             <span class="bg-brandRed text-white font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs">
                                 <i class="fa-solid fa-check text-[10px]"></i>
                             </span>
-                            <h3 class="text-lg md:text-xl font-bold">馬拉松賽前裝備 <span class="text-xs md:text-sm text-slate-400 font-normal">（逐項勾選已備妥項目）</span></h3>
+                            <h3 class="text-lg md:text-xl font-bold">馬拉松賽前裝備 <span class="text-xs md:text-sm text-slate-400 font-normal">（勾選你已準備的裝備）</span></h3>
                         </div>
-                        <a href="https://www.evaairrun.com/" id="race-rule-link" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1 text-xs">
-                            <span>大會規章</span>
+                        <a href="https://www.evaairrun.com/" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1 text-xs">
+                            <span>大會規定</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                         </a>
                     </div>
 
-                    <!-- 分類切換 Tabs 與尚未準備篩選 -->
                     <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div class="flex flex-1">
                             <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
@@ -145,3 +156,868 @@
                             </label>
                         </div>
                     </div>
+
+                    <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
+                    </div>
+
+                    <div class="space-y-3 pt-2">
+                        <div class="flex items-center gap-2">
+                            <div class="relative flex-grow">
+                                <i class="fa-solid fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                                <input type="text" id="custom-item-input" onkeypress="handleCustomItemKey(event)" placeholder="新增個人裝備 (例如：能量膠、防磨膏、BCAA)" class="w-full pl-9 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed text-xs transition">
+                            </div>
+                            <button onclick="addCustomItem()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold py-2.5 px-4 rounded-xl transition flex-shrink-0 shadow-sm">
+                                新增
+                            </button>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <button id="edit-mode-btn" onclick="toggleEditMode()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-pen-to-square" id="edit-btn-icon"></i>
+                                <span id="edit-btn-text">編輯清單項目</span>
+                            </button>
+                            <button onclick="resetDeletedItems()" class="flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm">
+                                <i class="fa-solid fa-rotate-left"></i>
+                                <span>恢復預設裝備</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 md:p-6 space-y-3">
+                        <div class="flex justify-between items-center font-bold text-sm md:text-base">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-slate-500 text-sm">準備完成度</span>
+                                <span id="completion-percentage" class="text-brandRed text-2xl font-black">0%</span>
+                            </div>
+                            <span id="items-left-text" class="text-slate-500 text-sm">尚未準備 <span id="items-left-count" class="text-brandRed text-base font-black">0</span> 項</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                            <div id="progress-bar" class="bg-brandRed h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-solid fa-bell mr-1"></i> 尚未準備的運動裝備</span>
+                            <ul id="unprepared-list" class="text-xs text-slate-600 space-y-1 list-disc list-inside max-h-[100px] overflow-y-auto">
+                            </ul>
+                        </div>
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block"><i class="fa-regular fa-lightbulb mr-1"></i> 跑旅 EXPO 貼心提醒</span>
+                            <p class="text-xs text-slate-600 leading-relaxed">
+                                長榮航空馬拉松出發前，請將號碼布、晶片與比賽配件再次核對。祝你順利無傷破 PB，享受完賽的美好時刻！
+                            </p>
+                        </div>
+                    </div>
+
+                    <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport], event)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>完成檢查，補齊你的馬拉松裝備 ➔</span>
+                    </a>
+                </section>
+            </div>
+
+            <div id="aside-poster" class="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                    <h3 class="text-base font-bold mb-3">你的裝備清單圖片 <span class="text-xs text-slate-400 font-normal">（預覽）</span></h3>
+                    
+                    <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-md text-white flex flex-col justify-between p-5" id="poster-preview">
+                       <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
+                          <img id="poster-bg" src="images/bg_road.jpg" alt="Poster Background" class="w-full h-full object-cover object-center opacity-55" onerror="this.src='images/bg_brand.jpg'">
+                          <div class="absolute inset-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/50 to-zinc-950/85"></div>
+                       </div>
+
+                        <div class="relative z-10 space-y-1">
+                            <p id="poster-race-tag" class="text-[10px] font-black text-brandRed uppercase tracking-widest">EVA AIR MARATHON</p>
+                            <h2 class="text-xl font-black tracking-tight">長榮馬拉松裝備清單</h2>
+                            <p id="poster-date" class="text-[9px] text-zinc-500 tracking-wider">2026.10.08</p>
+                        </div>
+
+                      <div class="relative z-10 flex-grow my-4 bg-black/50 border border-white/5 rounded-xl p-4 overflow-hidden flex flex-col min-h-[300px]">
+                          <div id="poster-items" class="space-y-2 text-xs overflow-y-auto no-scrollbar h-full pr-1">
+                          </div>
+                      </div>
+
+                        <div class="relative z-10 flex justify-between items-center pt-2 border-t border-white/10">
+                            <div class="space-y-0.5">
+                                <span class="text-[9px] font-bold italic tracking-wider text-zinc-400 block leading-tight">#WheverYouRaceWeSupportYou</span>
+                                <span id="poster-status-ready" class="text-[11px] font-black italic tracking-widest text-white block leading-tight">READY TO RUN</span>
+                            </div>
+                            <div class="text-right flex-shrink-0">
+                                <img id="poster-logo-square" src="images/logo2.jpg" alt="Logo" class="h-7 inline-block md:hidden object-contain" onerror="this.removeAttribute('src');">
+                                <img id="poster-logo-landscape" src="images/logo.jpg" alt="Logo" class="h-5 hidden md:inline-block object-contain" onerror="this.removeAttribute('src');">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 space-y-2">
+                        <button id="download-btn" onclick="downloadPoster()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl transition flex items-center justify-center space-x-2 text-xs shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-download" id="download-icon"></i>
+                            <span id="download-text">下載圖片 (9:16)</span>
+                        </button>
+                        <button onclick="shareList()" class="w-full bg-white hover:bg-slate-50 text-slate-700 font-bold py-2.5 rounded-xl border border-slate-200 transition flex items-center justify-center space-x-2 text-xs">
+                            <i class="fa-solid fa-share-nodes"></i>
+                            <span>分享專屬清單連結</span>
+                        </button>
+                    </div>
+
+                    <div class="mt-4 text-center space-y-0.5">
+                        <p class="text-[11px] text-slate-400">分享你的長榮馬裝備並標記我們</p>
+                        <p class="text-[11px] font-semibold text-brandRed">@compressport_taiwan <br> #WheverYouRaceWeSupportYou</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <canvas id="export-canvas" width="1080" height="1920" class="hidden"></canvas>
+
+    <script>
+        // ==========================================
+        // 📈 Google Sheets 行為分析設定
+        // ==========================================
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzcGAXtGU1atEcYTm8EfN2H56MCxluJyZnMpj3tT2qfTdiywZjPF9oiLn7LCh1L94hJ/exec";
+
+        function getOrCreateUserId() {
+            let uid = localStorage.getItem('packing_list_user_id');
+            if (!uid) {
+                uid = 'user_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                localStorage.setItem('packing_list_user_id', uid);
+            }
+            return uid;
+        }
+        const USER_ID = getOrCreateUserId();
+
+        function logEvent(actionName, categoryName = "", targetUrl = "", event = null) {
+            if (event && targetUrl) {
+                event.preventDefault();
+            }
+
+            if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
+                if (targetUrl) window.location.href = targetUrl;
+                return;
+            }
+            
+            const currentRaceTitle = currentRace ? (currentRace.title || "長榮馬拉松") : "長榮馬拉松";
+            const currentSportCategory = categoryName || currentSport || "road";
+            
+            const userAgent = navigator.userAgent;
+            let deviceType = "Desktop (Chrome)"; 
+            if (/Mobi|Android|iPhone/i.test(userAgent)) {
+                deviceType = "Mobile (Browser)";
+            } else if (/Safari/i.test(userAgent) && !/Chrome/i.test(userAgent)) {
+                deviceType = "Desktop (Safari)";
+            }
+
+            const data = {
+                userId: USER_ID,
+                action: actionName,
+                category: `${currentSportCategory} | ${currentRaceTitle}`, 
+                ipCountry: deviceType,
+                sport: currentSport,
+                raceId: currentRace ? currentRace.id : 'eva-marathon',
+                currentTab: currentTab,
+                checkedIds: Array.from(checkedItems) 
+            };
+
+            let hasRedirected = false;
+            const safeRedirect = () => {
+                if (targetUrl && !hasRedirected) {
+                    hasRedirected = true;
+                    window.location.href = targetUrl;
+                }
+            };
+
+            const timeoutId = setTimeout(safeRedirect, 800);
+
+            fetch(GAS_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            })
+            .finally(() => {
+                clearTimeout(timeoutId);
+                safeRedirect();
+            });
+        }
+
+        const OFFICIAL_STORE_URLS = {
+            road: 'https://bit.ly/4vtYOqx'
+        };
+
+        const SPREADSHEET_CSV_URLS = {
+            road: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=0&single=true&output=csv'
+        };
+
+        let RACES_DATABASE = { road: [] };
+        let GEAR_DATA = {};
+
+        // 🎯 專屬版固定賽事識別碼
+        const TARGET_RACE_ID = 'eva-marathon';
+        let currentSport = 'road';
+        let currentTab = 'mandatory';
+        let currentRace = { id: TARGET_RACE_ID, title: '長榮航空馬拉松', update: '常態更新', url: 'https://www.evaairrun.com/' };
+        
+        let checkedItems = new Set();
+        let customItemsDatabase = {}; 
+        let deletedItemsDatabase = {}; 
+        let isOnlyUnprepared = false; 
+        let isEditMode = false;        
+
+        function initDate() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const dateStr = `${yyyy}.${mm}.${dd}`;
+            const posterDate = document.getElementById('poster-date');
+            if (posterDate) posterDate.innerText = dateStr;
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            initDate();
+            
+            document.getElementById('items-grid').innerHTML = `<div class="col-span-2 text-center py-12 text-brandRed font-medium text-sm animate-pulse"><i class="fa-solid fa-spinner animate-spin mr-2"></i> 同步長榮馬拉松裝備清單中...</div>`;
+
+            try {
+                await fetchGoogleSheetsData();
+            } catch(e) {
+                console.error(e);
+            }
+
+            // 檢查是否有專屬的長榮賽事資訊
+            if (RACES_DATABASE.road && RACES_DATABASE.road.length > 0) {
+                const found = RACES_DATABASE.road.find(r => r.id === TARGET_RACE_ID);
+                if (found) {
+                    currentRace = found;
+                }
+            }
+
+            document.getElementById('header-display-title').innerText = currentRace.title;
+            document.getElementById('poster-race-tag').innerText = (currentRace.title || 'EVA AIR MARATHON').toUpperCase();
+
+            loadSavedChecklist();
+            loadChecklist();
+
+            logEvent('Visitor_EVAMarathon', currentSport);
+        });
+
+        // 🎯 原汁原味母系統 CSV 解析（加入空格與底線容錯）
+        async function fetchGoogleSheetsData() {
+            const response = await fetch(SPREADSHEET_CSV_URLS.road);
+            if (!response.ok) throw new Error("CSV Fetch 失敗");
+            const csvText = await response.text();
+            
+            const lines = parseCSV(csvText);
+            if (lines.length < 2) return; 
+
+            const headers = lines[0].map(h => h.trim().toLowerCase());
+            const raceIdIdx = headers.indexOf('raceid');
+            const raceTitleIdx = headers.indexOf('racetitle');
+            const updateIdx = headers.indexOf('lastupdate');
+            const categoryIdx = headers.indexOf('category');
+            const itemIdIdx = headers.indexOf('itemid');
+            const itemNameIdx = headers.indexOf('itemname');
+            const raceUrlIdx = headers.indexOf('raceurl');
+
+            if (raceIdIdx === -1 || itemNameIdx === -1) return;
+
+            const raceMap = new Map();
+
+            for (let i = 1; i < lines.length; i++) {
+                const row = lines[i];
+                if (row.length < headers.length) continue;
+
+                let rawRaceId = row[raceIdIdx]?.trim();
+                if (!rawRaceId) continue;
+                
+                // 容錯：將 "general road" 自動映射成 "general_road"
+                let raceId = rawRaceId;
+                if (rawRaceId.toLowerCase() === 'general road') {
+                    raceId = 'general_road';
+                }
+
+                const raceTitle = row[raceTitleIdx]?.trim() || raceId;
+                const lastUpdate = row[updateIdx]?.trim() || '常態更新';
+                const category = row[categoryIdx]?.trim()?.toLowerCase() || 'mandatory';
+                const itemId = row[itemIdIdx]?.trim() || `item_${i}`;
+                const itemName = row[itemNameIdx]?.trim();
+                const raceUrl = row[raceUrlIdx]?.trim() || '#';
+
+                if (!itemName) continue;
+
+                if (!raceMap.has(raceId)) {
+                    raceMap.set(raceId, { id: raceId, title: raceTitle, update: lastUpdate, url: raceUrl });
+                }
+
+                if (!GEAR_DATA[raceId]) {
+                    GEAR_DATA[raceId] = { mandatory: [], recommended: [], weather: [] };
+                }
+                if (GEAR_DATA[raceId][category]) {
+                    GEAR_DATA[raceId][category].push({ id: itemId, name: itemName });
+                }
+            }
+
+            RACES_DATABASE.road = Array.from(raceMap.values());
+        }
+
+        function parseCSV(text) {
+            let p = '', r = [];
+            let q = false;
+            let row = [''];
+            for (let i = 0; i < text.length; i++) {
+                let c = text[i];
+                if (c === '"') {
+                    if (q && text[i+1] === '"') { row[row.length-1] += '"'; i++; }
+                    else { q = !q; }
+                } else if (c === ',' && !q) {
+                    row.push('');
+                } else if (c === '\r' || c === '\n') {
+                    if (c === '\r' && text[i+1] === '\n') { i++; }
+                    if (!q) { r.push(row); row = ['']; }
+                    else { row[row.length-1] += '\n'; }
+                } else {
+                    row[row.length-1] += c;
+                }
+            }
+            if (row.length > 1 || row[0] !== '') r.push(row);
+            return r;
+        }
+
+        function loadSavedChecklist() {
+            checkedItems.clear();
+            const storageKey = `compressport_checked_${TARGET_RACE_ID}`;
+            const savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+                try {
+                    const arr = JSON.parse(savedData);
+                    arr.forEach(id => checkedItems.add(id));
+                } catch(e) {}
+            }
+
+            const customStorageKey = `compressport_custom_list_${TARGET_RACE_ID}`;
+            const savedCustomData = localStorage.getItem(customStorageKey);
+            if (savedCustomData) {
+                try {
+                    customItemsDatabase[TARGET_RACE_ID] = JSON.parse(savedCustomData);
+                } catch(e) {
+                    customItemsDatabase[TARGET_RACE_ID] = [];
+                }
+            } else {
+                customItemsDatabase[TARGET_RACE_ID] = [];
+            }
+
+            const deletedStorageKey = `compressport_deleted_${TARGET_RACE_ID}`;
+            const savedDeletedData = localStorage.getItem(deletedStorageKey);
+            if (savedDeletedData) {
+                try {
+                    deletedItemsDatabase[TARGET_RACE_ID] = JSON.parse(savedDeletedData);
+                } catch(e) {
+                    deletedItemsDatabase[TARGET_RACE_ID] = [];
+                }
+            } else {
+                deletedItemsDatabase[TARGET_RACE_ID] = [];
+            }
+        }
+
+        function saveChecklistToStorage() {
+            const storageKey = `compressport_checked_${TARGET_RACE_ID}`;
+            const arr = Array.from(checkedItems);
+            localStorage.setItem(storageKey, JSON.stringify(arr));
+        }
+
+        function saveCustomItemsToStorage() {
+            const customStorageKey = `compressport_custom_list_${TARGET_RACE_ID}`;
+            localStorage.setItem(customStorageKey, JSON.stringify(customItemsDatabase[TARGET_RACE_ID] || []));
+        }
+
+        function saveDeletedItemsToStorage() {
+            const deletedStorageKey = `compressport_deleted_${TARGET_RACE_ID}`;
+            localStorage.setItem(deletedStorageKey, JSON.stringify(deletedItemsDatabase[TARGET_RACE_ID] || []));
+        }
+
+        function addCustomItem() {
+            const input = document.getElementById('custom-item-input');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const customId = `c_${Date.now()}`;
+            const newItem = { id: customId, name: name, isCustom: true };
+
+            if (!customItemsDatabase[TARGET_RACE_ID]) {
+                customItemsDatabase[TARGET_RACE_ID] = [];
+            }
+            customItemsDatabase[TARGET_RACE_ID].push(newItem);
+
+            saveCustomItemsToStorage();
+            input.value = ''; 
+            loadChecklist(); 
+
+            logEvent('Add_Custom_Item', currentSport);
+        }
+
+        function handleCustomItemKey(e) {
+            if (e.key === 'Enter') {
+                addCustomItem();
+            }
+        }
+
+        function deleteItem(id, isCustom, e) {
+            if (e) e.stopPropagation(); 
+            
+            if (isCustom) {
+                if (customItemsDatabase[TARGET_RACE_ID]) {
+                    customItemsDatabase[TARGET_RACE_ID] = customItemsDatabase[TARGET_RACE_ID].filter(item => item.id !== id);
+                    saveCustomItemsToStorage();
+                }
+            } else {
+                if (!deletedItemsDatabase[TARGET_RACE_ID]) {
+                    deletedItemsDatabase[TARGET_RACE_ID] = [];
+                }
+                if (!deletedItemsDatabase[TARGET_RACE_ID].includes(id)) {
+                    deletedItemsDatabase[TARGET_RACE_ID].push(id);
+                    saveDeletedItemsToStorage();
+                }
+            }
+            
+            checkedItems.delete(id); 
+            saveChecklistToStorage();
+            loadChecklist();
+        }
+
+        function resetDeletedItems() {
+            if (confirm("確定要恢復預設裝備嗎？這將會還原所有被刪除的原始項目，並清除您自訂新增的裝備。")) {
+                deletedItemsDatabase[TARGET_RACE_ID] = [];
+                saveDeletedItemsToStorage();
+                
+                customItemsDatabase[TARGET_RACE_ID] = [];
+                saveCustomItemsToStorage();
+                
+                if (isEditMode) toggleEditMode();
+                loadChecklist();
+            }
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            const btn = document.getElementById('edit-mode-btn');
+            const text = document.getElementById('edit-btn-text');
+            const icon = document.getElementById('edit-btn-icon');
+            
+            if (isEditMode) {
+                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-brandRed font-bold text-xs rounded-xl border border-brandRed/40 transition flex items-center justify-center space-x-1.5 shadow-sm";
+                text.innerText = "完成編輯";
+                if (icon) icon.className = "fa-solid fa-floppy-disk";
+            } else {
+                btn.className = "flex-1 py-2 bg-white hover:bg-slate-50 text-slate-500 font-medium text-xs rounded-xl border border-slate-200 transition flex items-center justify-center space-x-1.5 shadow-sm";
+                text.innerText = "編輯清單項目";
+                if (icon) icon.className = "fa-solid fa-pen-to-square";
+            }
+            renderChecklistItems();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            ['mandatory', 'recommended', 'weather'].forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition';
+                } else {
+                    btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition';
+                }
+            });
+            renderChecklistItems();
+        }
+
+        function toggleUnpreparedFilter() {
+            isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
+            renderChecklistItems();
+        }
+
+        function loadChecklist() {
+            renderChecklistItems();
+            updateProgress();
+            syncPosterPreview();
+        }
+
+        function getGearArrayFromSource(db, raceId, tab) {
+            if (db && db[raceId] && db[raceId][tab]) {
+                return db[raceId][tab];
+            }
+            return [];
+        }
+
+        // 🎯 核心：優先抓取 general_road，若有長榮專屬項目則自動疊加
+        function getAllCurrentGearItems() {
+            let cloudBase = getGearArrayFromSource(GEAR_DATA, 'general_road', currentTab);
+            let baseItems = JSON.parse(JSON.stringify(cloudBase || []));
+
+            let cloudSpecific = getGearArrayFromSource(GEAR_DATA, TARGET_RACE_ID, currentTab);
+            cloudSpecific.forEach(specItem => {
+                if (!baseItems.some(b => b.id === specItem.id || b.name === specItem.name)) {
+                    baseItems.push(specItem);
+                }
+            });
+
+            const deletedList = deletedItemsDatabase[TARGET_RACE_ID] || [];
+            baseItems = baseItems.filter(item => !deletedList.includes(item.id));
+
+            if (currentTab === 'mandatory' && customItemsDatabase[TARGET_RACE_ID]) {
+                baseItems = [...baseItems, ...customItemsDatabase[TARGET_RACE_ID]];
+            }
+            return baseItems;
+        }
+
+        function renderChecklistItems() {
+            const grid = document.getElementById('items-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            let items = getAllCurrentGearItems();
+
+            if (isOnlyUnprepared) {
+                items = items.filter(item => !checkedItems.has(item.id));
+            }
+
+            if (items.length === 0) {
+                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前頁面的項目皆已準備就緒！' : '大會尚未於此分類填寫推薦裝備項目'}</div>`;
+                return;
+            }
+
+            items.forEach(item => {
+                const isChecked = checkedItems.has(item.id);
+                const itemDiv = document.createElement('div');
+                
+                if (isEditMode) {
+                    itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
+                } else {
+                    itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
+                    itemDiv.onclick = () => toggleItem(item.id);
+                }
+
+                let deleteBtnHtml = '';
+                if (item.isCustom) {
+                    deleteBtnHtml = `
+                        <button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2">
+                            <i class="fa-regular fa-trash-can text-xs"></i>
+                        </button>
+                    `;
+                } else if (isEditMode) {
+                    deleteBtnHtml = `
+                        <button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2" title="隱藏此項目">
+                            <i class="fa-regular fa-trash-can text-xs"></i>
+                        </button>
+                    `;
+                }
+
+                itemDiv.innerHTML = `
+                    <div class="flex items-center space-x-3 overflow-hidden flex-grow">
+                        ${!isEditMode ? `
+                        <div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">
+                            ${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
+                        </div>` : '<i class="fa-solid fa-circle text-[5px] text-slate-300 ml-1 flex-shrink-0"></i>'}
+                        
+                        <span class="text-xs font-semibold text-slate-700 truncate ${(!isEditMode && isChecked) ? 'line-through text-slate-400 font-normal' : ''}">
+                            ${item.name} 
+                            ${item.isCustom ? '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200/60 ml-1 font-normal">自訂</span>' : ''}
+                        </span>
+                    </div>
+                    ${deleteBtnHtml}
+                `;
+                grid.appendChild(itemDiv);
+            });
+        }
+
+        function toggleItem(id) {
+            if (isEditMode) return; 
+            
+            if (checkedItems.has(id)) checkedItems.delete(id);
+            else checkedItems.add(id);
+            
+            saveChecklistToStorage();
+            
+            if (isOnlyUnprepared) {
+                renderChecklistItems();
+                updateProgress();
+                syncPosterPreview();
+            } else {
+                loadChecklist();
+            }
+        }
+
+        function getEntireRaceItemsCollection() {
+            const tabs = ['mandatory', 'recommended', 'weather'];
+            let entireList = [];
+
+            tabs.forEach(tab => {
+                let cloudBase = getGearArrayFromSource(GEAR_DATA, 'general_road', tab);
+                let baseItems = JSON.parse(JSON.stringify(cloudBase || []));
+
+                let cloudSpecific = getGearArrayFromSource(GEAR_DATA, TARGET_RACE_ID, tab);
+                cloudSpecific.forEach(spec => {
+                    if (!baseItems.some(b => b.id === spec.id || b.name === spec.name)) {
+                        baseItems.push(spec);
+                    }
+                });
+                entireList = [...entireList, ...baseItems];
+            });
+
+            const deletedList = deletedItemsDatabase[TARGET_RACE_ID] || [];
+            entireList = entireList.filter(item => !deletedList.includes(item.id));
+
+            const customList = customItemsDatabase[TARGET_RACE_ID] || [];
+            return [...entireList, ...customList];
+        }
+
+        function updateProgress() {
+            const allItems = getEntireRaceItemsCollection();
+            
+            const totalCount = allItems.length;
+            const checkedCount = allItems.filter(item => checkedItems.has(item.id)).length;
+            const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
+            const remainingCount = totalCount - checkedCount;
+
+            document.getElementById('completion-percentage').innerText = `${percentage}%`;
+            document.getElementById('items-left-count').innerText = remainingCount;
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+
+            const unpreparedUl = document.getElementById('unprepared-list');
+            unpreparedUl.innerHTML = '';
+            const unpreparedItems = allItems.filter(item => !checkedItems.has(item.id));
+            
+            if (unpreparedItems.length === 0) {
+                unpreparedUl.innerHTML = `<li class="text-emerald-600 font-bold list-none">✓ 所有裝備均已備妥！</li>`;
+            } else {
+                unpreparedItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerText = item.name;
+                    unpreparedUl.appendChild(li);
+                });
+            }
+        }
+
+        function syncPosterPreview() {
+            const posterContainer = document.getElementById('poster-items');
+            if (!posterContainer) return;
+            posterContainer.innerHTML = '';
+            
+            const allItems = getEntireRaceItemsCollection();
+
+            allItems.forEach(item => {
+                const isChecked = checkedItems.has(item.id);
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "flex items-center space-x-2 text-[11px] py-0.5";
+                
+                if (isChecked) {
+                    itemDiv.innerHTML = `<i class="fa-solid fa-square-check text-brandRed text-xs"></i><span class="text-zinc-200 truncate">${item.name}</span>`;
+                } else {
+                    itemDiv.innerHTML = `<i class="fa-regular fa-square text-zinc-600 text-xs"></i><span class="text-zinc-500 truncate">${item.name}</span>`;
+                }
+                posterContainer.appendChild(itemDiv);
+            });
+        }
+
+        function shareList() {
+            const shareUrl = window.location.origin + window.location.pathname;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: `長榮馬拉松｜賽前裝備清單 - COMPRESSPORT`,
+                    text: `我在長榮航空 2026 跑旅航站 EXPO 建立了專屬裝備清單，出發前快速確認，一起破 PB 無傷完賽！`,
+                    url: shareUrl,
+                })
+                .then(() => {
+                    logEvent('Share_App_EVAMarathon', currentSport);
+                })
+                .catch(err => console.log('分享取消或未成功', err));
+            } else {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    alert(`【專屬連結已複製！】\n\n已成功將「長榮馬拉松專屬裝備清單」連結複製到剪貼簿。分享給一起參賽的跑友吧！🤝`);
+                    logEvent('Share_CopyLink_EVAMarathon', currentSport);
+                }).catch(err => {
+                    console.error('無法複製連結', err);
+                });
+            }
+        }
+
+        function downloadPoster() {
+            const btn = document.getElementById('download-btn');
+            const icon = document.getElementById('download-icon');
+            const text = document.getElementById('download-text');
+            
+            btn.disabled = true;
+            icon.className = "fa-solid fa-spinner animate-spin mr-2";
+            text.innerText = "正在產生長榮馬專屬圖片...";
+
+            setTimeout(() => {
+                try {
+                    const canvas = document.getElementById('export-canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    ctx.fillStyle = '#09090b';
+                    ctx.fillRect(0, 0, 1080, 1920);
+
+                    const posterBgImg = document.getElementById('poster-bg');
+                    if (posterBgImg && posterBgImg.src && posterBgImg.complete && posterBgImg.naturalWidth > 0) {
+                        ctx.save();
+                        ctx.globalAlpha = 0.55; 
+                        
+                        const canvasWidth = 1080;
+                        const canvasHeight = 1920;
+                        const imgWidth = posterBgImg.naturalWidth;
+                        const imgHeight = posterBgImg.naturalHeight;
+
+                        const r = Math.max(canvasWidth / imgWidth, canvasHeight / imgHeight);
+                        const nw = imgWidth * r;
+                        const nh = imgHeight * r;
+                        const cx = (canvasWidth - nw) / 2;
+                        const cy = (canvasHeight - nh) / 2;
+
+                        ctx.drawImage(posterBgImg, cx, cy, nw, nh);
+                        ctx.restore();
+                    }
+
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
+                    gradient.addColorStop(0, 'rgba(9, 9, 11, 0.4)');    
+                    gradient.addColorStop(0.5, 'rgba(9, 9, 11, 0.5)');  
+                    gradient.addColorStop(1, 'rgba(9, 9, 11, 0.85)');   
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 1080, 1920);
+
+                    ctx.fillStyle = '#e2001a';
+                    ctx.font = 'bold 36px "Inter", "Noto Sans TC"';
+                    ctx.fillText('EVA AIR MARATHON 2026', 80, 160);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '900 76px "Noto Sans TC"';
+                    ctx.fillText('我的長榮馬裝備清單', 80, 255);
+
+                    ctx.fillStyle = '#71717a';
+                    ctx.font = '500 28px "Inter"';
+                    ctx.fillText(document.getElementById('poster-date').innerText, 80, 310);
+
+                    ctx.fillStyle = '#e2001a';
+                    ctx.fillRect(80, 340, 920, 4);
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.03)';
+                    ctx.fillRect(80, 380, 920, 1300);
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(80, 380, 920, 1300);
+
+                    const allItems = getEntireRaceItemsCollection();
+                    const totalItems = allItems.length;
+
+                    let fontSize = 32;       
+                    let lineHeight = 82;     
+                    let maxRows = 14;        
+                    let columnsCount = 2;    
+                    
+                    if (totalItems > 44) {
+                        fontSize = 22;
+                        lineHeight = 52;
+                        maxRows = 22; 
+                        columnsCount = 3;
+                    } else if (totalItems > 28) {
+                        fontSize = 24;
+                        lineHeight = 55;
+                        maxRows = 22;
+                        columnsCount = 2;
+                    } else if (totalItems > 20) {
+                        fontSize = 26;
+                        lineHeight = 65;
+                        maxRows = 18;
+                        columnsCount = 2;
+                    } else if (totalItems > 14) {
+                        fontSize = 28;
+                        lineHeight = 72;
+                        maxRows = 16;
+                        columnsCount = 2;
+                    }
+
+                    let startY = 460;
+                    let xPositions = (columnsCount === 3) ? [110, 420, 730] : [130, 580];
+
+                    allItems.forEach((item, index) => {
+                        const colIndex = Math.floor(index / maxRows);
+                        
+                        if (colIndex >= columnsCount) {
+                            if (index === maxRows * columnsCount || index === allItems.length - 1) {
+                                ctx.fillStyle = '#e2001a';
+                                ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
+                                const lastX = xPositions[columnsCount - 1];
+                                const lastY = startY + (maxRows - 1) * lineHeight;
+                                ctx.fillText(`...及其他共 ${allItems.length - index} 項`, lastX, lastY);
+                            }
+                            return;
+                        }
+
+                        const xPos = xPositions[colIndex];
+                        const rowIndex = index % maxRows;
+                        const yPos = startY + rowIndex * lineHeight;
+
+                        if (yPos > 1620) return;
+
+                        const isChecked = checkedItems.has(item.id);
+
+                        if (isChecked) {
+                            ctx.fillStyle = '#e2001a';
+                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
+                            ctx.fillText('✓', xPos, yPos);
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillText(item.name, xPos + 35, yPos);
+                        } else {
+                            ctx.fillStyle = '#4b5563';
+                            ctx.font = `bold ${fontSize}px "Noto Sans TC"`;
+                            ctx.fillText('☐', xPos, yPos);
+                            ctx.fillStyle = '#71717a';
+                            ctx.fillText(item.name, xPos + 35, yPos);
+                        }
+                    });
+
+                    ctx.fillStyle = '#a1a1aa'; 
+                    ctx.font = '900 italic 30px "Inter"';
+                    ctx.fillText('#WheverYouRaceWeSupportYou', 80, 1795);
+
+                    ctx.fillStyle = '#ffffff'; 
+                    ctx.font = '900 italic 38px "Inter"';
+                    ctx.fillText('READY TO RUN', 80, 1855);
+
+                    const navLogo = document.getElementById('nav-logo');
+                    if (navLogo && navLogo.complete && navLogo.naturalWidth > 0) {
+                        const targetLogoHeight = 40; 
+                        const aspectRatio = navLogo.naturalWidth / navLogo.naturalHeight;
+                        const targetLogoWidth = targetLogoHeight * aspectRatio;
+                        
+                        const logoX = 1000 - targetLogoWidth; 
+                        const logoY = 1855 - targetLogoHeight + 8; 
+
+                        ctx.drawImage(navLogo, logoX, logoY, targetLogoWidth, targetLogoHeight);
+                    } else {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '900 32px "Inter"';
+                        ctx.fillText('COMPRESSPORT', 700, 1855);
+                    }
+
+                    const imageURL = canvas.toDataURL("image/png");
+                    const link = document.createElement('a');
+                    link.download = '長榮航空馬拉松_賽前裝備清單.png';
+                    link.href = imageURL;
+                    link.click();
+
+                    logEvent('Download_Image_EVAMarathon', currentSport);
+
+                } catch (error) {
+                    console.error("下載圖片失敗", error);
+                } finally {
+                    btn.disabled = false;
+                    icon.className = "fa-solid fa-download";
+                    text.innerText = "下載圖片 (9:16)";
+                }
+            }, 300);
+        }
+    </script>
+</body>
+</html>
