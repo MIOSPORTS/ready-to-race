@@ -129,7 +129,7 @@
                         </a>
                     </div>
 
-                    <!-- 🎯 四個統一風格 Tabs（無放大鏡、無 Checkbox） -->
+                    <!-- 四個統一風格 Tabs -->
                     <div class="flex border-b border-slate-200">
                         <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-xs sm:text-sm focus:outline-none transition">必要裝備</button>
                         <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">建議裝備</button>
@@ -137,7 +137,7 @@
                         <button onclick="switchTab('unprepared')" id="tab-unprepared" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">尚未準備清單</button>
                     </div>
 
-                    <!-- 🎯 裝備清單 Grid：加上 items-start content-start，確保卡片不會因為數量少而被強制拉高撐大 -->
+                    <!-- 裝備清單 Grid -->
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px] items-start content-start">
                     </div>
 
@@ -230,7 +230,7 @@
                             <label class="block text-[11px] font-bold text-slate-500 mb-1">號碼布編號 (BIB NO.)</label>
                             <div class="relative">
                                 <i class="fa-solid fa-id-card absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                <input type="text" id="input-bib-no" maxlength="10" placeholder="例如：A12345" 
+                                <input type="text" id="input-bib-no" maxlength="10" placeholder="例如：RUNNER、A12345" 
                                        oninput="updatePosterPersonalization()"
                                        class="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed uppercase">
                             </div>
@@ -239,14 +239,14 @@
                             <label class="block text-[11px] font-bold text-slate-500 mb-1">我的長榮馬宣言</label>
                             <div class="relative">
                                 <i class="fa-solid fa-quote-left absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                                <input type="text" id="input-declaration" maxlength="28" placeholder="例如：無傷完賽，破 PB 飛向終點！" 
+                                <input type="text" id="input-declaration" maxlength="28" placeholder="例如：順利完賽" 
                                        oninput="updatePosterPersonalization()"
                                        class="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed">
                             </div>
                         </div>
                     </div>
                     
-                    <!-- 海報即時預覽 -->
+                    <!-- 🎯 海報即時預覽（預設 RUNNER 與 順利完賽） -->
                     <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-xl text-white flex flex-col justify-between p-6" id="poster-preview">
                        <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
                           <img id="poster-bg" src="images/bg_road.jpg" alt="Poster Background" class="w-full h-full object-cover object-center opacity-40" onerror="this.src='images/bg_brand.jpg'">
@@ -278,11 +278,11 @@
                                 </div>
                             </div>
 
-                            <!-- 宣言大引言 -->
+                            <!-- 宣言大引言（預設 順利完賽） -->
                             <div class="mt-6 bg-black/40 backdrop-blur-md border border-white/10 rounded-xl p-4 text-center">
                                 <span class="text-[9px] font-black text-brandRed uppercase tracking-widest block mb-1">MY MARATHON GOAL</span>
                                 <p id="preview-declaration-text" class="text-sm font-bold text-white tracking-wide leading-relaxed">
-                                    “ 無傷完賽，破 PB 飛向終點！ ”
+                                    “ 順利完賽 ”
                                 </p>
                             </div>
                         </div>
@@ -454,6 +454,7 @@
             if (posterDate) posterDate.innerText = dateStr;
         }
 
+        // 🎯 更新號碼布、宣言與參賽組別（預設 RUNNER 與 順利完賽）
         function updatePosterPersonalization() {
             const bibInput = document.getElementById('input-bib-no');
             const declInput = document.getElementById('input-declaration');
@@ -464,11 +465,13 @@
             const selectedDistKey = distSelect ? distSelect.value : '42k';
             const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
 
+            // 預設為 RUNNER
             const bibText = document.getElementById('preview-bib-text');
             bibText.innerText = bibValue ? bibValue : "RUNNER";
 
+            // 預設為 順利完賽
             const declText = document.getElementById('preview-declaration-text');
-            declText.innerText = declValue ? `“ ${declValue} ”` : "“ 無傷完賽，破 PB 飛向終點！ ”";
+            declText.innerText = declValue ? `“ ${declValue} ”` : "“ 順利完賽 ”";
 
             const catTag = document.getElementById('preview-race-category-tag');
             if (catTag) catTag.innerText = catInfo.tag;
@@ -724,7 +727,6 @@
             renderChecklistItems();
         }
 
-        // 🎯 支援 4 個 Tab 頁籤切換
         function switchTab(tab) {
             currentTab = tab;
             ['mandatory', 'recommended', 'weather', 'unprepared'].forEach(t => {
@@ -770,7 +772,6 @@
             return baseItems;
         }
 
-        // 🎯 核心渲染：保證無論項目多寡，卡片高度、尺寸與文字大小完全一致
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid');
             if (!grid) return;
@@ -794,7 +795,6 @@
                 const isChecked = checkedItems.has(item.id);
                 const itemDiv = document.createElement('div');
                 
-                // 加上 h-[52px] 與統一 padding，確保等大不變形
                 if (isEditMode) {
                     itemDiv.className = `flex items-center justify-between px-3.5 py-3 h-[52px] bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
                 } else {
@@ -842,8 +842,6 @@
             else checkedItems.add(id);
             
             saveChecklistToStorage();
-            
-            // 重新載入對應清單與進度條
             loadChecklist();
         }
 
@@ -1040,9 +1038,9 @@
                     ctx.font = '900 22px "Inter"';
                     ctx.fillText('COMPRESSPORT', bibCardX + bibCardWidth - 225, bibCardY + 490);
 
-                    // 6. 下方長榮馬賽事宣言卡片
+                    // 6. 下方長榮馬賽事宣言卡片（預設為 順利完賽）
                     const declInput = document.getElementById('input-declaration').value.trim();
-                    const declText = declInput || "無傷完賽，破 PB 飛向終點！";
+                    const declText = declInput || "順利完賽";
                     const declCardY = 1060;
                     const declCardHeight = 360;
 
