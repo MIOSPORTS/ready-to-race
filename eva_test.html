@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 🎯 SEO 專屬標題與描述 -->
     <title>長榮馬拉松｜賽前裝備清單 - COMPRESSPORT x 長榮航空 2026 跑旅航站 EXPO</title>
     <meta name="description" content="長榮航空 2026 跑旅航站 EXPO 專屬！COMPRESSPORT 專為長榮馬拉松跑者打造的賽前裝備檢查清單。比賽前逐項確認跑鞋、能量補給與路跑配件，助你突破 PB、無傷完賽！">
     <meta name="keywords" content="長榮馬拉松, 長榮航空跑旅航站EXPO, 裝備清單, 馬拉松, 路跑, 運動裝備, COMPRESSPORT">
     
-    <!-- Open Graph -->
     <meta property="og:title" content="長榮馬拉松｜賽前裝備清單 - COMPRESSPORT">
     <meta property="og:description" content="長榮馬拉松賽前裝備確認！一鍵確認必備裝備，不再漏帶關鍵物品。">
     <meta property="og:type" content="website">
@@ -77,7 +75,7 @@
         </div>
     </nav>
 
-    <!-- 🎯 展場手機優化 Hero Header -->
+    <!-- 展場手機優化 Hero Header -->
     <header class="relative bg-zinc-950 text-white overflow-hidden py-10 md:py-14 px-6 md:px-16 lg:px-24">
         <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900">
             <img id="hero-bg" src="images/bg_road.jpg" alt="Road Marathon Background" class="w-full h-full object-cover object-center" onerror="this.src='images/bg_brand.jpg'">
@@ -131,23 +129,16 @@
                         </a>
                     </div>
 
-                    <!-- 分類切換 Tabs 與尚未準備篩選 -->
-                    <div class="flex border-b border-slate-200 flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div class="flex flex-1">
-                            <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition">必要裝備</button>
-                            <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">建議裝備</button>
-                            <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition">依天氣調整</button>
-                        </div>
-                        <div class="flex items-center px-2 py-2 sm:py-0 select-none">
-                            <label class="flex items-center space-x-2 cursor-pointer text-xs font-bold text-slate-500 hover:text-slate-700 transition">
-                                <input type="checkbox" id="toggle-unprepared" onchange="toggleUnpreparedFilter()" class="rounded border-slate-300 text-brandRed focus:ring-brandRed/20 w-3.5 h-3.5 cursor-pointer">
-                                <span><i class="fa-solid fa-magnifying-glass mr-1 text-[10px]"></i>尚未準備清單</span>
-                            </label>
-                        </div>
+                    <!-- 🎯 四個統一風格 Tabs（無放大鏡、無 Checkbox） -->
+                    <div class="flex border-b border-slate-200">
+                        <button onclick="switchTab('mandatory')" id="tab-mandatory" class="flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-xs sm:text-sm focus:outline-none transition">必要裝備</button>
+                        <button onclick="switchTab('recommended')" id="tab-recommended" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">建議裝備</button>
+                        <button onclick="switchTab('weather')" id="tab-weather" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">依天氣調整</button>
+                        <button onclick="switchTab('unprepared')" id="tab-unprepared" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">尚未準備清單</button>
                     </div>
 
-                    <!-- 裝備清單 Grid -->
-                    <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px]">
+                    <!-- 🎯 裝備清單 Grid：加上 items-start content-start，確保卡片不會因為數量少而被強制拉高撐大 -->
+                    <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px] items-start content-start">
                     </div>
 
                     <!-- 新增自訂裝備與編輯工具列 -->
@@ -211,7 +202,7 @@
                 </section>
             </div>
 
-            <!-- 🎯 右側：個人化號碼布、距離組別與長榮馬宣言分享卡片 -->
+            <!-- 右側：個人化號碼布、距離組別與長榮馬宣言分享卡片 -->
             <div id="aside-poster" class="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
                     <div>
@@ -221,7 +212,6 @@
 
                     <!-- 選手資訊輸入欄位 -->
                     <div class="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
-                        <!-- 🎯 新增：四組別選擇 -->
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 mb-1">參賽組別 (CATEGORY)</label>
                             <div class="relative">
@@ -256,7 +246,7 @@
                         </div>
                     </div>
                     
-                    <!-- 🎯 海報即時預覽（9:16 純粹號碼布、距離與宣言風格） -->
+                    <!-- 海報即時預覽 -->
                     <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-xl text-white flex flex-col justify-between p-6" id="poster-preview">
                        <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
                           <img id="poster-bg" src="images/bg_road.jpg" alt="Poster Background" class="w-full h-full object-cover object-center opacity-40" onerror="this.src='images/bg_brand.jpg'">
@@ -282,7 +272,6 @@
                                         RUNNER
                                     </span>
                                 </div>
-                                <!-- 🎯 連動距離顯示 -->
                                 <div class="text-[9px] font-bold text-zinc-400 tracking-wider uppercase border-t border-zinc-100 pt-1.5 flex justify-between items-center">
                                     <span id="preview-dist-text" class="font-black text-zinc-700">ROAD RACE 42.195KM</span>
                                     <span class="text-brandRed font-black">COMPRESSPORT</span>
@@ -422,7 +411,6 @@
             url: 'https://www.evaairrun.com/'
         };
 
-        // 🎯 賽事組別定義
         const RACE_CATEGORIES = {
             '42k': {
                 nameZh: '全程馬拉松組',
@@ -454,7 +442,6 @@
         let checkedItems = new Set();
         let customItemsDatabase = {}; 
         let deletedItemsDatabase = {}; 
-        let isOnlyUnprepared = false; 
         let isEditMode = false;        
 
         function initDate() {
@@ -467,7 +454,6 @@
             if (posterDate) posterDate.innerText = dateStr;
         }
 
-        // 🎯 更新號碼布、宣言與參賽組別
         function updatePosterPersonalization() {
             const bibInput = document.getElementById('input-bib-no');
             const declInput = document.getElementById('input-declaration');
@@ -478,7 +464,6 @@
             const selectedDistKey = distSelect ? distSelect.value : '42k';
             const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
 
-            // 更新預覽文字
             const bibText = document.getElementById('preview-bib-text');
             bibText.innerText = bibValue ? bibValue : "RUNNER";
 
@@ -491,7 +476,6 @@
             const distText = document.getElementById('preview-dist-text');
             if (distText) distText.innerText = catInfo.label;
 
-            // 儲存至 localStorage
             localStorage.setItem(`compressport_bib_${TARGET_RACE_ID}`, bibValue);
             localStorage.setItem(`compressport_decl_${TARGET_RACE_ID}`, declValue);
             localStorage.setItem(`compressport_dist_${TARGET_RACE_ID}`, selectedDistKey);
@@ -740,21 +724,18 @@
             renderChecklistItems();
         }
 
+        // 🎯 支援 4 個 Tab 頁籤切換
         function switchTab(tab) {
             currentTab = tab;
-            ['mandatory', 'recommended', 'weather'].forEach(t => {
+            ['mandatory', 'recommended', 'weather', 'unprepared'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
+                if (!btn) return;
                 if (t === tab) {
-                    btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-sm focus:outline-none transition';
+                    btn.className = 'flex-1 py-3 text-center font-bold text-brandRed border-b-2 border-brandRed text-xs sm:text-sm focus:outline-none transition';
                 } else {
-                    btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-sm focus:outline-none transition';
+                    btn.className = 'flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition';
                 }
             });
-            renderChecklistItems();
-        }
-
-        function toggleUnpreparedFilter() {
-            isOnlyUnprepared = document.getElementById('toggle-unprepared').checked;
             renderChecklistItems();
         }
 
@@ -789,19 +770,23 @@
             return baseItems;
         }
 
+        // 🎯 核心渲染：保證無論項目多寡，卡片高度、尺寸與文字大小完全一致
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid');
             if (!grid) return;
             grid.innerHTML = '';
 
-            let items = getAllCurrentGearItems();
+            let items = [];
 
-            if (isOnlyUnprepared) {
-                items = items.filter(item => !checkedItems.has(item.id));
+            if (currentTab === 'unprepared') {
+                const allItems = getEntireRaceItemsCollection();
+                items = allItems.filter(item => !checkedItems.has(item.id));
+            } else {
+                items = getAllCurrentGearItems();
             }
 
             if (items.length === 0) {
-                grid.innerHTML = `<div class="col-span-2 text-center py-8 text-slate-400 text-sm">${isOnlyUnprepared ? '✓ 當前分類的裝備皆已準備就緒！' : '目前尚無此分類之推薦項目'}</div>`;
+                grid.innerHTML = `<div class="col-span-2 text-center py-12 text-slate-400 text-sm font-medium">${currentTab === 'unprepared' ? '✓ 所有裝備皆已準備就緒！' : '目前尚無此分類之推薦項目'}</div>`;
                 return;
             }
 
@@ -809,30 +794,31 @@
                 const isChecked = checkedItems.has(item.id);
                 const itemDiv = document.createElement('div');
                 
+                // 加上 h-[52px] 與統一 padding，確保等大不變形
                 if (isEditMode) {
-                    itemDiv.className = `flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
+                    itemDiv.className = `flex items-center justify-between px-3.5 py-3 h-[52px] bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
                 } else {
-                    itemDiv.className = `flex items-center justify-between p-3.5 bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
+                    itemDiv.className = `flex items-center justify-between px-3.5 py-3 h-[52px] bg-white border rounded-xl hover:shadow-sm cursor-pointer checkbox-transition select-none ${isChecked ? 'border-brandRed/30 bg-brandRed/5' : 'border-slate-200'}`;
                     itemDiv.onclick = () => toggleItem(item.id);
                 }
 
                 let deleteBtnHtml = '';
                 if (item.isCustom) {
                     deleteBtnHtml = `
-                        <button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2">
+                        <button onclick="deleteItem('${item.id}', true, event)" class="text-slate-300 hover:text-brandRed p-1 rounded transition ml-2 flex-shrink-0">
                             <i class="fa-regular fa-trash-can text-xs"></i>
                         </button>
                     `;
                 } else if (isEditMode) {
                     deleteBtnHtml = `
-                        <button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2" title="隱藏此項目">
+                        <button onclick="deleteItem('${item.id}', false, event)" class="text-slate-400 hover:text-brandRed p-1 rounded transition ml-2 flex-shrink-0" title="隱藏此項目">
                             <i class="fa-regular fa-trash-can text-xs"></i>
                         </button>
                     `;
                 }
 
                 itemDiv.innerHTML = `
-                    <div class="flex items-center space-x-3 overflow-hidden flex-grow">
+                    <div class="flex items-center space-x-3 overflow-hidden flex-grow min-w-0">
                         ${!isEditMode ? `
                         <div class="w-4 h-4 rounded flex items-center justify-center border flex-shrink-0 checkbox-transition ${isChecked ? 'bg-brandRed border-brandRed text-white' : 'border-slate-300'}">
                             ${isChecked ? '<i class="fa-solid fa-check text-[9px]"></i>' : ''}
@@ -857,12 +843,8 @@
             
             saveChecklistToStorage();
             
-            if (isOnlyUnprepared) {
-                renderChecklistItems();
-                updateProgress();
-            } else {
-                loadChecklist();
-            }
+            // 重新載入對應清單與進度條
+            loadChecklist();
         }
 
         function getEntireRaceItemsCollection() {
@@ -937,7 +919,6 @@
             }
         }
 
-        // 🎯 9:16 純粹號碼布、距離組別與宣言海報生成（Canvas 繪圖）
         function downloadPoster() {
             const btn = document.getElementById('download-btn');
             const icon = document.getElementById('download-icon');
@@ -956,7 +937,6 @@
                     const canvas = document.getElementById('export-canvas');
                     const ctx = canvas.getContext('2d');
 
-                    // 取得組別資訊
                     const distSelect = document.getElementById('select-race-dist');
                     const selectedDistKey = distSelect ? distSelect.value : '42k';
                     const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
@@ -1008,31 +988,27 @@
                     ctx.font = '900 70px "Noto Sans TC"';
                     ctx.fillText('長榮航空馬拉松', 100, 260);
 
-                    // 顯示組別與日期
                     ctx.fillStyle = '#a1a1aa';
                     ctx.font = '700 26px "Noto Sans TC", "Inter"';
                     ctx.fillText(`${catInfo.nameZh} (${catInfo.dist}) ｜ TAIPEI`, 100, 315);
 
-                    // 🎯 5. 中央巨大賽事號碼布 (BIB)
+                    // 5. 中央巨大賽事號碼布 (BIB)
                     const bibValue = document.getElementById('input-bib-no').value.trim().toUpperCase() || "RUNNER";
                     const bibCardY = 440;
                     const bibCardWidth = 880;
                     const bibCardHeight = 540;
                     const bibCardX = 100;
 
-                    // 號碼布白底卡片
                     ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
                     ctx.roundRect(bibCardX, bibCardY, bibCardWidth, bibCardHeight, 28);
                     ctx.fill();
 
-                    // 號碼布頂部紅色飾條
                     ctx.fillStyle = '#e2001a';
                     ctx.beginPath();
                     ctx.roundRect(bibCardX, bibCardY, bibCardWidth, 32, [28, 28, 0, 0]);
                     ctx.fill();
 
-                    // 號碼布標頭文字（顯示英文組別標籤）
                     ctx.fillStyle = '#71717a';
                     ctx.font = '900 24px "Inter"';
                     ctx.fillText(catInfo.tag, bibCardX + 50, bibCardY + 95);
@@ -1041,11 +1017,9 @@
                     ctx.font = '900 24px "Inter"';
                     ctx.fillText('BIB NO.', bibCardX + bibCardWidth - 160, bibCardY + 95);
 
-                    // 分隔細線
                     ctx.fillStyle = '#e4e4e7';
                     ctx.fillRect(bibCardX + 50, bibCardY + 120, bibCardWidth - 100, 2);
 
-                    // 號碼布主數字/代號
                     ctx.fillStyle = '#09090b';
                     let bibFontSize = 140;
                     if (bibValue.length > 7) bibFontSize = 110;
@@ -1054,11 +1028,9 @@
                     ctx.textAlign = 'center';
                     ctx.fillText(bibValue, 540, bibCardY + 310);
 
-                    // 號碼布底部分隔細線
                     ctx.fillStyle = '#e4e4e7';
                     ctx.fillRect(bibCardX + 50, bibCardY + 440, bibCardWidth - 100, 2);
 
-                    // 號碼布底部里程標示
                     ctx.textAlign = 'left';
                     ctx.fillStyle = '#18181b';
                     ctx.font = '900 24px "Inter"';
@@ -1068,7 +1040,7 @@
                     ctx.font = '900 22px "Inter"';
                     ctx.fillText('COMPRESSPORT', bibCardX + bibCardWidth - 225, bibCardY + 490);
 
-                    // 🎯 6. 下方長榮馬賽事宣言卡片
+                    // 6. 下方長榮馬賽事宣言卡片
                     const declInput = document.getElementById('input-declaration').value.trim();
                     const declText = declInput || "無傷完賽，破 PB 飛向終點！";
                     const declCardY = 1060;
@@ -1082,12 +1054,10 @@
                     ctx.lineWidth = 2.5;
                     ctx.stroke();
 
-                    // 宣言 Header 標籤
                     ctx.fillStyle = '#e2001a';
                     ctx.font = '900 24px "Inter"';
                     ctx.fillText('MY MARATHON GOAL ｜ 賽事宣言', 150, declCardY + 75);
 
-                    // 宣言主文字（自動折行）
                     ctx.fillStyle = '#ffffff';
                     ctx.textAlign = 'center';
 
