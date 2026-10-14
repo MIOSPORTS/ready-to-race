@@ -211,16 +211,31 @@
                 </section>
             </div>
 
-            <!-- 🎯 右側：個人化號碼布與長榮馬宣言分享卡片（無裝備清單） -->
+            <!-- 🎯 右側：個人化號碼布、距離組別與長榮馬宣言分享卡片 -->
             <div id="aside-poster" class="lg:col-span-4 lg:sticky lg:top-6 space-y-6">
                 <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4">
                     <div>
                         <h3 class="text-base font-bold">你的專屬賽事海報</h3>
-                        <p class="text-xs text-slate-400">輸入號碼布與宣言，產出極簡選手風分享圖</p>
+                        <p class="text-xs text-slate-400">選擇參賽組別、輸入號碼布與宣言</p>
                     </div>
 
                     <!-- 選手資訊輸入欄位 -->
                     <div class="space-y-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200/80">
+                        <!-- 🎯 新增：四組別選擇 -->
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500 mb-1">參賽組別 (CATEGORY)</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-route absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                                <select id="select-race-dist" onchange="updatePosterPersonalization()" class="w-full pl-8 pr-3 py-2 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed cursor-pointer appearance-none">
+                                    <option value="42k" selected>全程馬拉松組 (42.195KM)</option>
+                                    <option value="21k">半程馬拉松組 (21.0975KM)</option>
+                                    <option value="10k">10公里組 (10KM)</option>
+                                    <option value="3k">3公里組 (3KM)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-[10px] pointer-events-none"></i>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-[11px] font-bold text-slate-500 mb-1">號碼布編號 (BIB NO.)</label>
                             <div class="relative">
@@ -241,7 +256,7 @@
                         </div>
                     </div>
                     
-                    <!-- 🎯 海報即時預覽（9:16 純粹號碼布與宣言風格） -->
+                    <!-- 🎯 海報即時預覽（9:16 純粹號碼布、距離與宣言風格） -->
                     <div class="relative w-full aspect-[9/16] bg-zinc-950 rounded-2xl overflow-hidden shadow-xl text-white flex flex-col justify-between p-6" id="poster-preview">
                        <div class="absolute inset-0 z-0 bg-zinc-900 transition-all duration-500">
                           <img id="poster-bg" src="images/bg_road.jpg" alt="Poster Background" class="w-full h-full object-cover object-center opacity-40" onerror="this.src='images/bg_brand.jpg'">
@@ -259,7 +274,7 @@
                         <div class="relative z-10 my-auto py-4">
                             <div class="bg-white rounded-2xl p-5 text-zinc-950 shadow-2xl border-t-8 border-brandRed text-center space-y-2">
                                 <div class="flex justify-between items-center text-[10px] font-black tracking-widest text-zinc-400 border-b border-zinc-100 pb-1.5">
-                                    <span>EVA AIR MARATHON</span>
+                                    <span id="preview-race-category-tag">FULL MARATHON</span>
                                     <span>BIB NO.</span>
                                 </div>
                                 <div class="py-2">
@@ -267,8 +282,9 @@
                                         RUNNER
                                     </span>
                                 </div>
+                                <!-- 🎯 連動距離顯示 -->
                                 <div class="text-[9px] font-bold text-zinc-400 tracking-wider uppercase border-t border-zinc-100 pt-1.5 flex justify-between items-center">
-                                    <span>ROAD RACE 42.195KM</span>
+                                    <span id="preview-dist-text" class="font-black text-zinc-700">ROAD RACE 42.195KM</span>
                                     <span class="text-brandRed font-black">COMPRESSPORT</span>
                                 </div>
                             </div>
@@ -406,6 +422,34 @@
             url: 'https://www.evaairrun.com/'
         };
 
+        // 🎯 賽事組別定義
+        const RACE_CATEGORIES = {
+            '42k': {
+                nameZh: '全程馬拉松組',
+                tag: 'FULL MARATHON',
+                dist: '42.195KM',
+                label: 'ROAD RACE 42.195KM'
+            },
+            '21k': {
+                nameZh: '半程馬拉松組',
+                tag: 'HALF MARATHON',
+                dist: '21.0975KM',
+                label: 'ROAD RACE 21.0975KM'
+            },
+            '10k': {
+                nameZh: '10公里組',
+                tag: '10K RUN',
+                dist: '10KM',
+                label: 'ROAD RACE 10KM'
+            },
+            '3k': {
+                nameZh: '3公里組',
+                tag: '3K FUN RUN',
+                dist: '3KM',
+                label: 'ROAD RACE 3KM'
+            }
+        };
+
         let currentTab = 'mandatory';
         let checkedItems = new Set();
         let customItemsDatabase = {}; 
@@ -423,32 +467,48 @@
             if (posterDate) posterDate.innerText = dateStr;
         }
 
-        // 🎯 更新號碼布與宣言
+        // 🎯 更新號碼布、宣言與參賽組別
         function updatePosterPersonalization() {
             const bibInput = document.getElementById('input-bib-no');
             const declInput = document.getElementById('input-declaration');
+            const distSelect = document.getElementById('select-race-dist');
 
             const bibValue = bibInput.value.trim().toUpperCase();
             const declValue = declInput.value.trim();
+            const selectedDistKey = distSelect ? distSelect.value : '42k';
+            const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
 
+            // 更新預覽文字
             const bibText = document.getElementById('preview-bib-text');
             bibText.innerText = bibValue ? bibValue : "RUNNER";
 
             const declText = document.getElementById('preview-declaration-text');
             declText.innerText = declValue ? `“ ${declValue} ”` : "“ 無傷完賽，破 PB 飛向終點！ ”";
 
+            const catTag = document.getElementById('preview-race-category-tag');
+            if (catTag) catTag.innerText = catInfo.tag;
+
+            const distText = document.getElementById('preview-dist-text');
+            if (distText) distText.innerText = catInfo.label;
+
+            // 儲存至 localStorage
             localStorage.setItem(`compressport_bib_${TARGET_RACE_ID}`, bibValue);
             localStorage.setItem(`compressport_decl_${TARGET_RACE_ID}`, declValue);
+            localStorage.setItem(`compressport_dist_${TARGET_RACE_ID}`, selectedDistKey);
         }
 
         function loadSavedPersonalization() {
             const savedBib = localStorage.getItem(`compressport_bib_${TARGET_RACE_ID}`) || '';
             const savedDecl = localStorage.getItem(`compressport_decl_${TARGET_RACE_ID}`) || '';
+            const savedDist = localStorage.getItem(`compressport_dist_${TARGET_RACE_ID}`) || '42k';
 
             const bibInput = document.getElementById('input-bib-no');
             const declInput = document.getElementById('input-declaration');
+            const distSelect = document.getElementById('select-race-dist');
+
             if (bibInput) bibInput.value = savedBib;
             if (declInput) declInput.value = savedDecl;
+            if (distSelect && RACE_CATEGORIES[savedDist]) distSelect.value = savedDist;
 
             updatePosterPersonalization();
         }
@@ -877,7 +937,7 @@
             }
         }
 
-        // 🎯 9:16 純粹號碼布與宣言海報生成（Canvas 繪圖）
+        // 🎯 9:16 純粹號碼布、距離組別與宣言海報生成（Canvas 繪圖）
         function downloadPoster() {
             const btn = document.getElementById('download-btn');
             const icon = document.getElementById('download-icon');
@@ -895,6 +955,11 @@
 
                     const canvas = document.getElementById('export-canvas');
                     const ctx = canvas.getContext('2d');
+
+                    // 取得組別資訊
+                    const distSelect = document.getElementById('select-race-dist');
+                    const selectedDistKey = distSelect ? distSelect.value : '42k';
+                    const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
 
                     // 1. 底色
                     ctx.fillStyle = '#0a0a0c';
@@ -929,23 +994,24 @@
                     ctx.fillStyle = gradient;
                     ctx.fillRect(0, 0, 1080, 1920);
 
-                    // 4. 頂部賽事標籤與日期
+                    // 4. 頂部賽事標籤與組別
                     ctx.fillStyle = '#e2001a';
                     ctx.beginPath();
-                    ctx.roundRect(100, 130, 310, 48, 8);
+                    ctx.roundRect(100, 130, 340, 48, 8);
                     ctx.fill();
 
                     ctx.fillStyle = '#ffffff';
                     ctx.font = '900 20px "Inter"';
-                    ctx.fillText('2026 OFFICIAL RUNNER', 125, 162);
+                    ctx.fillText(`2026 OFFICIAL RUNNER`, 125, 162);
 
                     ctx.fillStyle = '#ffffff';
-                    ctx.font = '900 74px "Noto Sans TC"';
-                    ctx.fillText('長榮航空馬拉松', 100, 265);
+                    ctx.font = '900 70px "Noto Sans TC"';
+                    ctx.fillText('長榮航空馬拉松', 100, 260);
 
+                    // 顯示組別與日期
                     ctx.fillStyle = '#a1a1aa';
-                    ctx.font = '600 28px "Inter"';
-                    ctx.fillText(document.getElementById('poster-date').innerText + ' ｜ TAIPEI, TAIWAN', 100, 320);
+                    ctx.font = '700 26px "Noto Sans TC", "Inter"';
+                    ctx.fillText(`${catInfo.nameZh} (${catInfo.dist}) ｜ TAIPEI`, 100, 315);
 
                     // 🎯 5. 中央巨大賽事號碼布 (BIB)
                     const bibValue = document.getElementById('input-bib-no').value.trim().toUpperCase() || "RUNNER";
@@ -960,16 +1026,16 @@
                     ctx.roundRect(bibCardX, bibCardY, bibCardWidth, bibCardHeight, 28);
                     ctx.fill();
 
-                    // 號碼布頂部紅色條帶裝飾
+                    // 號碼布頂部紅色飾條
                     ctx.fillStyle = '#e2001a';
                     ctx.beginPath();
                     ctx.roundRect(bibCardX, bibCardY, bibCardWidth, 32, [28, 28, 0, 0]);
                     ctx.fill();
 
-                    // 號碼布標頭文字
+                    // 號碼布標頭文字（顯示英文組別標籤）
                     ctx.fillStyle = '#71717a';
                     ctx.font = '900 24px "Inter"';
-                    ctx.fillText('EVA AIR MARATHON 2026', bibCardX + 50, bibCardY + 95);
+                    ctx.fillText(catInfo.tag, bibCardX + 50, bibCardY + 95);
 
                     ctx.fillStyle = '#e2001a';
                     ctx.font = '900 24px "Inter"';
@@ -992,11 +1058,11 @@
                     ctx.fillStyle = '#e4e4e7';
                     ctx.fillRect(bibCardX + 50, bibCardY + 440, bibCardWidth - 100, 2);
 
-                    // 號碼布底部賽事標章
+                    // 號碼布底部里程標示
                     ctx.textAlign = 'left';
-                    ctx.fillStyle = '#71717a';
-                    ctx.font = 'bold 22px "Inter"';
-                    ctx.fillText('ROAD RACE 42.195KM', bibCardX + 50, bibCardY + 490);
+                    ctx.fillStyle = '#18181b';
+                    ctx.font = '900 24px "Inter"';
+                    ctx.fillText(catInfo.label, bibCardX + 50, bibCardY + 490);
 
                     ctx.fillStyle = '#e2001a';
                     ctx.font = '900 22px "Inter"';
@@ -1021,7 +1087,7 @@
                     ctx.font = '900 24px "Inter"';
                     ctx.fillText('MY MARATHON GOAL ｜ 賽事宣言', 150, declCardY + 75);
 
-                    // 宣言主文字（支援長文字拆成雙行）
+                    // 宣言主文字（自動折行）
                     ctx.fillStyle = '#ffffff';
                     ctx.textAlign = 'center';
 
@@ -1066,7 +1132,7 @@
                     const imageURL = canvas.toDataURL("image/png");
                     const link = document.createElement('a');
                     const fileNameBib = (bibValue && bibValue !== 'RUNNER') ? `_${bibValue}` : '';
-                    link.download = `長榮航空馬拉松_選手海報${fileNameBib}.png`;
+                    link.download = `長榮航空馬拉松_${catInfo.nameZh}${fileNameBib}.png`;
                     link.href = imageURL;
                     link.click();
 
