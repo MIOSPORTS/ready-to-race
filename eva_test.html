@@ -58,26 +58,26 @@
         </div>
         
         <div class="flex space-x-5 md:space-x-7 text-xs md:text-sm font-semibold tracking-wider text-zinc-400 items-center">
-            <a href="https://www.miosports.com.tw/" onclick="logEvent('Click_Nav_MioWebsite', currentSport, 'https://www.miosports.com.tw/', event, true)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.miosports.com.tw/" target="_blank" rel="noopener noreferrer" onclick="logEvent('Click_Nav_MioWebsite', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-solid fa-globe text-sm"></i>
                 <span class="hidden sm:inline">MIOSPORTS 官網</span>
             </a>
-            <a href="https://www.facebook.com/MioSports" onclick="logEvent('Click_Nav_FB', currentSport, 'https://www.facebook.com/MioSports', event, true)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.facebook.com/MioSports" target="_blank" rel="noopener noreferrer" onclick="logEvent('Click_Nav_FB', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-facebook text-base"></i>
                 <span class="hidden sm:inline">FACEBOOK</span>
             </a>
-            <a href="https://www.instagram.com/compressport_taiwan/" onclick="logEvent('Click_Nav_IG', currentSport, 'https://www.instagram.com/compressport_taiwan/', event, true)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://www.instagram.com/compressport_taiwan/" target="_blank" rel="noopener noreferrer" onclick="logEvent('Click_Nav_IG', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-instagram text-base"></i>
                 <span class="hidden sm:inline">INSTAGRAM</span>
             </a>
-            <a href="https://lin.ee/Zq3Io8l" onclick="logEvent('Click_Nav_LINE', currentSport, 'https://lin.ee/Zq3Io8l', event, true)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
+            <a href="https://lin.ee/Zq3Io8l" target="_blank" rel="noopener noreferrer" onclick="logEvent('Click_Nav_LINE', currentSport)" class="hover:text-white cursor-pointer transition flex items-center space-x-1.5 py-1">
                 <i class="fa-brands fa-line text-base"></i>
                 <span class="hidden sm:inline">LINE</span>
             </a>
         </div>
     </nav>
 
-    <!-- 🎯 展場手機優化 Hero Header（已移除目前賽事小卡） -->
+    <!-- 🎯 Hero Header（小卡已徹底移除） -->
     <header class="relative bg-zinc-950 text-white overflow-hidden py-10 md:py-14 px-6 md:px-16 lg:px-24">
         <div class="absolute inset-0 z-0 opacity-45 md:opacity-55 bg-zinc-900">
             <img id="hero-bg" src="images/bg_road.jpg" alt="Road Marathon Background" class="w-full h-full object-cover object-center" onerror="this.src='images/bg_brand.jpg'">
@@ -114,7 +114,7 @@
                             </span>
                             <h3 class="text-lg md:text-xl font-bold">馬拉松賽前裝備 <span class="text-xs md:text-sm text-slate-400 font-normal">（逐項勾選已備妥項目）</span></h3>
                         </div>
-                        <a href="https://www.evaairrun.com/" id="race-rule-link" target="_blank" class="text-brandRed hover:underline font-semibold flex items-center space-x-1 text-xs">
+                        <a href="https://www.evaairrun.com/" id="race-rule-link" target="_blank" rel="noopener noreferrer" class="text-brandRed hover:underline font-semibold flex items-center space-x-1 text-xs">
                             <span>大會規章</span>
                             <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                         </a>
@@ -128,7 +128,7 @@
                         <button onclick="switchTab('unprepared')" id="tab-unprepared" class="flex-1 py-3 text-center font-bold text-slate-400 border-b-2 border-transparent hover:text-slate-600 text-xs sm:text-sm focus:outline-none transition">尚未準備清單</button>
                     </div>
 
-                    <!-- 🎯 裝備清單 Grid（卡片尺寸保持統一高度與邊距） -->
+                    <!-- 🎯 裝備清單 Grid（尺寸維持統一等大） -->
                     <div id="items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 min-h-[220px] items-start content-start">
                     </div>
 
@@ -185,8 +185,13 @@
                         </div>
                     </div>
 
-                    <!-- 🎯 COMPRESSPORT 官方商城 CTA（新開分頁） -->
-                    <a id="shop-redirect-btn" href="javascript:void(0);" onclick="logEvent('Click_Shop_Btn', currentSport, OFFICIAL_STORE_URLS[currentSport], event, true)" class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
+                    <!-- 🎯 商城按鈕：原生 target="_blank" 確保百分之百新分頁開啟，不被瀏覽器擋彈出視窗 -->
+                    <a id="shop-redirect-btn" 
+                       href="https://www.miosports.com.tw/v2/official/SalePageCategory/406624?sortMode=Curator" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       onclick="logEvent('Click_Shop_Btn', currentSport)" 
+                       class="w-full bg-brandRed hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-brandRed/20 transition flex items-center justify-center space-x-2 text-base tracking-wide">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span>完成檢查，補齊你的馬拉松裝備 ➔</span>
                     </a>
@@ -331,29 +336,9 @@
         }
         const USER_ID = getOrCreateUserId();
 
-        function logEvent(actionName, categoryName = "", targetUrl = "", event = null, openInNewTab = false) {
-            if (event && targetUrl) {
-                event.preventDefault();
-            }
-
-            const navigate = () => {
-                if (!targetUrl) return;
-                if (openInNewTab) {
-                    window.open(targetUrl, '_blank', 'noopener,noreferrer');
-                } else {
-                    window.location.href = targetUrl;
-                }
-            };
-
-            if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) {
-                navigate();
-                return;
-            }
-            
-            // 如果指定新開分頁，立即打開避免被瀏覽器阻擋彈出視窗
-            if (openInNewTab && targetUrl) {
-                window.open(targetUrl, '_blank', 'noopener,noreferrer');
-            }
+        // 🎯 埋點事件：非同步發送，不干擾原生另開新分頁行為
+        function logEvent(actionName, categoryName = "") {
+            if (!GAS_URL || GAS_URL.includes("YOUR_GAS_WEB_APP_URL")) return;
             
             const currentRaceTitle = currentRace ? (currentRace.title || "長榮馬拉松") : "長榮馬拉松";
             const currentSportCategory = categoryName || currentSport || "road";
@@ -377,31 +362,15 @@
                 checkedIds: Array.from(checkedItems) 
             };
 
-            let hasRedirected = false;
-            const safeRedirect = () => {
-                if (targetUrl && !hasRedirected && !openInNewTab) {
-                    hasRedirected = true;
-                    window.location.href = targetUrl;
-                }
-            };
-
-            const timeoutId = setTimeout(safeRedirect, 800);
-
+            // 使用 keepalive 確保頁面即使用戶切換也能完整送達
             fetch(GAS_URL, {
                 method: 'POST',
                 mode: 'cors',
                 headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify(data)
-            })
-            .finally(() => {
-                clearTimeout(timeoutId);
-                safeRedirect();
-            });
+                body: JSON.stringify(data),
+                keepalive: true
+            }).catch(() => {});
         }
-
-        const OFFICIAL_STORE_URLS = {
-            road: 'https://www.miosports.com.tw/v2/official/SalePageCategory/406624?sortMode=Curator'
-        };
 
         const SPREADSHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTu0xkyE7lDth7K9YfJE2_Ez_TaF4KbK1jPaRqHOGT02afyL-RCoVJl8-pMwaJ5FOzbFeZlU69uXQz/pub?gid=0&single=true&output=csv';
 
@@ -459,7 +428,6 @@
             if (posterDate) posterDate.innerText = dateStr;
         }
 
-        // 🎯 更新號碼布、宣言與參賽組別（預設 RUNNER 與 順利完賽）
         function updatePosterPersonalization() {
             const bibInput = document.getElementById('input-bib-no');
             const declInput = document.getElementById('input-declaration');
@@ -470,11 +438,9 @@
             const selectedDistKey = distSelect ? distSelect.value : '42k';
             const catInfo = RACE_CATEGORIES[selectedDistKey] || RACE_CATEGORIES['42k'];
 
-            // 預設 RUNNER
             const bibText = document.getElementById('preview-bib-text');
             bibText.innerText = bibValue ? bibValue : "RUNNER";
 
-            // 預設 順利完賽
             const declText = document.getElementById('preview-declaration-text');
             declText.innerText = declValue ? `“ ${declValue} ”` : "“ 順利完賽 ”";
 
@@ -731,7 +697,6 @@
             renderChecklistItems();
         }
 
-        // 🎯 支援 4 個 Tab 頁籤切換
         function switchTab(tab) {
             currentTab = tab;
             ['mandatory', 'recommended', 'weather', 'unprepared'].forEach(t => {
@@ -777,7 +742,6 @@
             return baseItems;
         }
 
-        // 🎯 核心渲染：保證無論項目多寡，卡片高度、尺寸與文字大小完全一致
         function renderChecklistItems() {
             const grid = document.getElementById('items-grid');
             if (!grid) return;
@@ -801,7 +765,6 @@
                 const isChecked = checkedItems.has(item.id);
                 const itemDiv = document.createElement('div');
                 
-                // 固定 h-[52px]，防止項目過少時被撐大變形
                 if (isEditMode) {
                     itemDiv.className = `flex items-center justify-between px-3.5 py-3 h-[52px] bg-slate-50 border border-slate-200 rounded-xl checkbox-transition select-none`;
                 } else {
